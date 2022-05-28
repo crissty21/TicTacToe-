@@ -1,0 +1,12 @@
+#BlueJ class context
+comment0.target=Gride
+comment0.text=\r\n\ boxurile\ din\ careu\r\n
+comment1.params=
+comment1.target=Gride()
+comment2.params=
+comment2.target=void\ clear()
+comment3.params=orientare
+comment3.target=void\ end(int)
+comment4.params=
+comment4.target=void\ act()
+numComments=5
