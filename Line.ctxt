@@ -3,6 +3,4 @@ comment0.target=Line
 comment0.text=\r\n\ linia\ ce\ vine\ trasata\ la\ final\r\n
 comment1.params=ori\ z\ b
 comment1.target=Line(int,\ int,\ int)
-comment2.params=
-comment2.target=void\ act()
-numComments=3
+numComments=2

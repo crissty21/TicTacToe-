@@ -27,7 +27,7 @@ public class Next extends Actor
         if (start) {
             ct++;
             if (ct % 5 == 0)
-                if (Brain.next == true)
+                if (Brain.getNextPlayer() == Type.X)
                     setImage(np[ct / 5]);
                 else
                     setImage(np[4 - (ct / 5)]);
@@ -37,7 +37,7 @@ public class Next extends Actor
             }
         }
         if (start1) {
-            if (Brain.next == true)
+            if (Brain.getNextPlayer() == Type.X)
                 setImage(np[0]);
             else
                 setImage(np[4]);

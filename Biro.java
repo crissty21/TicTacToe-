@@ -36,7 +36,7 @@ public class Biro extends Actor
                 setImage(pui[ct/10]);
             if(ct==7)
             {
-                cucurigu.play();
+                //cucurigu.play();
                 cucurigu.setVolume(50);
             }
             if(ct==60)

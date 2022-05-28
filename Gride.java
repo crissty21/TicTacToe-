@@ -2,58 +2,94 @@ import greenfoot.*;
 /**
  * boxurile din careu
  */    
-public class Gride extends Actor
+public class Gride extends Brain
 {
     int c,r;//coordonatele elementului in tabloul jocului
     boolean his = true;
-    int aux,a,b;
     boolean start = false;
     int contor;
-    
-    GreenfootImage xImg = new GreenfootImage("as.png");
-    GreenfootImage oImg = new GreenfootImage("os.png");
-    
-    
-    public static GreenfootImage[] explozie = new GreenfootImage[13];
-    
+    public Element tem;
+    static GreenfootImage xImg = new GreenfootImage("as.png");
+    static GreenfootImage oImg = new GreenfootImage("os.png");
+
+    static GreenfootImage[] explozie = {
+            new GreenfootImage("box1.png"),
+            new GreenfootImage("box2.png"),
+            new GreenfootImage("box3.png"),
+            new GreenfootImage("box4.png"),
+            new GreenfootImage("box5.png"),
+            new GreenfootImage("box6.png"),
+            new GreenfootImage("box7.png"),
+            new GreenfootImage("box8.png"),
+            new GreenfootImage("box9.png"),
+            new GreenfootImage("box10.png"),
+            new GreenfootImage("box11.png"),
+            new GreenfootImage("box12.png"),
+            new GreenfootImage("box13.png")
+        };
+
     public Gride()
     {
-         explozie[0] = new GreenfootImage("box1.png");
-            explozie[1] = new GreenfootImage("box2.png");
-            explozie[2] = new GreenfootImage("box3.png");
-            explozie[3] = new GreenfootImage("box4.png");
-            explozie[4] = new GreenfootImage("box5.png");
-            explozie[5] = new GreenfootImage("box6.png");
-            explozie[6] = new GreenfootImage("box7.png");
-            explozie[7] = new GreenfootImage("box8.png");
-            explozie[8] = new GreenfootImage("box9.png");
-            explozie[9] = new GreenfootImage("box10.png");
-            explozie[10] = new GreenfootImage("box11.png");
-            explozie[11] = new GreenfootImage("box12.png");
-            explozie[12] = new GreenfootImage("box13.png");
         setImage(explozie[0]);
     }
 
+    public Gride(int x, int y)
+    {
+        r=x;
+        c=y;
+        setImage(explozie[0]);
+    }
+    public int getCoordX()
+    {
+        return r;
+    }
+    public int getCoordY()
+    {
+        return c;
+    }
     public void clear() //selecteaza x sau 0 pt caseta 
     {
-
-        if(Brain.next)
+        tem = clicked(this);
+        if(CurrentPlayer == Type.X)
         {
+            CurrentPlayer = Type.Y;
             setImage(xImg);
-            Brain.grid[c][r]=1;
-            Next.start1 = true;
-            Brain.next = false;
         }
         else
         {
+            CurrentPlayer = Type.X;
             setImage(oImg);
-            Brain.grid[c][r]=-1;
-            Next.start1 = true;
-            Brain.next = true;
         }
+        Next.start1 = true;  
     }
-
-    public void end(int orientare) // pentru a pozitiona corect linia initiala
+    public void act() 
+    {
+        if(Greenfoot.mouseClicked(this))
+        {   
+            if(his) //verifica daca nu a fost deschisa cutia
+            {
+                his = false; //marcheaza casuta ca fiind deschisa
+                Brain.mutari++;
+                start = true;
+                contor = 0;
+            }
+        }
+        if(start)
+        {
+            contor++;
+            if(contor % 5 == 0)
+            {
+                setImage(explozie[contor / 5]);
+            }
+            if(contor == 30)Next.start = true;  
+            if(contor >= 60)
+            {
+                start = false;
+                clear();
+            }
+        }
+    }    
+    /*    public void end(int orientare) // pentru a pozitiona corect linia initiala
     {
         switch(orientare)
         {
@@ -107,33 +143,5 @@ public class Gride extends Actor
                 }
 
         }
-    }
-
-    public void act() 
-    {
-        if(Greenfoot.mouseClicked(this))
-        {   
-            if(his) //verifica daca nu a fost deschisa cutia
-            {
-                his = false; //marcheaza casuta ca fiind deschisa
-                Brain.mutari++;
-                start = true;
-                contor = 0;
-            }
-        }
-        if(start)
-        {
-            contor++;
-            if(contor % 5 == 0)
-            {
-                setImage(explozie[contor / 5]);
-            }
-            if(contor == 30)Next.start = true;  
-            if(contor >= 60)
-            {
-                start = false;
-                clear();
-            }
-        }
-    }    
+    }*/
 }

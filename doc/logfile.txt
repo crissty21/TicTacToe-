@@ -1,0 +1,40 @@
+Class documentation
+<---- javadoc command: ---->
+X:\Apps\Greenfoot\jdk\bin\javadoc.exe
+-author
+-version
+-nodeprecated
+-protected
+-Xdoclint:none
+-noindex
+-notree
+-nohelp
+-nonavbar
+-source
+11
+-classpath
+X:\Apps\Greenfoot\lib\greenfoot.jar;X:\Apps\Greenfoot\lib\bluejcore.jar;X:\Apps\Greenfoot\lib\bluejeditor.jar;X:\Apps\Greenfoot\lib\bluejext2.jar;X:\Apps\Greenfoot\lib\junit-jupiter-5.5.2.jar;X:\Apps\Greenfoot\lib\junit-jupiter-api-5.5.2.jar;X:\Apps\Greenfoot\lib\junit-jupiter-engine-5.5.2.jar;X:\Apps\Greenfoot\lib\junit-jupiter-migrationsupport-5.5.2.jar;X:\Apps\Greenfoot\lib\junit-jupiter-params-5.5.2.jar;X:\Apps\Greenfoot\lib\junit-platform-commons-1.5.2.jar;X:\Apps\Greenfoot\lib\junit-platform-console-1.5.2.jar;X:\Apps\Greenfoot\lib\junit-platform-console-standalone-1.5.2.jar;X:\Apps\Greenfoot\lib\junit-platform-engine-1.5.2.jar;X:\Apps\Greenfoot\lib\junit-platform-launcher-1.5.2.jar;X:\Apps\Greenfoot\lib\junit-platform-reporting-1.5.2.jar;X:\Apps\Greenfoot\lib\junit-platform-runner-1.5.2.jar;X:\Apps\Greenfoot\lib\junit-platform-suite-api-1.5.2.jar;X:\Apps\Greenfoot\lib\junit-platform-testkit-1.5.2.jar;X:\Apps\Greenfoot\lib\junit-quickcheck-core-0.9.jar;X:\Apps\Greenfoot\lib\junit-vintage-engine-5.5.2.jar;X:\Apps\Greenfoot\lib\hamcrest-core-1.3.jar;X:\Apps\Greenfoot\lib\bluej.jar;X:\Apps\Greenfoot\lib\classgraph-4.8.90.jar;X:\Apps\Greenfoot\lib\diffutils-1.2.1.jar;X:\Apps\Greenfoot\lib\commons-logging-api-1.1.2.jar;X:\Apps\Greenfoot\lib\jl1.0.1.jar;X:\Apps\Greenfoot\lib\opencsv-2.3.jar;X:\Apps\Greenfoot\lib\xom-1.2.9.jar;X:\Apps\Greenfoot\lib\lang-stride.jar;X:\Apps\Greenfoot\lib\nsmenufx-2.1.8.jar;X:\Apps\Greenfoot\lib\richtextfx-fat-0.9.0.jar;X:\Apps\Greenfoot\lib\guava-17.0.jar;X:\Apps\Greenfoot\lib\httpclient-4.1.1.jar;X:\Apps\Greenfoot\lib\httpcore-4.1.jar;X:\Apps\Greenfoot\lib\httpmime-4.1.1.jar;X:\Apps\Greenfoot\lib\javafx\lib\javafx.base.jar;X:\Apps\Greenfoot\lib\javafx\lib\javafx.controls.jar;X:\Apps\Greenfoot\lib\javafx\lib\javafx.fxml.jar;X:\Apps\Greenfoot\lib\javafx\lib\javafx.graphics.jar;X:\Apps\Greenfoot\lib\javafx\lib\javafx.media.jar;X:\Apps\Greenfoot\lib\javafx\lib\javafx.properties.jar;X:\Apps\Greenfoot\lib\javafx\lib\javafx.swing.jar;X:\Apps\Greenfoot\lib\javafx\lib\javafx.web.jar;X:\greenfoot\greenfoot
+-d
+X:\greenfoot\greenfoot\doc
+-encoding
+UTF-8
+-charset
+UTF-8
+X:\greenfoot\greenfoot\Brain.java
+<---- end of javadoc command ---->
+Loading source file X:\greenfoot\greenfoot\Brain.java...
+Constructing Javadoc information...
+warning: unknown enum constant Tag.Any
+  reason: class file for threadchecker.Tag not found
+warning: unknown enum constant Tag.Any
+Standard Doclet version 11.0.10
+Building tree for all the packages and classes...
+Generating X:\greenfoot\greenfoot\doc\Brain.html...
+Generating X:\greenfoot\greenfoot\doc\package-summary.html...
+Generating X:\greenfoot\greenfoot\doc\constant-values.html...
+Building index for all the packages and classes...
+Building index for all classes...
+Generating X:\greenfoot\greenfoot\doc\allclasses.html...
+Generating X:\greenfoot\greenfoot\doc\allclasses.html...
+Generating X:\greenfoot\greenfoot\doc\index.html...
+2 warnings

@@ -20,7 +20,7 @@ public class Line extends Actor
             linie[2] = new GreenfootImage("linie_3.png");
             linie[3] = new GreenfootImage("linie_4.png");
     }
-    
+    /*
     public void act() 
     {
         if(set)
@@ -65,5 +65,5 @@ public class Line extends Actor
                         
         }
         
-    }    
+    }   */ 
 }
