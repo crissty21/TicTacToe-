@@ -1,4 +1,5 @@
-import greenfoot.*;  
+import greenfoot.*; 
+import java.util.*; 
 /**
  * boxurile din careu
  */    
@@ -8,6 +9,7 @@ public class Gride extends Brain
     boolean his = true;
     boolean start = false;
     int contor;
+    
     public Element tem;
     static GreenfootImage xImg = new GreenfootImage("as.png");
     static GreenfootImage oImg = new GreenfootImage("os.png");

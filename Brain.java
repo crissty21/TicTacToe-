@@ -66,6 +66,10 @@ class Element
     {
         Lines.get(index).addAll(newLine);
     }
+    public boolean won(int index)
+    {
+        return Lines.get(index).size() >= Brain.winReq;
+    }
     public List<Element> getLine(int index)
     {
         return Lines.get(index);
@@ -116,23 +120,20 @@ public class Brain extends Actor
     //     2 -> \
     //     3 -> /
     protected static Type CurrentPlayer;
-    public static boolean next; // tine minte ordinea jucatorilor 
-
+    public static int winReq;
     public static int n=10; // numarul de locuri in careu
     public static int mutari; //pt a putea indentifica egalitatea
     //daca mutari == 100 => egalitate
     int[] mapNeigh;
     final int[][] offsetNeigh = {{-1,-1,-1,0,0,1,1,1},{-1,0,1,-1,1,-1,0,1}};
-    boolean ok=true;
+    boolean ok;
     public Brain()
     {
+        winReq = 4;
         ok = true;
-        next = true;
         mutari=0;
         setImage(new GreenfootImage("placa mov.png"));
-        //cod temporal
-        if(next) CurrentPlayer = Type.X;
-        else CurrentPlayer = Type.Y;
+        CurrentPlayer = Type.X;
         createMap();
     }
 
@@ -151,6 +152,7 @@ public class Brain extends Actor
 
     public void creare_grid()
     {
+        Elements.clear();
         MyList<Element> TempList;
         for(int i=0;i<n;i++)
         {
@@ -168,6 +170,8 @@ public class Brain extends Actor
 
     protected Element clicked(Gride Clicked)
     {
+        boolean added;
+        
         MyList<Element> desiredLine;
         Element desiredNeigh;
 
@@ -180,6 +184,7 @@ public class Brain extends Actor
         //avem 8 vecini
         for(int i=0;i<8;i++)
         {
+            added = false;
             desiredLine = Elements.get(Clicked.getCoordX()+offsetNeigh[0][i]);
             if(desiredLine != null)
                 desiredNeigh = desiredLine.get(Clicked.getCoordY()+offsetNeigh[1][i]);
@@ -190,6 +195,16 @@ public class Brain extends Actor
                 {
                     //trebuie sa stim in ce lista de linii il adaugam 
                     justClicked.addLineOnLine(mapNeigh[i],desiredNeigh.getLine(mapNeigh[i]));
+                    added = true;
+                }
+            }
+            if(added)
+            {
+                if(justClicked.won(mapNeigh[i]))
+                {
+                    System.out.println("Won"/);
+                    //add wining to dos
+                    
                 }
             }
         }
