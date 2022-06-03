@@ -95,22 +95,18 @@ public class Brain extends Actor
             Elements.add(TempList);
         }
     }
-    public static Type getNextPlayer()
-    {
-        return CurrentPlayer;
-    }
     
-    protected Element clicked(Element Clicked)
+    protected void clicked(Element Clicked)
     {
         boolean added;
         MyList<Element> desiredLine;
         Element desiredNeigh;
-        Element justClicked = Elements.get(Clicked.getCoordX()).get(Clicked.getCoordY());
 
-        justClicked.setStatus(CurrentPlayer);
+        Clicked.setStatus(CurrentPlayer);
+
         // ne adaugam pe noi pe liniile componente
         for(int i=0;i<=3;i++)
-            justClicked.addOnLine(i, justClicked);
+            Clicked.addOnLine(i, Clicked);
             
         //verificam vecinii si adaugam pe linie daca sunt deschisi 
         //avem 8 vecini
@@ -123,19 +119,19 @@ public class Brain extends Actor
             else continue;
             if(desiredNeigh != null) //avem vecin in careu
             {
-                if(desiredNeigh.getStatus() == justClicked.getStatus())
+                if(desiredNeigh.getStatus() == Clicked.getStatus())
                 {
                     //trebuie sa stim in ce lista de linii il adaugam 
-                    justClicked.addLineOnLine(mapNeigh[i],desiredNeigh.getLine(mapNeigh[i]));
+                    Clicked.addLineOnLine(mapNeigh[i],desiredNeigh.getLine(mapNeigh[i]));
                     added = true;
                 }
             }
             if(added)
             {
-                if(justClicked.won(mapNeigh[i]))
+                if(Clicked.won(mapNeigh[i]))
                 {
                     //adding the Lines
-                    for(Element iter : justClicked.getLine(mapNeigh[i]))
+                    for(Element iter : Clicked.getLine(mapNeigh[i]))
                     {
                         getWorld().addObject(new Line(mapNeigh[i]), turnXinCoord(iter.getCoordX()), turnYinCoord(iter.getCoordY()));
                     }
@@ -143,8 +139,7 @@ public class Brain extends Actor
             }
         }
         //dupa ce am gasit toti vecinii, sincronizam listele lor, cu lista din elementul curent 
-        justClicked.sincLines();
-        return justClicked;
+        Clicked.sincLines();
     }
 
     public void act() 

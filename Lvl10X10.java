@@ -11,11 +11,9 @@ public class Lvl10X10 extends World
         super(900,700, 1);  
         addObject(new Biro(),48,554);
         addObject(new Brain(),580,290);
-        addObject(new Finalitate(3),10,10);
         addObject(new Gun(),100,633);
         addObject(new Next(1),530,630);
         addObject(new Decor(1),90,644);
-        addObject(new Help(),860,660);
         setBackground(new GreenfootImage("background 2.png"));
     }
 }

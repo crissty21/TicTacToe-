@@ -129,10 +129,10 @@ public class Element extends Brain
     {
         if(Greenfoot.mouseClicked(this))
         {   
-            if(his) //verifica daca nu a fost deschisa cutia
+            if(Val == Type.notOpened) //verifica daca nu a fost deschisa cutia
             {
-                his = false; //marcheaza casuta ca fiind deschisa
                 Brain.mutari++;
+                Val = CurrentPlayer;
                 start = true;
                 contor = 0;
             }
