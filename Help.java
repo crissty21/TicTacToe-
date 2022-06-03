@@ -35,7 +35,7 @@ public class Help extends Actor
         if (mouse != null) 
         {  
             setImage(imgs[1]);
-            List objects = getWorld().getObjectsAt(mouse.getX(), mouse.getY(),Help.class);  
+            List<Help> objects = getWorld().getObjectsAt(mouse.getX(), mouse.getY(),Help.class);  
             for (Object object : objects)  
             {  
                 if (object == this)  

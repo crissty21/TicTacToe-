@@ -1,5 +1,4 @@
 import greenfoot.*; 
-import java.util.*; 
 /**
  * boxurile din careu
  */    

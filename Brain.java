@@ -202,7 +202,7 @@ public class Brain extends Actor
             {
                 if(justClicked.won(mapNeigh[i]))
                 {
-                    System.out.println("Won"/);
+                    System.out.println("Won");
                     //add wining to dos
                     
                 }
@@ -227,3 +227,9 @@ public class Brain extends Actor
         return CurrentPlayer;
     }
 }
+/*
+ * "java.project.referencedLibraries": [
+        "lib/doua stelute sus/*.jar",
+        "c:\\path\\to\\jarfile\\commons-logging-1.1.1.jar"
+    ]
+ */

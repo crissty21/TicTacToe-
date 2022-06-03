@@ -27,7 +27,7 @@ public class Sound_ctrl extends Actor
             if (mouse != null)
             {  
                 setImage(voiceOn);  
-                List objects = getWorld().getObjectsAt(mouse.getX(), mouse.getY(),Sound_ctrl.class);  
+                List<Sound_ctrl> objects = getWorld().getObjectsAt(mouse.getX(), mouse.getY(),Sound_ctrl.class);  
                 for (Object object : objects)  
                 {  
                     if (object == this)  
