@@ -1,6 +1,6 @@
 #BlueJ class context
 comment0.target=Line
 comment0.text=\r\n\ linia\ ce\ vine\ trasata\ la\ final\r\n
-comment1.params=ori\ z\ b
-comment1.target=Line(int,\ int,\ int)
+comment1.params=ori
+comment1.target=Line(int)
 numComments=2

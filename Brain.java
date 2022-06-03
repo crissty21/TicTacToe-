@@ -4,101 +4,7 @@ import java.util.*;
 enum Type{
     notOpened, X, Y;
 };
-class Element
-{
-    int x, y;
-    Gride BoxInWorld; //referinta la obiectul prorpiu zis din lume
-    List<List<Element>> Lines; //lista cu linile din care face parte obiectul
-    Type Val;
-    public Element()
-    {
-        x = y = 0;
-        Val = Val.notOpened;
-        BoxInWorld = new Gride();
-        Lines = new ArrayList<>();
-        for(int i=0;i<4;i++)
-            Lines.add(new ArrayList<Element>());
-    }
 
-    public Element(int CoordX, int CoordY)
-    {
-        this();
-        x = CoordX;
-        y = CoordY;
-    }
-
-    public Element(int CoordX, int CoordY, Gride RefToObject)
-    {
-        this(CoordX, CoordY);
-        BoxInWorld = RefToObject;
-    }
-
-    public void setStatus(Type newStatus)
-    {
-        Val = newStatus;
-    }
-
-    public Type getStatus()
-    {
-        return Val;
-    }
-
-    public int getLineLenght(int index)
-    {
-        return Lines.get(index).size();
-    }
-
-    public int getCoordX()
-    {
-        return x;
-    }
-
-    public int getCoordY()
-    {
-        return y;
-    }
-
-    public void addOnLine(int index, Element vecin)
-    {
-        Lines.get(index).add(vecin);
-    }
-    public void addLineOnLine(int index, List<Element> newLine)
-    {
-        Lines.get(index).addAll(newLine);
-    }
-    public boolean won(int index)
-    {
-        return Lines.get(index).size() >= Brain.winReq;
-    }
-    public List<Element> getLine(int index)
-    {
-        return Lines.get(index);
-    }
-    public boolean containsOnLine(int line, Element second)
-    {
-        return Lines.get(line).contains(second);
-    }
-
-    public void sincLines()
-    {
-        for(int line=0;line<=3;line++)
-        {
-            int sizeOfLine = Lines.get(line).size();
-            //luam fiecare vecin 
-            for(int i = 1;i<sizeOfLine;i++)
-            {
-                //adaugam in lista vecinului, toate elemente ce lipsesc
-                for(int j = 0; j<sizeOfLine;j++)
-                {
-                    if(Lines.get(line).get(i).containsOnLine(line, Lines.get(line).get(j)) == false)
-                    {
-                        Lines.get(line).get(i).addOnLine(line, Lines.get(line).get(j));
-                    }
-                }
-            }
-        }
-    }
-};
 //clasa folosita pentru override la metoda get()
 class MyList<T> extends ArrayList<T>
 {
@@ -119,26 +25,38 @@ public class Brain extends Actor
     //     1 -> |
     //     2 -> \
     //     3 -> /
-    protected static Type CurrentPlayer;
-    public static int winReq;
-    public static int n=10; // numarul de locuri in careu
+
+    protected static Type CurrentPlayer; //tine minte care jucator urmeaza
+    public static int winReq; //numarul de elemente consecutive necesare castigarii
+    public static int n; // numarul de locuri in careu
     public static int mutari; //pt a putea indentifica egalitatea
     //daca mutari == 100 => egalitate
-    int[] mapNeigh;
-    final int[][] offsetNeigh = {{-1,-1,-1,0,0,1,1,1},{-1,0,1,-1,1,-1,0,1}};
-    boolean ok;
+
+
+    int[] mapNeigh;//mapeaza vecinii pe linii, in functie de oridinea lor
+    final int[][] offsetNeigh = {{-1,-1,-1,0,0,1,1,1},{-1,0,1,-1,1,-1,0,1}}; //offsetul la care se afla vecinii
+
+    boolean ok;//semafor folosit pentru crearea unui eveniment begin play
     public Brain()
     {
+        init();
+        createMap();
+        setImage(new GreenfootImage("placa mov.png"));
+    }
+
+    private void init() 
+    {
+        //initializeaza variabile
         winReq = 4;
+        n=10;
         ok = true;
         mutari=0;
-        setImage(new GreenfootImage("placa mov.png"));
         CurrentPlayer = Type.X;
-        createMap();
     }
 
     private void createMap()
     {
+        //creaza mapa vecinilor
         mapNeigh = new int[8];
         mapNeigh[0] = 2;
         mapNeigh[1] = 1;
@@ -150,6 +68,17 @@ public class Brain extends Actor
         mapNeigh[7] = 2;
     }
 
+    private int turnXinCoord(int x)
+    {
+        //turning index into coordonates
+        return (x+1)*50+305;
+    }
+    private int turnYinCoord(int y)
+    {
+        //turning index into coordonates
+        return (y+1)*50+15;
+    }
+    
     public void creare_grid()
     {
         Elements.clear();
@@ -159,27 +88,30 @@ public class Brain extends Actor
             TempList = new MyList<>();
             for(int j=0;j<n;j++)
             {
-                Gride obj = new Gride(i,j);
-                Element temp = new Element(i, j, obj);
+                Element temp = new Element(i, j);
                 TempList.add(temp);
-                getWorld().addObject(obj,(i+1)*50+305,(j+1)*50+15);
+                getWorld().addObject(temp,turnXinCoord(i),turnYinCoord(j));
             }
             Elements.add(TempList);
         }
     }
-
-    protected Element clicked(Gride Clicked)
+    public static Type getNextPlayer()
+    {
+        return CurrentPlayer;
+    }
+    
+    protected Element clicked(Element Clicked)
     {
         boolean added;
-        
         MyList<Element> desiredLine;
         Element desiredNeigh;
-
         Element justClicked = Elements.get(Clicked.getCoordX()).get(Clicked.getCoordY());
+
         justClicked.setStatus(CurrentPlayer);
         // ne adaugam pe noi pe liniile componente
         for(int i=0;i<=3;i++)
             justClicked.addOnLine(i, justClicked);
+            
         //verificam vecinii si adaugam pe linie daca sunt deschisi 
         //avem 8 vecini
         for(int i=0;i<8;i++)
@@ -202,9 +134,11 @@ public class Brain extends Actor
             {
                 if(justClicked.won(mapNeigh[i]))
                 {
-                    System.out.println("Won");
-                    //add wining to dos
-                    
+                    //adding the Lines
+                    for(Element iter : justClicked.getLine(mapNeigh[i]))
+                    {
+                        getWorld().addObject(new Line(mapNeigh[i]), turnXinCoord(iter.getCoordX()), turnYinCoord(iter.getCoordY()));
+                    }
                 }
             }
         }
@@ -221,11 +155,6 @@ public class Brain extends Actor
             creare_grid();
         }
     } 
-
-    public static Type getNextPlayer()
-    {
-        return CurrentPlayer;
-    }
 }
 /*
  * "java.project.referencedLibraries": [
