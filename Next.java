@@ -3,15 +3,14 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 /**
  * afiseaza care este urmatorul jucator
  */
-public class Next extends Brain
-{
+public class Next extends Brain {
     public static boolean start, start1;
     public static int ct;
     static int a;
-    
+
     GreenfootImage[] np = new GreenfootImage[5];
-    public Next(int z) 
-    {
+
+    public Next(int z) {
         initImgs();
         start = start1 = false;
         ct = 0;
@@ -26,8 +25,7 @@ public class Next extends Brain
         np[4] = new GreenfootImage("light4.png");
     }
 
-    public void act()
-    {
+    public void act() {
         if (start) {
             ct++;
             if (ct % 5 == 0)

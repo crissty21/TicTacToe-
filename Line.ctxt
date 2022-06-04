@@ -3,4 +3,6 @@ comment0.target=Line
 comment0.text=\r\n\ linia\ ce\ vine\ trasata\ la\ final\r\n
 comment1.params=ori
 comment1.target=Line(int)
-numComments=2
+comment2.params=raport
+comment2.target=float\ resizeImgs(float)
+numComments=3
