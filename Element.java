@@ -1,7 +1,6 @@
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.*;
 
-import javax.naming.spi.DirStateFactory.Result;
 
 public class Element extends Actor {
     int x, y;

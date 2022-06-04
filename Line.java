@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 /**
  * linia ce vine trasata la final
