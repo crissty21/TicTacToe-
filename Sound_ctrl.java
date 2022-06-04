@@ -1,11 +1,6 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.List;
-/**
- * Write a description of class Sound_ctrl here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
+
 public class Sound_ctrl extends Actor
 {
     boolean liber,once = true;

@@ -4,7 +4,9 @@ import java.util.*;
 enum Type{
     notOpened, X, Y;
 };
-
+enum State{
+    waitForMove, animationOn;
+}
 //clasa folosita pentru override la metoda get()
 class MyList<T> extends ArrayList<T>
 {
@@ -28,27 +30,30 @@ public class Brain extends Actor
 
     protected static Type CurrentPlayer; //tine minte care jucator urmeaza
     public static int winReq; //numarul de elemente consecutive necesare castigarii
-    public static int n; // numarul de locuri in careu
+    private static int size;
     public static int mutari; //pt a putea indentifica egalitatea
     //daca mutari == 100 => egalitate
-
+    protected static State gameState;
 
     int[] mapNeigh;//mapeaza vecinii pe linii, in functie de oridinea lor
     final int[][] offsetNeigh = {{-1,-1,-1,0,0,1,1,1},{-1,0,1,-1,1,-1,0,1}}; //offsetul la care se afla vecinii
 
     boolean ok;//semafor folosit pentru crearea unui eveniment begin play
-    public Brain()
+    public Brain(){ 
+    }
+    public Brain(int _size, int _winReq)
     {
-        init();
+        init(_size, _winReq);
         createMap();
-        setImage(new GreenfootImage("placa mov.png"));
+        //setImage(new GreenfootImage("placa mov.png"));
     }
 
-    private void init() 
+    private void init(int _size, int _winReq) 
     {
         //initializeaza variabile
-        winReq = 4;
-        n=10;
+        gameState = State.waitForMove;
+        size = _size;
+        winReq = _winReq;
         ok = true;
         mutari=0;
         CurrentPlayer = Type.X;
@@ -78,8 +83,44 @@ public class Brain extends Actor
         //turning index into coordonates
         return (y+1)*50+15;
     }
+    private int turnXinCoord(int x, int dim)
+    {
+        //turning index into coordonates
+        int offset;
+        switch(dim)
+        {
+            case 10: offset = 1; break;
+            case 9: offset = 1; break;
+            case 8: offset = 2; break;
+            case 7: offset = 2; break;
+            case 6: offset = 3; break;
+            case 5: offset = 3; break;
+            case 4: offset = 4; break;
+            case 3: offset = 5; break;
+            default: offset=1; break;
+        }
+        return (x+offset)*50+305;
+    }
+    private int turnYinCoord(int y, int dim)
+    {
+        //turning index into coordonates
+        int offset;
+        switch(dim)
+        {
+            case 10: offset = 1; break;
+            case 9: offset = 1; break;
+            case 8: offset = 2; break;
+            case 7: offset = 2; break;
+            case 6: offset = 3; break;
+            case 5: offset = 3; break;
+            case 4: offset = 4; break;
+            case 3: offset = 4; break;
+            default: offset=1; break;
+        }
+        return (y+offset)*50+15;
+    }
     
-    public void creare_grid()
+    public void createGrid(int n)
     {
         Elements.clear();
         MyList<Element> TempList;
@@ -88,9 +129,9 @@ public class Brain extends Actor
             TempList = new MyList<>();
             for(int j=0;j<n;j++)
             {
-                Element temp = new Element(i, j);
+                Element temp = new Element(i, j, this);
                 TempList.add(temp);
-                getWorld().addObject(temp,turnXinCoord(i),turnYinCoord(j));
+                getWorld().addObject(temp,turnXinCoord(i, n),turnYinCoord(j, n));
             }
             Elements.add(TempList);
         }
@@ -147,7 +188,7 @@ public class Brain extends Actor
         if(ok)
         {
             ok=false;
-            creare_grid();
+            createGrid(size);
         }
     } 
 }

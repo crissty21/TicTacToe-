@@ -1,12 +1,12 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.*;
 
-public class Element extends Brain
+public class Element extends Actor
 {
     int x, y;
     List<List<Element>> Lines; //lista cu linile din care face parte obiectul
     Type Val;
-
+    Brain refToBrain;
     boolean his = true;
     boolean start = false;
     int contor;
@@ -44,7 +44,11 @@ public class Element extends Brain
         x = CoordX;
         y = CoordY;
     }
-
+    public Element(int CoordX, int CoordY, Brain refToOwner)
+    {
+        this(CoordX, CoordY);
+        refToBrain = refToOwner;
+    }
     public void setStatus(Type newStatus)
     {
         Val = newStatus;
@@ -112,29 +116,33 @@ public class Element extends Brain
     
     public void clear() //selecteaza x sau 0 pt caseta 
     {
-        clicked(this);
-        if(CurrentPlayer == Type.X)
+        refToBrain.clicked(this);
+        if(Brain.CurrentPlayer == Type.X)
         {
-            CurrentPlayer = Type.Y;
+            Brain.CurrentPlayer = Type.Y;
             setImage(xImg);
         }
         else
         {
-            CurrentPlayer = Type.X;
+            Brain.CurrentPlayer = Type.X;
             setImage(oImg);
         }
         Next.start1 = true;  
+        Brain.gameState = State.waitForMove;
     }
     public void act() 
     {
         if(Greenfoot.mouseClicked(this))
         {   
+            //cooldown
+            //if(Brain.gameState == State.waitForMove)
             if(Val == Type.notOpened) //verifica daca nu a fost deschisa cutia
             {
                 Brain.mutari++;
-                Val = CurrentPlayer;
+                Val = Brain.CurrentPlayer;
                 start = true;
                 contor = 0;
+                Brain.gameState = State.animationOn;
             }
         }
         if(start)
