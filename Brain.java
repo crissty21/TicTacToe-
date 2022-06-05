@@ -62,6 +62,7 @@ public class Brain extends Actor {
         if (size > 10) {
             raport = Element.resizeImgs(size);
             Line.resizeImgs(raport);
+            Bullet.raport = raport;
         }
         else raport = -1;
     }

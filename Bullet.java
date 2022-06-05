@@ -4,11 +4,14 @@ import greenfoot.*;
 
 public class Bullet extends Actor {
     private Element refToTarget;
-    private GreenfootImage glont = new GreenfootImage("bullet.png");
+    private GreenfootImage glont;
     private Vector2d newLocation, moveHere;
     private int ct;
+    public static float raport = 1;
 
     public Bullet(Element target) {
+        glont = new GreenfootImage("bullet.png");
+        resizeImg();
         refToTarget = target;
         turnTowards(target.getX(), target.getY());
         turn(-50);
@@ -41,6 +44,16 @@ public class Bullet extends Actor {
         double x = getX() + (speed * Math.cos(direction));
         double y = getY() + (speed * Math.sin(direction));
         return new Vector2d(x, y);
+    }
+
+    private void resizeImg()
+    {
+        int newWidth, newHeight;
+        newWidth = (int)(glont.getWidth()/raport);
+        newHeight = (int)(glont.getHeight()/raport);
+        if(newWidth == 0)newWidth = 1;
+        if(newHeight == 0 )newHeight = 1;
+        glont.scale(newWidth, newHeight);
     }
 }
 
