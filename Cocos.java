@@ -2,9 +2,9 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 public class Cocos extends Actor {
     public static boolean startAnimation;
-    int ct;
-    Gun refToGun;
-    public static GreenfootImage[] pui = new GreenfootImage[7];
+    private int ct;
+    private Gun refToGun;
+    private static GreenfootImage[] pui = new GreenfootImage[7];
 
     public Cocos(Gun _refToGun) {
         init(_refToGun);
@@ -27,8 +27,9 @@ public class Cocos extends Actor {
     public void act() {
         if (startAnimation) {
             ct++;
-            if (ct % 10 == 0)
+            if (ct % 10 == 0) {
                 setImage(pui[ct / 10]);
+            }
             if (ct == 60) {
                 refToGun.turnGunOnOff();
                 setImage(pui[0]);

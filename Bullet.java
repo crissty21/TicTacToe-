@@ -1,5 +1,7 @@
 import java.util.List;
 
+import javax.swing.text.StyledEditorKit.BoldAction;
+
 import greenfoot.*;
 
 public class Bullet extends Actor {
@@ -10,11 +12,19 @@ public class Bullet extends Actor {
     public static float raport = 1;
 
     public Bullet(Element target) {
-        glont = new GreenfootImage("bullet.png");
+        initVars(target);
+        initialSettings(target);
+    }
+
+    private void initialSettings(Element target) {
         resizeImg();
-        refToTarget = target;
         turnTowards(target.getX(), target.getY());
         turn(-50);
+    }
+
+    private void initVars(Element target) {
+        glont = new GreenfootImage("bullet.png");
+        refToTarget = target;
         ct = 0;
         moveHere = new Vector2d(refToTarget.getX(), refToTarget.getY());
     }
@@ -25,16 +35,23 @@ public class Bullet extends Actor {
             setImage(glont);
         }
         newLocation = lerp(moveHere, 10);
+        if (reachedDestination()) {
+            Brain.gameState = State.animationOn;
+            getWorld().removeObject(this);
+        }
+    }
+
+    private boolean reachedDestination() {
         setLocation(newLocation.getX(), newLocation.getY());
         if (isTouching(Element.class)) {
             List<Element> intersectingObjs = getIntersectingObjects(Element.class);
             for (Element iter : intersectingObjs) {
                 if (iter == refToTarget) {
-                    Brain.gameState = State.animationOn;
-                    getWorld().removeObject(this);
+                    return true;
                 }
             }
         }
+        return false;
     }
 
     private Vector2d lerp(Vector2d other, double speed) {
@@ -46,13 +63,14 @@ public class Bullet extends Actor {
         return new Vector2d(x, y);
     }
 
-    private void resizeImg()
-    {
+    private void resizeImg() {
         int newWidth, newHeight;
-        newWidth = (int)(glont.getWidth()/raport);
-        newHeight = (int)(glont.getHeight()/raport);
-        if(newWidth == 0)newWidth = 1;
-        if(newHeight == 0 )newHeight = 1;
+        newWidth = (int) (glont.getWidth() / raport);
+        newHeight = (int) (glont.getHeight() / raport);
+        if (newWidth == 0)
+            newWidth = 1;
+        if (newHeight == 0)
+            newHeight = 1;
         glont.scale(newWidth, newHeight);
     }
 }

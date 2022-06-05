@@ -1,20 +1,18 @@
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.*;
 
-
 public class Element extends Actor {
-    int x, y;
-    List<List<Element>> Lines; // lista cu linile din care face parte obiectul
-    Type Val;
-    Brain refToBrain;
-    boolean his = true;
-    boolean selected;
-    int contor;
-    Gun refToGun;
+    private int x, y;
+    private List<List<Element>> Lines; // lista cu linile din care face parte obiectul
+    private Type Val;
+    private Brain refToBrain;
+    private boolean selected;
+    private int contor;
+    private Gun refToGun;
 
-    static GreenfootImage xImg = new GreenfootImage("as.png");
-    static GreenfootImage oImg = new GreenfootImage("os.png");
-    static GreenfootImage[] explozie = {
+    private static GreenfootImage xImg = new GreenfootImage("as.png");
+    private static GreenfootImage oImg = new GreenfootImage("os.png");
+    private static GreenfootImage[] explozie = {
             new GreenfootImage("box1.png"),
             new GreenfootImage("box2.png"),
             new GreenfootImage("box3.png"),
@@ -107,7 +105,7 @@ public class Element extends Actor {
         return Lines.get(index).size() >= Brain.winReq;
     }
 
-    public void clear() // selecteaza x sau 0 pt caseta
+    public void choose() // selecteaza x sau 0 pt caseta
     {
         refToBrain.clicked(this);
         if (Brain.CurrentPlayer == Type.X) {
@@ -124,16 +122,17 @@ public class Element extends Actor {
     public void act() {
         if (Greenfoot.mouseClicked(this)) {
             // cooldown
-            if(Brain.gameState == State.waitForMove)
-            if (Val == Type.notOpened) // verifica daca nu a fost deschisa cutia
-            {
-                refToGun.lookAtMe(this);
-                Cocos.startAnimation = true;
-                Brain.mutari++;
-                Val = Brain.CurrentPlayer;
-                selected = true;
-                contor = 0;
-                Brain.gameState = State.WaitingForBullet;
+            if (Brain.gameState == State.waitForMove) {
+                if (Val == Type.notOpened) // verifica daca nu a fost deschisa cutia
+                {
+                    refToGun.lookAtMe(this);
+                    Cocos.startAnimation = true;
+                    Brain.mutari++;
+                    Val = Brain.CurrentPlayer;
+                    Brain.gameState = State.WaitingForBullet;
+                    selected = true;
+                    contor = 0;
+                }
             }
         }
         if (selected && Brain.gameState == State.animationOn) {
@@ -141,41 +140,42 @@ public class Element extends Actor {
             if (contor % 5 == 0) {
                 setImage(explozie[contor / 5]);
             }
-            if (contor == 30)
+            if (contor == 30) {
                 Next.start = true;
+            }
             if (contor >= 60) {
                 selected = false;
-                clear();
+                choose();
             }
         }
     }
 
-    public static float resizeImgs(int size)
-    {
-        int initialSpace = 50, 
-            maxSpace = 500,
-            dim = 38;
+    public static float resizeImgs(int size) {
+        int initialSpace = 50,
+                maxSpace = 500,
+                dim = 38;
         int newHeight, newWidth;
-        float raport = (float)initialSpace/(float)((float)maxSpace / (float)size);
-        
-        xImg.scale((int)(dim/raport), (int)(dim/raport));
-        oImg.scale((int)(dim/raport), (int)(dim/raport));
-        for(GreenfootImage iter : explozie)
-        {
-            newWidth = (int)(iter.getWidth()/raport);
-            newHeight = (int)(iter.getHeight()/raport);
-            if(newWidth == 0)newWidth = 1;
-            if(newHeight == 0 )newHeight = 1;
+        float raport = (float) initialSpace / (float) ((float) maxSpace / (float) size);
+
+        xImg.scale((int) (dim / raport), (int) (dim / raport));
+        oImg.scale((int) (dim / raport), (int) (dim / raport));
+        for (GreenfootImage iter : explozie) {
+            newWidth = (int) (iter.getWidth() / raport);
+            newHeight = (int) (iter.getHeight() / raport);
+            if (newWidth == 0) {
+                newWidth = 1;
+            }
+            if (newHeight == 0) {
+                newHeight = 1;
+            }
             iter.scale(newWidth, newHeight);
         }
         return raport;
     }
 
-    public static void initImgs()
-    {
+    public static void initImgs() {
         xImg = new GreenfootImage("as.png");
         oImg = new GreenfootImage("os.png");
-
         explozie[0] = new GreenfootImage("box1.png");
         explozie[1] = new GreenfootImage("box2.png");
         explozie[2] = new GreenfootImage("box3.png");
@@ -190,5 +190,5 @@ public class Element extends Actor {
         explozie[11] = new GreenfootImage("box12.png");
         explozie[12] = new GreenfootImage("box13.png");
     }
- 
+
 }

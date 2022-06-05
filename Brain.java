@@ -21,7 +21,7 @@ class MyList<T> extends ArrayList<T> {
 }
 
 public class Brain extends Actor {
-    static MyList<MyList<Element>> Elements = new MyList<>();
+    private static MyList<MyList<Element>> Elements = new MyList<>();
     // 0 -> -
     // 1 -> |
     // 2 -> \
@@ -29,17 +29,17 @@ public class Brain extends Actor {
 
     protected static Type CurrentPlayer; // tine minte care jucator urmeaza
     public static int winReq; // numarul de elemente consecutive necesare castigarii
-    private static int size;
+    private static int size; // dimensiunea careului
     public static int mutari; // pt a putea indentifica egalitatea
     // daca mutari == 100 => egalitate
     protected static State gameState;
     private float raport;
-    Gun refToGun;
-    int[] mapNeigh;// mapeaza vecinii pe linii, in functie de oridinea lor
-    final int[][] offsetNeigh = { { -1, -1, -1, 0, 0, 1, 1, 1 }, { -1, 0, 1, -1, 1, -1, 0, 1 } }; // offsetul la care se
-                                                                                                  // afla vecinii
-
-    boolean ok;// semafor folosit pentru crearea unui eveniment begin play
+    private boolean ok;// semafor folosit pentru crearea unui eveniment begin play
+    private Gun refToGun;
+    private int[] mapNeigh;// mapeaza vecinii pe linii, in functie de oridinea lor
+    private final int[][] offsetNeigh = { { -1, -1, -1, 0, 0, 1, 1, 1 }, { -1, 0, 1, -1, 1, -1, 0, 1 } }; // offsetul la
+                                                                                                          // care se
+    // afla vecinii
 
     public Brain() {
     }
@@ -63,8 +63,8 @@ public class Brain extends Actor {
             raport = Element.resizeImgs(size);
             Line.resizeImgs(raport);
             Bullet.raport = raport;
-        }
-        else raport = -1;
+        } else
+            raport = -1;
     }
 
     private void createMap() {
@@ -112,7 +112,8 @@ public class Brain extends Actor {
                 offset = 1;
                 break;
         }
-        if(raport == -1) return (x + offset) * 50 + 305;
+        if (raport == -1)
+            return (x + offset) * 50 + 305;
         return (int) ((x + offset) * (50 / raport) + 305 + 50 / raport / 2);
     }
 
@@ -148,11 +149,13 @@ public class Brain extends Actor {
                 offset = 1;
                 break;
         }
-        if(raport == -1) return (y + offset) * 50 + 15;
+        if (raport == -1)
+            return (y + offset) * 50 + 15;
         return (int) ((y + offset) * (50 / raport) + 15 + 50 / raport / 2);
     }
 
     public void createGrid(int n) {
+        // creaza gridul
         Elements.clear();
         MyList<Element> TempList;
         for (int i = 0; i < n; i++) {
@@ -182,10 +185,12 @@ public class Brain extends Actor {
         for (int i = 0; i < 8; i++) {
             added = false;
             desiredLine = Elements.get(Clicked.getCoordX() + offsetNeigh[0][i]);
-            if (desiredLine != null)
+            if (desiredLine != null) {
                 desiredNeigh = desiredLine.get(Clicked.getCoordY() + offsetNeigh[1][i]);
-            else
+            } 
+            else {
                 continue;
+            }
             if (desiredNeigh != null) // avem vecin in careu
             {
                 if (desiredNeigh.getStatus() == Clicked.getStatus()) {
@@ -201,6 +206,7 @@ public class Brain extends Actor {
                         getWorld().addObject(new Line(mapNeigh[i]), turnXinCoord(iter.getCoordX(), size),
                                 turnYinCoord(iter.getCoordY(), size));
                     }
+                    break;
                 }
             }
         }
@@ -211,6 +217,7 @@ public class Brain extends Actor {
 
     public void act() {
         if (ok) {
+            // begin play
             ok = false;
             createGrid(size);
         }
