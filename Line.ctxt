@@ -5,4 +5,6 @@ comment1.params=ori
 comment1.target=Line(int)
 comment2.params=raport
 comment2.target=float\ resizeImgs(float)
-numComments=3
+comment3.params=
+comment3.target=void\ initImgs()
+numComments=4

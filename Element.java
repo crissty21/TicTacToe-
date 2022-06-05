@@ -8,8 +8,9 @@ public class Element extends Actor {
     Type Val;
     Brain refToBrain;
     boolean his = true;
-    boolean start = false;
+    boolean selected;
     int contor;
+    Gun refToGun;
 
     static GreenfootImage xImg = new GreenfootImage("as.png");
     static GreenfootImage oImg = new GreenfootImage("os.png");
@@ -34,6 +35,7 @@ public class Element extends Actor {
         x = y = 0;
         Val = Val.notOpened;
         Lines = new ArrayList<>();
+        selected = false;
         for (int i = 0; i < 4; i++)
             Lines.add(new ArrayList<Element>());
     }
@@ -44,9 +46,10 @@ public class Element extends Actor {
         y = CoordY;
     }
 
-    public Element(int CoordX, int CoordY, Brain refToOwner) {
+    public Element(int CoordX, int CoordY, Brain refToOwner, Gun _refToGun) {
         this(CoordX, CoordY);
         refToBrain = refToOwner;
+        refToGun = _refToGun;
     }
 
     public void setStatus(Type newStatus) {
@@ -121,17 +124,19 @@ public class Element extends Actor {
     public void act() {
         if (Greenfoot.mouseClicked(this)) {
             // cooldown
-            // if(Brain.gameState == State.waitForMove)
+            if(Brain.gameState == State.waitForMove)
             if (Val == Type.notOpened) // verifica daca nu a fost deschisa cutia
             {
+                refToGun.lookAtMe(this);
+                Cocos.startAnimation = true;
                 Brain.mutari++;
                 Val = Brain.CurrentPlayer;
-                start = true;
+                selected = true;
                 contor = 0;
-                Brain.gameState = State.animationOn;
+                Brain.gameState = State.WaitingForBullet;
             }
         }
-        if (start) {
+        if (selected && Brain.gameState == State.animationOn) {
             contor++;
             if (contor % 5 == 0) {
                 setImage(explozie[contor / 5]);
@@ -139,7 +144,7 @@ public class Element extends Actor {
             if (contor == 30)
                 Next.start = true;
             if (contor >= 60) {
-                start = false;
+                selected = false;
                 clear();
             }
         }

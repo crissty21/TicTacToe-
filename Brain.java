@@ -6,7 +6,7 @@ enum Type {
 };
 
 enum State {
-    waitForMove, animationOn;
+    waitForMove, WaitingForBullet, animationOn;
 }
 
 // clasa folosita pentru override la metoda get()
@@ -34,7 +34,7 @@ public class Brain extends Actor {
     // daca mutari == 100 => egalitate
     protected static State gameState;
     private float raport;
-
+    Gun refToGun;
     int[] mapNeigh;// mapeaza vecinii pe linii, in functie de oridinea lor
     final int[][] offsetNeigh = { { -1, -1, -1, 0, 0, 1, 1, 1 }, { -1, 0, 1, -1, 1, -1, 0, 1 } }; // offsetul la care se
                                                                                                   // afla vecinii
@@ -44,14 +44,15 @@ public class Brain extends Actor {
     public Brain() {
     }
 
-    public Brain(int _size, int _winReq) {
-        init(_size, _winReq);
+    public Brain(int _size, int _winReq, Gun _refToGun) {
+        init(_size, _winReq, _refToGun);
         createMap();
         // setImage(new GreenfootImage("placa mov.png"));
     }
 
-    private void init(int _size, int _winReq) {
+    private void init(int _size, int _winReq, Gun _refToGun) {
         // initializeaza variabile
+        refToGun = _refToGun;
         gameState = State.waitForMove;
         size = _size;
         winReq = _winReq;
@@ -156,7 +157,7 @@ public class Brain extends Actor {
         for (int i = 0; i < n; i++) {
             TempList = new MyList<>();
             for (int j = 0; j < n; j++) {
-                Element temp = new Element(i, j, this);
+                Element temp = new Element(i, j, this, refToGun);
                 TempList.add(temp);
                 getWorld().addObject(temp, turnXinCoord(i, n), turnYinCoord(j, n));
             }

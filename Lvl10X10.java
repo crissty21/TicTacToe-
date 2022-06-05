@@ -12,11 +12,14 @@ public class Lvl10X10 extends World
         
         Element.initImgs();
         Line.initImgs();
-        addObject(new Biro(),48,554);
-        addObject(new Brain(3,4),580,290);
-        addObject(new Gun(),100,633);
+        Gun refToGun = new Gun();
+        addObject(new Cocos(refToGun),48,554);
+        addObject(refToGun,90,610);
+        addObject(new Brain(10,4,refToGun),580,290);
         addObject(new Next(1),530,630);
         addObject(new Decor(1),90,644);
         setBackground(new GreenfootImage("background 2.png"));
+        
+        setPaintOrder(Decor.class, Gun.class, Bullet.class);
     }
 }
