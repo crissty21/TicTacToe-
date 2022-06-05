@@ -1,6 +1,8 @@
 #BlueJ class context
 comment0.target=Line
 comment0.text=\r\n\ linia\ ce\ vine\ trasata\ la\ final\r\n
-comment1.params=ori\ z\ b
-comment1.target=Line(int,\ int,\ int)
-numComments=2
+comment1.params=ori
+comment1.target=Line(int)
+comment2.params=raport
+comment2.target=float\ resizeImgs(float)
+numComments=3

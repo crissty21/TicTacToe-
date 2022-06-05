@@ -1,144 +1,72 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.*;
 
-enum Type{
+enum Type {
     notOpened, X, Y;
 };
-class Element
-{
-    int x, y;
-    Gride BoxInWorld; //referinta la obiectul prorpiu zis din lume
-    List<List<Element>> Lines; //lista cu linile din care face parte obiectul
-    Type Val;
-    public Element()
-    {
-        x = y = 0;
-        Val = Val.notOpened;
-        BoxInWorld = new Gride();
-        Lines = new ArrayList<>();
-        for(int i=0;i<4;i++)
-            Lines.add(new ArrayList<Element>());
-    }
 
-    public Element(int CoordX, int CoordY)
-    {
-        this();
-        x = CoordX;
-        y = CoordY;
-    }
+enum State {
+    waitForMove, animationOn;
+}
 
-    public Element(int CoordX, int CoordY, Gride RefToObject)
-    {
-        this(CoordX, CoordY);
-        BoxInWorld = RefToObject;
-    }
-
-    public void setStatus(Type newStatus)
-    {
-        Val = newStatus;
-    }
-
-    public Type getStatus()
-    {
-        return Val;
-    }
-
-    public int getLineLenght(int index)
-    {
-        return Lines.get(index).size();
-    }
-
-    public int getCoordX()
-    {
-        return x;
-    }
-
-    public int getCoordY()
-    {
-        return y;
-    }
-
-    public void addOnLine(int index, Element vecin)
-    {
-        Lines.get(index).add(vecin);
-    }
-    public void addLineOnLine(int index, List<Element> newLine)
-    {
-        Lines.get(index).addAll(newLine);
-    }
-    public boolean won(int index)
-    {
-        return Lines.get(index).size() >= Brain.winReq;
-    }
-    public List<Element> getLine(int index)
-    {
-        return Lines.get(index);
-    }
-    public boolean containsOnLine(int line, Element second)
-    {
-        return Lines.get(line).contains(second);
-    }
-
-    public void sincLines()
-    {
-        for(int line=0;line<=3;line++)
-        {
-            int sizeOfLine = Lines.get(line).size();
-            //luam fiecare vecin 
-            for(int i = 1;i<sizeOfLine;i++)
-            {
-                //adaugam in lista vecinului, toate elemente ce lipsesc
-                for(int j = 0; j<sizeOfLine;j++)
-                {
-                    if(Lines.get(line).get(i).containsOnLine(line, Lines.get(line).get(j)) == false)
-                    {
-                        Lines.get(line).get(i).addOnLine(line, Lines.get(line).get(j));
-                    }
-                }
-            }
-        }
-    }
-};
-//clasa folosita pentru override la metoda get()
-class MyList<T> extends ArrayList<T>
-{
+// clasa folosita pentru override la metoda get()
+class MyList<T> extends ArrayList<T> {
     @Override
-    public T get(int index)
-    {
-        if(index < 0 || index > size()-1)
-        {
+    public T get(int index) {
+        if (index < 0 || index > size() - 1) {
             return null;
         }
         return super.get(index);
     }
 }
-public class Brain extends Actor
-{
+
+public class Brain extends Actor {
     static MyList<MyList<Element>> Elements = new MyList<>();
-    //     0 -> -
-    //     1 -> |
-    //     2 -> \
-    //     3 -> /
-    protected static Type CurrentPlayer;
-    public static int winReq;
-    public static int n=10; // numarul de locuri in careu
-    public static int mutari; //pt a putea indentifica egalitatea
-    //daca mutari == 100 => egalitate
-    int[] mapNeigh;
-    final int[][] offsetNeigh = {{-1,-1,-1,0,0,1,1,1},{-1,0,1,-1,1,-1,0,1}};
-    boolean ok;
-    public Brain()
-    {
-        winReq = 4;
-        ok = true;
-        mutari=0;
-        setImage(new GreenfootImage("placa mov.png"));
-        CurrentPlayer = Type.X;
-        createMap();
+    // 0 -> -
+    // 1 -> |
+    // 2 -> \
+    // 3 -> /
+
+    protected static Type CurrentPlayer; // tine minte care jucator urmeaza
+    public static int winReq; // numarul de elemente consecutive necesare castigarii
+    private static int size;
+    public static int mutari; // pt a putea indentifica egalitatea
+    // daca mutari == 100 => egalitate
+    protected static State gameState;
+    private float raport;
+
+    int[] mapNeigh;// mapeaza vecinii pe linii, in functie de oridinea lor
+    final int[][] offsetNeigh = { { -1, -1, -1, 0, 0, 1, 1, 1 }, { -1, 0, 1, -1, 1, -1, 0, 1 } }; // offsetul la care se
+                                                                                                  // afla vecinii
+
+    boolean ok;// semafor folosit pentru crearea unui eveniment begin play
+
+    public Brain() {
     }
 
-    private void createMap()
-    {
+    public Brain(int _size, int _winReq) {
+        init(_size, _winReq);
+        createMap();
+        // setImage(new GreenfootImage("placa mov.png"));
+    }
+
+    private void init(int _size, int _winReq) {
+        // initializeaza variabile
+        gameState = State.waitForMove;
+        size = _size;
+        winReq = _winReq;
+        ok = true;
+        mutari = 0;
+        CurrentPlayer = Type.X;
+        if (size > 10) {
+            raport = Element.resizeImgs(size);
+            Line.resizeImgs(raport);
+        }
+        else raport = -1;
+    }
+
+    private void createMap() {
+        // creaza mapa vecinilor
         mapNeigh = new int[8];
         mapNeigh[0] = 2;
         mapNeigh[1] = 1;
@@ -150,80 +78,145 @@ public class Brain extends Actor
         mapNeigh[7] = 2;
     }
 
-    public void creare_grid()
-    {
+    private int turnXinCoord(int x, int dim) {
+        // turning index into coordonates
+        int offset;
+        switch (dim) {
+            case 10:
+                offset = 1;
+                break;
+            case 9:
+                offset = 1;
+                break;
+            case 8:
+                offset = 2;
+                break;
+            case 7:
+                offset = 2;
+                break;
+            case 6:
+                offset = 3;
+                break;
+            case 5:
+                offset = 3;
+                break;
+            case 4:
+                offset = 4;
+                break;
+            case 3:
+                offset = 5;
+                break;
+            default:
+                offset = 1;
+                break;
+        }
+        if(raport == -1) return (x + offset) * 50 + 305;
+        return (int) ((x + offset) * (50 / raport) + 305 + 50 / raport / 2);
+    }
+
+    private int turnYinCoord(int y, int dim) {
+        // turning index into coordonates
+        int offset;
+        switch (dim) {
+            case 10:
+                offset = 1;
+                break;
+            case 9:
+                offset = 1;
+                break;
+            case 8:
+                offset = 2;
+                break;
+            case 7:
+                offset = 2;
+                break;
+            case 6:
+                offset = 3;
+                break;
+            case 5:
+                offset = 3;
+                break;
+            case 4:
+                offset = 4;
+                break;
+            case 3:
+                offset = 4;
+                break;
+            default:
+                offset = 1;
+                break;
+        }
+        if(raport == -1) return (y + offset) * 50 + 15;
+        return (int) ((y + offset) * (50 / raport) + 15 + 50 / raport / 2);
+    }
+
+    public void createGrid(int n) {
         Elements.clear();
         MyList<Element> TempList;
-        for(int i=0;i<n;i++)
-        {
+        for (int i = 0; i < n; i++) {
             TempList = new MyList<>();
-            for(int j=0;j<n;j++)
-            {
-                Gride obj = new Gride(i,j);
-                Element temp = new Element(i, j, obj);
+            for (int j = 0; j < n; j++) {
+                Element temp = new Element(i, j, this);
                 TempList.add(temp);
-                getWorld().addObject(obj,(i+1)*50+305,(j+1)*50+15);
+                getWorld().addObject(temp, turnXinCoord(i, n), turnYinCoord(j, n));
             }
             Elements.add(TempList);
         }
     }
 
-    protected Element clicked(Gride Clicked)
-    {
+    protected void clicked(Element Clicked) {
         boolean added;
-        
         MyList<Element> desiredLine;
         Element desiredNeigh;
 
-        Element justClicked = Elements.get(Clicked.getCoordX()).get(Clicked.getCoordY());
-        justClicked.setStatus(CurrentPlayer);
+        Clicked.setStatus(CurrentPlayer);
+
         // ne adaugam pe noi pe liniile componente
-        for(int i=0;i<=3;i++)
-            justClicked.addOnLine(i, justClicked);
-        //verificam vecinii si adaugam pe linie daca sunt deschisi 
-        //avem 8 vecini
-        for(int i=0;i<8;i++)
-        {
+        for (int i = 0; i <= 3; i++)
+            Clicked.addOnLine(i, Clicked);
+
+        // verificam vecinii si adaugam pe linie daca sunt deschisi
+        // avem 8 vecini
+        for (int i = 0; i < 8; i++) {
             added = false;
-            desiredLine = Elements.get(Clicked.getCoordX()+offsetNeigh[0][i]);
-            if(desiredLine != null)
-                desiredNeigh = desiredLine.get(Clicked.getCoordY()+offsetNeigh[1][i]);
-            else continue;
-            if(desiredNeigh != null) //avem vecin in careu
+            desiredLine = Elements.get(Clicked.getCoordX() + offsetNeigh[0][i]);
+            if (desiredLine != null)
+                desiredNeigh = desiredLine.get(Clicked.getCoordY() + offsetNeigh[1][i]);
+            else
+                continue;
+            if (desiredNeigh != null) // avem vecin in careu
             {
-                if(desiredNeigh.getStatus() == justClicked.getStatus())
-                {
-                    //trebuie sa stim in ce lista de linii il adaugam 
-                    justClicked.addLineOnLine(mapNeigh[i],desiredNeigh.getLine(mapNeigh[i]));
+                if (desiredNeigh.getStatus() == Clicked.getStatus()) {
+                    // trebuie sa stim in ce lista de linii il adaugam
+                    Clicked.addLineOnLine(mapNeigh[i], desiredNeigh.getLine(mapNeigh[i]));
                     added = true;
                 }
             }
-            if(added)
-            {
-                if(justClicked.won(mapNeigh[i]))
-                {
-                    System.out.println("Won"/);
-                    //add wining to dos
-                    
+            if (added) {
+                if (Clicked.won(mapNeigh[i])) {
+                    // adding the Lines
+                    for (Element iter : Clicked.getLine(mapNeigh[i])) {
+                        getWorld().addObject(new Line(mapNeigh[i]), turnXinCoord(iter.getCoordX(), size),
+                                turnYinCoord(iter.getCoordY(), size));
+                    }
                 }
             }
         }
-        //dupa ce am gasit toti vecinii, sincronizam listele lor, cu lista din elementul curent 
-        justClicked.sincLines();
-        return justClicked;
+        // dupa ce am gasit toti vecinii, sincronizam listele lor, cu lista din
+        // elementul curent
+        Clicked.sincLines();
     }
 
-    public void act() 
-    {
-        if(ok)
-        {
-            ok=false;
-            creare_grid();
+    public void act() {
+        if (ok) {
+            ok = false;
+            createGrid(size);
         }
-    } 
-
-    public static Type getNextPlayer()
-    {
-        return CurrentPlayer;
     }
 }
+/*
+ * "java.project.referencedLibraries": [
+ * "lib/doua stelute sus/*.jar",
+ * "c:\\path\\to\\jarfile\\commons-logging-1.1.1.jar"
+ * ]
+ */

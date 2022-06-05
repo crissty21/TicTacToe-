@@ -9,13 +9,14 @@ public class Lvl10X10 extends World
     {    
         //se plaseaza obiectele in functie de raportul din clasa variabile
         super(900,700, 1);  
+        
+        Element.initImgs();
+        Line.initImgs();
         addObject(new Biro(),48,554);
-        addObject(new Brain(),580,290);
-        addObject(new Finalitate(3),10,10);
+        addObject(new Brain(3,4),580,290);
         addObject(new Gun(),100,633);
         addObject(new Next(1),530,630);
         addObject(new Decor(1),90,644);
-        addObject(new Help(),860,660);
         setBackground(new GreenfootImage("background 2.png"));
     }
 }

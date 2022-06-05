@@ -1,11 +1,6 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.List;
-/**
- * Write a description of class Sound_ctrl here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
+
 public class Sound_ctrl extends Actor
 {
     boolean liber,once = true;
@@ -27,7 +22,7 @@ public class Sound_ctrl extends Actor
             if (mouse != null)
             {  
                 setImage(voiceOn);  
-                List objects = getWorld().getObjectsAt(mouse.getX(), mouse.getY(),Sound_ctrl.class);  
+                List<Sound_ctrl> objects = getWorld().getObjectsAt(mouse.getX(), mouse.getY(),Sound_ctrl.class);  
                 for (Object object : objects)  
                 {  
                     if (object == this)  
