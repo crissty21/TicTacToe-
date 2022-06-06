@@ -1,7 +1,6 @@
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.*;
 
-import javax.swing.text.html.HTMLDocument.HTMLReader.BlockAction;
 
 enum Type {
     notOpened, X, Y;

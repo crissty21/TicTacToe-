@@ -1,5 +1,3 @@
-import javax.transaction.xa.Xid;
-
 import greenfoot.*;
 
 public class ZoomElement extends Actor

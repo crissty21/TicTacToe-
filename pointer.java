@@ -1,5 +1,3 @@
-import java.util.*;
-
 import greenfoot.*;
 
 public class pointer extends Actor {
