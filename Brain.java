@@ -39,8 +39,9 @@ public class Brain extends Actor {
     private int[] mapNeigh;// mapeaza vecinii pe linii, in functie de oridinea lor
     private final int[][] offsetNeigh = { { -1, -1, -1, 0, 0, 1, 1, 1 }, { -1, 0, 1, -1, 1, -1, 0, 1 } }; // offsetul la
                                                                                                           // care se
-    private final int[][] offsetPointer = { { -1, -1, -1, 0, 0, 0, 1, 1, 1 }, { -1, 0, 1, -1, 0, 1, -1, 0, 1 } }; // offsetul
-                                                                                                                  // la
+    private final int[][] offsetPointer = {
+            { -2, -2, -2, -2, -2, -1, -1, -1, -1, -1,  0,  0, 0, 0, 0,  1,  1, 1, 1, 1,  2,  2, 2, 2, 2 },
+            { -2, -1,  0,  1,  2, -2, -1,  0,  1,  2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2 } }; 
 
     private List<pointer> crossair = new ArrayList<>();
 
@@ -70,6 +71,8 @@ public class Brain extends Actor {
         } else
             raport = -1;
         GreenfootImage img = new GreenfootImage(500, 500);
+        img.setColor(Color.BLACK);
+        img.fillRect(0, 0, 500, 500);
         setImage(img);
     }
 
@@ -175,11 +178,12 @@ public class Brain extends Actor {
         }
 
         pointer temp;
-        for (int i = 0; i <= 8; i++) {
+        for (int i = 0; i < 25; i++) {
             temp = new pointer(raport, i);
             getWorld().addObject(temp, 100, 100);
             crossair.add(temp);
         }
+        ZoomElement.scaleImgs();
     }
 
     protected void clicked(Element Clicked) {
@@ -246,7 +250,7 @@ public class Brain extends Actor {
             for (pointer iter : crossair) {
                 cordx = mouse.getX() + (int) (50 / raport * offsetPointer[0][index]);
                 cordy = mouse.getY() + (int) (50 / raport * offsetPointer[1][index]);
-                iter.setLocation(cordx , cordy);
+                iter.setLocation(cordx, cordy);
                 index++;
             }
         }

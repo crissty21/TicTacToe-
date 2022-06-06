@@ -1,3 +1,5 @@
+import javax.transaction.xa.Xid;
+
 import greenfoot.*;
 
 public class ZoomElement extends Actor
@@ -32,6 +34,16 @@ public class ZoomElement extends Actor
             case X: setImage(xImg);break;
             case Y: setImage(oImg);break;
             default: setImage(explozie[0]);
+        }
+        
+    }
+    public static void scaleImgs() {
+        int dim = 20;
+        xImg.scale(dim, dim);
+        oImg.scale(dim, dim);
+        for(GreenfootImage iter : explozie)
+        {
+            iter.scale(dim, dim);
         }
     }
     public void act() {
