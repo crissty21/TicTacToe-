@@ -2,10 +2,10 @@
 comment0.target=Brain
 comment1.params=
 comment1.target=Brain()
-comment2.params=_size\ _winReq
-comment2.target=Brain(int,\ int)
-comment3.params=_size\ _winReq
-comment3.target=void\ init(int,\ int)
+comment2.params=_size\ _winReq\ _refToGun
+comment2.target=Brain(int,\ int,\ Gun)
+comment3.params=_size\ _winReq\ _refToGun
+comment3.target=void\ init(int,\ int,\ Gun)
 comment4.params=
 comment4.target=void\ createMap()
 comment5.params=x\ dim

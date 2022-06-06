@@ -39,12 +39,16 @@ public class Brain extends Actor {
     private int[] mapNeigh;// mapeaza vecinii pe linii, in functie de oridinea lor
     private final int[][] offsetNeigh = { { -1, -1, -1, 0, 0, 1, 1, 1 }, { -1, 0, 1, -1, 1, -1, 0, 1 } }; // offsetul la
                                                                                                           // care se
-    // afla vecinii
+    private final int[][] offsetPointer = { { -1, -1, -1, 0, 0, 0, 1, 1, 1 }, { -1, 0, 1, -1, 0, 1, -1, 0, 1 } }; // offsetul
+                                                                                                                  // la
+
+    private List<pointer> crossair = new ArrayList<>();
 
     public Brain() {
     }
 
     public Brain(int _size, int _winReq, Gun _refToGun) {
+        this();
         init(_size, _winReq, _refToGun);
         createMap();
         // setImage(new GreenfootImage("placa mov.png"));
@@ -65,6 +69,8 @@ public class Brain extends Actor {
             Bullet.raport = raport;
         } else
             raport = -1;
+        GreenfootImage img = new GreenfootImage(500, 500);
+        setImage(img);
     }
 
     private void createMap() {
@@ -167,6 +173,13 @@ public class Brain extends Actor {
             }
             Elements.add(TempList);
         }
+
+        pointer temp;
+        for (int i = 0; i <= 8; i++) {
+            temp = new pointer(raport, i);
+            getWorld().addObject(temp, 100, 100);
+            crossair.add(temp);
+        }
     }
 
     protected void clicked(Element Clicked) {
@@ -187,8 +200,7 @@ public class Brain extends Actor {
             desiredLine = Elements.get(Clicked.getCoordX() + offsetNeigh[0][i]);
             if (desiredLine != null) {
                 desiredNeigh = desiredLine.get(Clicked.getCoordY() + offsetNeigh[1][i]);
-            } 
-            else {
+            } else {
                 continue;
             }
             if (desiredNeigh != null) // avem vecin in careu
@@ -220,6 +232,23 @@ public class Brain extends Actor {
             // begin play
             ok = false;
             createGrid(size);
+        }
+        if (size > 20) {
+            movePointer();
+        }
+    }
+
+    private void movePointer() {
+        if (Greenfoot.mouseMoved(null)) {
+            MouseInfo mouse = Greenfoot.getMouseInfo();
+            int index = 0;
+            int cordx, cordy;
+            for (pointer iter : crossair) {
+                cordx = mouse.getX() + (int) (50 / raport * offsetPointer[0][index]);
+                cordy = mouse.getY() + (int) (50 / raport * offsetPointer[1][index]);
+                iter.setLocation(cordx , cordy);
+                index++;
+            }
         }
     }
 }

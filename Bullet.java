@@ -1,6 +1,4 @@
 import java.util.List;
-
-
 import greenfoot.*;
 
 public class Bullet extends Actor {

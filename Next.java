@@ -10,7 +10,7 @@ public class Next extends Brain {
 
     GreenfootImage[] np = new GreenfootImage[5];
 
-    public Next(int z) {
+    public Next() {
         initImgs();
         start = start1 = false;
         ct = 0;
