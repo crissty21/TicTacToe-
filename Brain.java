@@ -1,6 +1,8 @@
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.*;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.BlockAction;
+
 enum Type {
     notOpened, X, Y;
 };
@@ -71,8 +73,6 @@ public class Brain extends Actor {
         } else
             raport = -1;
         GreenfootImage img = new GreenfootImage(500, 500);
-        img.setColor(Color.BLACK);
-        img.fillRect(0, 0, 500, 500);
         setImage(img);
     }
 
@@ -176,6 +176,7 @@ public class Brain extends Actor {
             }
             Elements.add(TempList);
         }
+        setLocation(turnXinCoord(n/2, n), turnYinCoord(n/2, n));
 
         pointer temp;
         for (int i = 0; i < 25; i++) {

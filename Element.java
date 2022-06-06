@@ -1,4 +1,6 @@
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+
+import java.awt.Color;
 import java.util.*;
 
 public class Element extends Actor {
@@ -156,9 +158,16 @@ public class Element extends Actor {
                 dim = 38;
         int newHeight, newWidth;
         float raport = (float) initialSpace / (float) ((float) maxSpace / (float) size);
-
+        
+        GreenfootImage temp = new GreenfootImage((int)(initialSpace/raport),(int)(initialSpace/raport));
         xImg.scale((int) (dim / raport), (int) (dim / raport));
         oImg.scale((int) (dim / raport), (int) (dim / raport));
+        temp.drawImage(xImg, 0, 0);
+        xImg = temp;
+        temp = new GreenfootImage((int)(initialSpace/raport),(int)(initialSpace/raport));
+        temp.drawImage(oImg, 0, 0);
+        oImg = temp;
+        int i=0;
         for (GreenfootImage iter : explozie) {
             newWidth = (int) (iter.getWidth() / raport);
             newHeight = (int) (iter.getHeight() / raport);
@@ -169,6 +178,10 @@ public class Element extends Actor {
                 newHeight = 1;
             }
             iter.scale(newWidth, newHeight);
+            temp = new GreenfootImage((int)(initialSpace/raport),(int)(initialSpace/raport));
+            //temp.fillRect(0, 0, (int)(initialSpace/raport),(int)(initialSpace/raport));
+            temp.drawImage(iter, 0, 0);
+            explozie[i++] = temp;
         }
         return raport;
     }

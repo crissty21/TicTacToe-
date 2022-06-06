@@ -33,6 +33,7 @@ public class pointer extends Actor {
             else if (isTouching(Brain.class) == false) {
                 if (added != null) {
                     getWorld().removeObject(added);
+                    oldInter = null;
                 }
             }
         }
