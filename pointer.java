@@ -24,8 +24,9 @@ public class pointer extends Actor {
                         getWorld().removeObject(added);
                     }
                     oldInter = inter;
-                    added = new ZoomElement(inter.getStatus());
+                    added = new ZoomElement(inter.getStatus(),inter);
                     getWorld().addObject(added, 70 + (30 * (index / 5)), 90 + 30 * (int) (index % 5));
+                    
                 }
             }
             else if (isTouching(Brain.class) == false) {

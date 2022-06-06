@@ -12,12 +12,12 @@ public class Lvl10X10 extends World
         Gun refToGun = new Gun();
         addObject(new Cocos(refToGun),48,554);
         addObject(refToGun,90,610);
-        addObject(new Brain(10,4,refToGun),580,290);
+        addObject(new Brain(21,4,refToGun),580,290);
         addObject(new Next(),530,630);
         addObject(new Decor(1),90,644);
         setBackground(new GreenfootImage("background 2.png"));
-        
-        setPaintOrder(Decor.class, Gun.class, Bullet.class, Element.class, pointer.class);
+        addObject(new Decor(2),130,150);
+        setPaintOrder( Decor.class, Gun.class, Bullet.class, Element.class, pointer.class);
     }
     
 }

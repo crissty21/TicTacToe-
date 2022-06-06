@@ -2,6 +2,8 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 import java.util.*;
 
+import org.ietf.jgss.Oid;
+
 public class Element extends Actor {
     private int x, y;
     private List<List<Element>> Lines; // lista cu linile din care face parte obiectul
@@ -37,6 +39,7 @@ public class Element extends Actor {
         selected = false;
         for (int i = 0; i < 4; i++)
             Lines.add(new ArrayList<Element>());
+        contor = 0;
     }
 
     public Element(int CoordX, int CoordY) {
@@ -106,6 +109,13 @@ public class Element extends Actor {
         return Lines.get(index).size() >= Brain.winReq;
     }
 
+    public int imgDisplayed()
+    {
+        GreenfootImage curentImage = getImage();
+        if(curentImage == xImg)return -1;
+        if(curentImage == oImg)return -2;
+        return contor/5;
+    }
     public void choose() // selecteaza x sau 0 pt caseta
     {
         refToBrain.clicked(this);
@@ -147,6 +157,7 @@ public class Element extends Actor {
             if (contor >= 60) {
                 selected = false;
                 choose();
+                contor = 0;
             }
         }
     }

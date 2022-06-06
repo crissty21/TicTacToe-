@@ -1,11 +1,11 @@
+import javax.print.event.PrintJobAdapter;
+
 import greenfoot.*;
 
-public class ZoomElement extends Actor
-{
-
-    private boolean startAnim;
-    private int contor;
+public class ZoomElement extends Actor {
+    private Element refToCopied;
     private Type tip;
+    private int curentImg;
     private static GreenfootImage xImg = new GreenfootImage("as.png");
     private static GreenfootImage oImg = new GreenfootImage("os.png");
     private static GreenfootImage[] explozie = {
@@ -23,38 +23,52 @@ public class ZoomElement extends Actor
             new GreenfootImage("box12.png"),
             new GreenfootImage("box13.png")
     };
-    public ZoomElement(Type _tip)
-    {
-        startAnim = false;
+
+    public ZoomElement(Type _tip, Element _refToCopied) {
+        refToCopied = _refToCopied;
         tip = _tip;
-        switch(tip)
-        {
-            case X: setImage(xImg);break;
-            case Y: setImage(oImg);break;
-            default: setImage(explozie[0]);
-        }
-        
+        choose();
+        curentImg = -5;
+
     }
+
+    private void choose() {
+        switch (tip) {
+            case X:
+                setImage(xImg);
+                break;
+            case Y:
+                setImage(oImg);
+                break;
+            default:
+                setImage(explozie[0]);
+        }
+    }
+
     public static void scaleImgs() {
         int dim = 20;
         xImg.scale(dim, dim);
         oImg.scale(dim, dim);
-        for(GreenfootImage iter : explozie)
-        {
+        for (GreenfootImage iter : explozie) {
             iter.scale(dim, dim);
         }
     }
+
     public void act() {
-        if (startAnim) {
-            contor++;
-            if (contor % 5 == 0) {
-                setImage(explozie[contor / 5]);
-            }
-            if (contor == 30) {
-                Next.start = true;
-            }
-            if (contor >= 60) {
-                startAnim = false;
+        int img = refToCopied.imgDisplayed();
+        if (img != curentImg) {
+            curentImg = img;
+            switch (img) {
+                case -1:
+                    setImage(xImg);
+                    break;
+                case -2:
+                    setImage(oImg);
+                    break;
+                case -3:
+                    break;
+                default:
+                    setImage(explozie[img]);
             }
         }
     }
