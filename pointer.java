@@ -2,7 +2,7 @@ import greenfoot.*;
 
 public class pointer extends Actor {
     public pointer(float _raport, int _index) {
-        int dim = 2;
+        int dim = 1;
         GreenfootImage image = new GreenfootImage(dim, dim);
         image.setColor(Color.BLACK);
         image.fillRect(0, 0, dim, dim);

@@ -2,8 +2,6 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 import java.util.*;
 
-import org.ietf.jgss.Oid;
-
 public class Element extends Actor {
     private int x, y;
     private List<List<Element>> Lines; // lista cu linile din care face parte obiectul

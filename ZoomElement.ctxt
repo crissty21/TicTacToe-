@@ -1,9 +1,11 @@
 #BlueJ class context
 comment0.target=ZoomElement
-comment1.params=_tip
-comment1.target=ZoomElement(Type)
+comment1.params=_tip\ _refToCopied
+comment1.target=ZoomElement(Type,\ Element)
 comment2.params=
-comment2.target=void\ scaleImgs()
+comment2.target=void\ choose()
 comment3.params=
-comment3.target=void\ act()
-numComments=4
+comment3.target=void\ scaleImgs()
+comment4.params=
+comment4.target=void\ act()
+numComments=5
