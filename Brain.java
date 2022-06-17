@@ -1,7 +1,6 @@
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.*;
 
-
 enum Type {
     notOpened, X, Y;
 };
@@ -34,6 +33,7 @@ public class Brain extends Actor {
     public static int mutari; // pt a putea indentifica egalitatea
     // daca mutari == 100 => egalitate
     protected static State gameState;
+    private int AiLevel;
     private float raport;
     private boolean ok;// semafor folosit pentru crearea unui eveniment begin play
     private Gun refToGun;
@@ -41,10 +41,11 @@ public class Brain extends Actor {
     private final int[][] offsetNeigh = { { -1, -1, -1, 0, 0, 1, 1, 1 }, { -1, 0, 1, -1, 1, -1, 0, 1 } }; // offsetul la
                                                                                                           // care se
     private final int[][] offsetPointer = {
-            { -2, -2, -2, -2, -2, -1, -1, -1, -1, -1,  0,  0, 0, 0, 0,  1,  1, 1, 1, 1,  2,  2, 2, 2, 2 },
-            { -2, -1,  0,  1,  2, -2, -1,  0,  1,  2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2 } }; 
+            { -2, -2, -2, -2, -2, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2 },
+            { -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2 } };
 
     private List<pointer> crossair = new ArrayList<>();
+    Type[][] AiMatrix;
 
     public Brain() {
     }
@@ -73,6 +74,9 @@ public class Brain extends Actor {
             raport = -1;
         GreenfootImage img = new GreenfootImage(500, 500);
         setImage(img);
+        AiLevel = 3;
+
+        AiMatrix = new Type[_size][_size];
     }
 
     private void createMap() {
@@ -175,7 +179,7 @@ public class Brain extends Actor {
             }
             Elements.add(TempList);
         }
-        setLocation(turnXinCoord(n/2, n), turnYinCoord(n/2, n));
+        setLocation(turnXinCoord(n / 2, n), turnYinCoord(n / 2, n));
 
         pointer temp;
         for (int i = 0; i < 25; i++) {
@@ -184,6 +188,83 @@ public class Brain extends Actor {
             crossair.add(temp);
         }
         ZoomElement.scaleImgs();
+    }
+
+    private void transcriptGrid() {
+        Type temp;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                temp = Elements.get(j).get(i).getStatus();
+                AiMatrix[i][j] = temp;
+            }
+        }
+    }
+
+    protected Element AiMove() {
+        int bestMove = Integer.MIN_VALUE;
+        int valoare;
+        Element nextMove = null;
+        // temp
+        transcriptGrid();
+        //
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (AiMatrix[i][j] == Type.notOpened) {
+                    // avem un copil valid
+                    AiMatrix[i][j] = Type.X;
+                    valoare = minimax(AiMatrix, AiLevel, Type.Y);
+                    if (valoare > bestMove) {
+                        bestMove = valoare;
+                        nextMove = Elements.get(i).get(j);
+                    }
+                    AiMatrix[i][j] = Type.notOpened;
+                }
+            }
+        }
+        return nextMove;
+    }
+
+    private int minimax(Type[][] grid, int depth, Type curentPlayer) {
+      
+        if (depth == 0) {
+            // check static evaluation
+            return 0;
+        } else {
+            int bestMove;
+            int valoare;
+            // adaugam in mod normal**
+            // terminal condition if won
+            
+            if (curentPlayer == Type.X) {
+                bestMove = Integer.MIN_VALUE;
+                for (int i = 0; i < size; i++) {
+                    for (int j = 0; j < size; j++) {
+                        if (grid[i][j] == Type.notOpened) {
+                            // avem un copil valid
+                            grid[i][j] = curentPlayer;
+                            valoare = minimax(grid, depth - 1, Type.Y);
+                            bestMove = Integer.max(bestMove, valoare);
+                            grid[i][j] = Type.notOpened;
+                        }
+                    }
+                }
+                return bestMove;
+            } else {
+                bestMove = Integer.MAX_VALUE;
+                for (int i = 0; i < size; i++) {
+                    for (int j = 0; j < size; j++) {
+                        if (grid[i][j] == Type.notOpened) {
+                            // avem un copil valid
+                            grid[i][j] = curentPlayer;
+                            valoare = minimax(grid, depth - 1, Type.X);
+                            bestMove = Integer.min(bestMove, valoare);
+                            grid[i][j] = Type.notOpened;
+                        }
+                    }
+                }
+                return bestMove;
+            }
+        }
     }
 
     protected void clicked(Element Clicked) {
@@ -231,6 +312,9 @@ public class Brain extends Actor {
         Clicked.sincLines();
     }
 
+    private Element temp;
+    private int ct = 0;
+
     public void act() {
         if (ok) {
             // begin play
@@ -239,6 +323,11 @@ public class Brain extends Actor {
         }
         if (size > 20) {
             movePointer();
+        }
+        ct++;
+        if (ct > 10 && CurrentPlayer == Type.X) {
+            CurrentPlayer = Type.Y;
+            temp = AiMove();
         }
     }
 

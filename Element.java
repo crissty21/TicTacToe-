@@ -60,6 +60,8 @@ public class Element extends Actor {
         return Val;
     }
 
+   
+   
     public int getLineLenght(int index) {
         return Lines.get(index).size();
     }
@@ -72,22 +74,27 @@ public class Element extends Actor {
         return y;
     }
 
+   
     public void addOnLine(int index, Element vecin) {
         Lines.get(index).add(vecin);
     }
 
+    
     public void addLineOnLine(int index, List<Element> newLine) {
         Lines.get(index).addAll(newLine);
     }
 
+    
     public List<Element> getLine(int index) {
         return Lines.get(index);
     }
 
+  
     public boolean containsOnLine(int line, Element second) {
         return Lines.get(line).contains(second);
     }
 
+   
     public void sincLines() {
         for (int line = 0; line <= 3; line++) {
             int sizeOfLine = Lines.get(line).size();
@@ -107,13 +114,15 @@ public class Element extends Actor {
         return Lines.get(index).size() >= Brain.winReq;
     }
 
-    public int imgDisplayed()
-    {
+    public int imgDisplayed() {
         GreenfootImage curentImage = getImage();
-        if(curentImage == xImg)return -1;
-        if(curentImage == oImg)return -2;
-        return contor/5;
+        if (curentImage == xImg)
+            return -1;
+        if (curentImage == oImg)
+            return -2;
+        return contor / 5;
     }
+
     public void choose() // selecteaza x sau 0 pt caseta
     {
         refToBrain.clicked(this);
@@ -129,7 +138,7 @@ public class Element extends Actor {
     }
 
     public void act() {
-        if (Greenfoot.mouseClicked(this)) {
+        if (Greenfoot.mouseClicked(this) && Brain.CurrentPlayer == Type.Y) {
             // cooldown
             if (Brain.gameState == State.waitForMove) {
                 if (Val == Type.notOpened) // verifica daca nu a fost deschisa cutia
@@ -166,16 +175,16 @@ public class Element extends Actor {
                 dim = 38;
         int newHeight, newWidth;
         float raport = (float) initialSpace / (float) ((float) maxSpace / (float) size);
-        
-        GreenfootImage temp = new GreenfootImage((int)(initialSpace/raport),(int)(initialSpace/raport));
+
+        GreenfootImage temp = new GreenfootImage((int) (initialSpace / raport), (int) (initialSpace / raport));
         xImg.scale((int) (dim / raport), (int) (dim / raport));
         oImg.scale((int) (dim / raport), (int) (dim / raport));
         temp.drawImage(xImg, 0, 0);
         xImg = temp;
-        temp = new GreenfootImage((int)(initialSpace/raport),(int)(initialSpace/raport));
+        temp = new GreenfootImage((int) (initialSpace / raport), (int) (initialSpace / raport));
         temp.drawImage(oImg, 0, 0);
         oImg = temp;
-        int i=0;
+        int i = 0;
         for (GreenfootImage iter : explozie) {
             newWidth = (int) (iter.getWidth() / raport);
             newHeight = (int) (iter.getHeight() / raport);
@@ -186,8 +195,8 @@ public class Element extends Actor {
                 newHeight = 1;
             }
             iter.scale(newWidth, newHeight);
-            temp = new GreenfootImage((int)(initialSpace/raport),(int)(initialSpace/raport));
-            //temp.fillRect(0, 0, (int)(initialSpace/raport),(int)(initialSpace/raport));
+            temp = new GreenfootImage((int) (initialSpace / raport), (int) (initialSpace / raport));
+            // temp.fillRect(0, 0, (int)(initialSpace/raport),(int)(initialSpace/raport));
             temp.drawImage(iter, 0, 0);
             explozie[i++] = temp;
         }

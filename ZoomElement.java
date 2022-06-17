@@ -1,5 +1,3 @@
-import javax.print.event.PrintJobAdapter;
-
 import greenfoot.*;
 
 public class ZoomElement extends Actor {
