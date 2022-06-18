@@ -210,70 +210,36 @@ public class Brain extends Actor {
         }
     }
 
-    protected Element AiMove() {
-        int bestMove = Integer.MIN_VALUE;
-        int valoare;
-        Element nextMove = null;
-        // temp
-        transcriptGrid();
-        // parcurgere in spirala incepand cu elementul de la coordonatele rowIndex
-        // colIndex
-
+    private coordonates getFirstValidNeighInSpiral(Type[][] matrix, coordonates startPosition, int noNeighb) {
+        int rowIndex = startPosition.x;
+        int colIndex = startPosition.y;
+        if (matrix[rowIndex][colIndex] == Type.notOpened) {
+            return startPosition;
+        }
         final int UP = 0;
         final int LEFT = 1;
         final int RIGHT = 2;
         final int DOWN = 3;
 
-        // The first element of the output(the spiral) is always the middle element of
-        // the input matrix
-        int rowIndex = 1;
-        int colIndex = 2;
-
-        if (AiMatrix[rowIndex][colIndex] == Type.notOpened) {
-            // avem un copil valid
-            AiMatrix[rowIndex][colIndex] = Type.X;
-            valoare = minimax(AiMatrix, AiLevel, Type.Y, new coordonates(rowIndex, colIndex), Integer.MIN_VALUE,
-                    Integer.MAX_VALUE);
-            // System.out.println(valoare);
-            if (valoare > bestMove) {
-                bestMove = valoare;
-                nextMove = Elements.get(rowIndex).get(colIndex);
-            }
-            AiMatrix[rowIndex][colIndex] = Type.notOpened;
-        }
-
-        // The first direction is always to the left
+        // incepem spre stanga
         int nextDirection = LEFT;
-
-        // This is a counter to loop through all the elements of the input matrix only
-        // one time
         int i = 0;
         // nevoie de o variabila care se incrementeaza tot la 2 iteratii
         int movesIter = 1, movesGlobal = 1;
         boolean change = false;
-        while (i < size * size - 1) {
-            System.out.println(rowIndex + " " + colIndex);
-            // Check which direction to go (left, down, right or up)
-            switch (nextDirection) {
 
+        while (i < size * size - 1) {
+            // check which direction to go (left, down, right or up)
+            switch (nextDirection) {
                 case LEFT:
-                    // From the input matrix, take the number at the left of the current
-                    // position(which is the middle of the input matrix) and add it to the spiral
                     colIndex -= 1;
                     if (colIndex >= 0 && rowIndex >= 0 && colIndex < size) {
                         i++;
                         if (AiMatrix[rowIndex][colIndex] == Type.notOpened) {
                             // avem un copil valid
-                            AiMatrix[rowIndex][colIndex] = Type.X;
-                            valoare = minimax(AiMatrix, AiLevel, Type.Y, new coordonates(rowIndex, colIndex),
-                                    Integer.MIN_VALUE,
-                                    Integer.MAX_VALUE);
-                            // System.out.println(valoare);
-                            if (valoare > bestMove) {
-                                bestMove = valoare;
-                                nextMove = Elements.get(rowIndex).get(colIndex);
-                            }
-                            AiMatrix[rowIndex][colIndex] = Type.notOpened;
+                            noNeighb--;
+                            if (noNeighb == 0)
+                                return new coordonates(rowIndex, colIndex);
                         }
                     }
                     movesIter--;
@@ -295,17 +261,9 @@ public class Brain extends Actor {
                     if (rowIndex < size && colIndex >= 0 && rowIndex >= 0) {
                         i++;
                         if (AiMatrix[rowIndex][colIndex] == Type.notOpened) {
-                            // avem un copil valid
-                            AiMatrix[rowIndex][colIndex] = Type.X;
-                            valoare = minimax(AiMatrix, AiLevel, Type.Y, new coordonates(rowIndex, colIndex),
-                                    Integer.MIN_VALUE,
-                                    Integer.MAX_VALUE);
-                            // System.out.println(valoare);
-                            if (valoare > bestMove) {
-                                bestMove = valoare;
-                                nextMove = Elements.get(rowIndex).get(colIndex);
-                            }
-                            AiMatrix[rowIndex][colIndex] = Type.notOpened;
+                            noNeighb--;
+                            if (noNeighb == 0)
+                                return new coordonates(rowIndex, colIndex);
                         }
                     }
                     movesIter--;
@@ -326,17 +284,9 @@ public class Brain extends Actor {
                     if (colIndex < size && rowIndex < size && colIndex >= 0) {
                         i++;
                         if (AiMatrix[rowIndex][colIndex] == Type.notOpened) {
-                            // avem un copil valid
-                            AiMatrix[rowIndex][colIndex] = Type.X;
-                            valoare = minimax(AiMatrix, AiLevel, Type.Y, new coordonates(rowIndex, colIndex),
-                                    Integer.MIN_VALUE,
-                                    Integer.MAX_VALUE);
-                            // System.out.println(valoare);
-                            if (valoare > bestMove) {
-                                bestMove = valoare;
-                                nextMove = Elements.get(rowIndex).get(colIndex);
-                            }
-                            AiMatrix[rowIndex][colIndex] = Type.notOpened;
+                            noNeighb--;
+                            if (noNeighb == 0)
+                                return new coordonates(rowIndex, colIndex);
                         }
                     }
                     movesIter--;
@@ -357,17 +307,9 @@ public class Brain extends Actor {
                     if (rowIndex >= 0 && colIndex < size && rowIndex < size) {
                         i++;
                         if (AiMatrix[rowIndex][colIndex] == Type.notOpened) {
-                            // avem un copil valid
-                            AiMatrix[rowIndex][colIndex] = Type.X;
-                            valoare = minimax(AiMatrix, AiLevel, Type.Y, new coordonates(rowIndex, colIndex),
-                                    Integer.MIN_VALUE,
-                                    Integer.MAX_VALUE);
-                            // System.out.println(valoare);
-                            if (valoare > bestMove) {
-                                bestMove = valoare;
-                                nextMove = Elements.get(rowIndex).get(colIndex);
-                            }
-                            AiMatrix[rowIndex][colIndex] = Type.notOpened;
+                            noNeighb--;
+                            if (noNeighb == 0)
+                                return new coordonates(rowIndex, colIndex);
                         }
                     }
                     movesIter--;
@@ -384,25 +326,12 @@ public class Brain extends Actor {
                     break;
             }
         }
-        // needs to get the last element
         switch (nextDirection) {
             case LEFT:
-                // From the input matrix, take the number at the left of the current
-                // position(which is the middle of the input matrix) and add it to the spiral
                 rowIndex = 0;
                 colIndex = size - 1;
                 if (AiMatrix[rowIndex][colIndex] == Type.notOpened) {
-                    // avem un copil valid
-                    AiMatrix[rowIndex][colIndex] = Type.X;
-                    valoare = minimax(AiMatrix, AiLevel, Type.Y, new coordonates(rowIndex, colIndex),
-                            Integer.MIN_VALUE,
-                            Integer.MAX_VALUE);
-                    // System.out.println(valoare);
-                    if (valoare > bestMove) {
-                        bestMove = valoare;
-                        nextMove = Elements.get(rowIndex).get(colIndex);
-                    }
-                    AiMatrix[rowIndex][colIndex] = Type.notOpened;
+                    return new coordonates(rowIndex, colIndex);
                 }
                 break;
 
@@ -411,17 +340,7 @@ public class Brain extends Actor {
                 rowIndex = 0;
 
                 if (AiMatrix[rowIndex][colIndex] == Type.notOpened) {
-                    // avem un copil valid
-                    AiMatrix[rowIndex][colIndex] = Type.X;
-                    valoare = minimax(AiMatrix, AiLevel, Type.Y, new coordonates(rowIndex, colIndex),
-                            Integer.MIN_VALUE,
-                            Integer.MAX_VALUE);
-                    // System.out.println(valoare);
-                    if (valoare > bestMove) {
-                        bestMove = valoare;
-                        nextMove = Elements.get(rowIndex).get(colIndex);
-                    }
-                    AiMatrix[rowIndex][colIndex] = Type.notOpened;
+                    return new coordonates(rowIndex, colIndex);
                 }
                 break;
 
@@ -429,17 +348,7 @@ public class Brain extends Actor {
                 rowIndex = size - 1;
                 colIndex = 0;
                 if (AiMatrix[rowIndex][colIndex] == Type.notOpened) {
-                    // avem un copil valid
-                    AiMatrix[rowIndex][colIndex] = Type.X;
-                    valoare = minimax(AiMatrix, AiLevel, Type.Y, new coordonates(rowIndex, colIndex),
-                            Integer.MIN_VALUE,
-                            Integer.MAX_VALUE);
-                    // System.out.println(valoare);
-                    if (valoare > bestMove) {
-                        bestMove = valoare;
-                        nextMove = Elements.get(rowIndex).get(colIndex);
-                    }
-                    AiMatrix[rowIndex][colIndex] = Type.notOpened;
+                    return new coordonates(rowIndex, colIndex);
                 }
                 break;
 
@@ -447,21 +356,39 @@ public class Brain extends Actor {
                 colIndex = size - 1;
                 rowIndex = size - 1;
                 if (AiMatrix[rowIndex][colIndex] == Type.notOpened) {
-                    // avem un copil valid
-                    AiMatrix[rowIndex][colIndex] = Type.X;
-                    valoare = minimax(AiMatrix, AiLevel, Type.Y, new coordonates(rowIndex, colIndex),
-                            Integer.MIN_VALUE,
-                            Integer.MAX_VALUE);
-                    // System.out.println(valoare);
-                    if (valoare > bestMove) {
-                        bestMove = valoare;
-                        nextMove = Elements.get(rowIndex).get(colIndex);
-                    }
-                    AiMatrix[rowIndex][colIndex] = Type.notOpened;
+                    return new coordonates(rowIndex, colIndex);
                 }
-
                 break;
         }
+        return new coordonates(0, 0);
+    }
+
+    protected Element AiMove() {
+        int bestMove = Integer.MIN_VALUE;
+        int valoare;
+        Element nextMove = null;
+        // temp
+        transcriptGrid();
+
+        int rowIndex = 1;
+        int colIndex = 2;
+
+        // preia primul vecini
+        coordonates nextNeigh;
+
+        for (int i = 1; i <= size * size; i++) {
+            nextNeigh = getFirstValidNeighInSpiral(AiMatrix, new coordonates(rowIndex, colIndex), i);
+
+            AiMatrix[nextNeigh.x][nextNeigh.y] = Type.X;
+            valoare = minimax(AiMatrix, AiLevel, Type.Y, nextNeigh, Integer.MIN_VALUE,
+                    Integer.MAX_VALUE);
+            if (valoare > bestMove) {
+                bestMove = valoare;
+                nextMove = Elements.get(nextNeigh.x).get(nextNeigh.y);
+            }
+            AiMatrix[nextNeigh.x][nextNeigh.y] = Type.notOpened;
+        }
+
         return nextMove;
     }
 
@@ -564,7 +491,9 @@ public class Brain extends Actor {
             int valoare;
             // adaugam in mod normal**
             // terminal condition if won
+            coordonates nextNeigh;
 
+            
             if (curentPlayer == Type.X) {
                 bestMove = Integer.MIN_VALUE;
                 for (int i = 0; i < size; i++) {
