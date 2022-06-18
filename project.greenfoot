@@ -202,5 +202,6 @@ target9.x=0
 target9.y=0
 version=3.0.0
 width=1936
+world.lastInstantiated=Lvl10X10
 xPosition=0
 yPosition=0
