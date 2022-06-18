@@ -1,7 +1,6 @@
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.*;
 
-
 enum Type {
     notOpened, X, Y;
 };
@@ -223,8 +222,8 @@ public class Brain extends Actor {
                 if (AiMatrix[i][j] == Type.notOpened) {
                     // avem un copil valid
                     AiMatrix[i][j] = Type.X;
-                    valoare = minimax(AiMatrix, AiLevel, Type.Y, new coordonates(i, j));
-                    // System.out.println(i + " " + j + " " + valoare);
+                    valoare = minimax(AiMatrix, AiLevel, Type.Y, new coordonates(i, j), Integer.MIN_VALUE,
+                            Integer.MAX_VALUE);
                     if (valoare > bestMove) {
                         bestMove = valoare;
                         nextMove = Elements.get(i).get(j);
@@ -319,14 +318,9 @@ public class Brain extends Actor {
             return Type.X;
     }
 
-    private int minimax(Type[][] grid, int depth, Type curentPlayer, coordonates lastAdded) {
+    private int minimax(Type[][] grid, int depth, Type curentPlayer, coordonates lastAdded, int alpha, int beta) {
 
         if (checkWon(grid, inversType(curentPlayer), lastAdded)) {
-            for (int i = 0; i < size; i++) {
-                System.out.println(
-                        grid[i][0] + " " + grid[i][1] + " " + grid[i][2] + " " + grid[i][3] + " " + grid[i][4]);
-            }
-            System.out.println("\n");
             if (curentPlayer == Type.X)
                 return -1;
             else
@@ -350,9 +344,14 @@ public class Brain extends Actor {
                         if (grid[i][j] == Type.notOpened) {
                             // avem un copil valid
                             grid[i][j] = curentPlayer;
-                            valoare = minimax(grid, depth - 1, Type.Y, new coordonates(i, j));
+                            valoare = minimax(grid, depth - 1, Type.Y, new coordonates(i, j), alpha, beta);
                             bestMove = Integer.max(bestMove, valoare);
+                            alpha = Integer.max(alpha, valoare);
                             grid[i][j] = Type.notOpened;
+                            if (beta <= alpha) {
+                                i = size;
+                                break;
+                            }
                         }
                     }
                 }
@@ -365,9 +364,14 @@ public class Brain extends Actor {
                         if (grid[i][j] == Type.notOpened) {
                             // avem un copil valid
                             grid[i][j] = curentPlayer;
-                            valoare = minimax(grid, depth - 1, Type.X, new coordonates(i, j));
+                            valoare = minimax(grid, depth - 1, Type.X, new coordonates(i, j), alpha, beta);
                             bestMove = Integer.min(bestMove, valoare);
+                            beta = Integer.min(beta, valoare);
                             grid[i][j] = Type.notOpened;
+                            if (beta <= alpha) {
+                                i = size;
+                                break;
+                            }
                         }
                     }
                 }
