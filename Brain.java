@@ -84,7 +84,7 @@ public class Brain extends Actor {
             raport = -1;
         GreenfootImage img = new GreenfootImage(500, 500);
         setImage(img);
-        AiLevel = 5;
+        AiLevel = 3;
 
         AiMatrix = new Type[_size][_size];
     }
@@ -211,6 +211,7 @@ public class Brain extends Actor {
     }
 
     private coordonates getFirstValidNeighInSpiral(Type[][] matrix, coordonates startPosition, int noNeighb) {
+        //returneaza primul vecin valid pornind intro spirala de la un set de coordonate
         int rowIndex = startPosition.x;
         int colIndex = startPosition.y;
         if (matrix[rowIndex][colIndex] == Type.notOpened) {
@@ -493,43 +494,35 @@ public class Brain extends Actor {
             // terminal condition if won
             coordonates nextNeigh;
 
-            
             if (curentPlayer == Type.X) {
                 bestMove = Integer.MIN_VALUE;
-                for (int i = 0; i < size; i++) {
-                    for (int j = 0; j < size; j++) {
-                        if (grid[i][j] == Type.notOpened) {
-                            // avem un copil valid
-                            grid[i][j] = curentPlayer;
-                            valoare = minimax(grid, depth - 1, Type.Y, new coordonates(i, j), alpha, beta);
-                            bestMove = Integer.max(bestMove, valoare);
-                            alpha = Integer.max(alpha, valoare);
-                            grid[i][j] = Type.notOpened;
-                            if (beta <= alpha) {
-                                i = size;
-                                break;
-                            }
-                        }
+                for (int i = 1; i <= size * size; i++) {
+                    nextNeigh = getFirstValidNeighInSpiral(grid, lastAdded, i);
+
+                    grid[nextNeigh.x][nextNeigh.y] = curentPlayer;
+                    valoare = minimax(grid, depth - 1, Type.Y, nextNeigh, alpha, beta);
+                    bestMove = Integer.max(bestMove, valoare);
+                    alpha = Integer.max(alpha, valoare);
+                    grid[nextNeigh.x][nextNeigh.y] = Type.notOpened;
+                    if (beta <= alpha) {
+                        i = size;
+                        break;
                     }
                 }
-
                 return bestMove;
             } else {
                 bestMove = Integer.MAX_VALUE;
-                for (int i = 0; i < size; i++) {
-                    for (int j = 0; j < size; j++) {
-                        if (grid[i][j] == Type.notOpened) {
-                            // avem un copil valid
-                            grid[i][j] = curentPlayer;
-                            valoare = minimax(grid, depth - 1, Type.X, new coordonates(i, j), alpha, beta);
-                            bestMove = Integer.min(bestMove, valoare);
-                            beta = Integer.min(beta, valoare);
-                            grid[i][j] = Type.notOpened;
-                            if (beta <= alpha) {
-                                i = size;
-                                break;
-                            }
-                        }
+                for (int i = 1; i <= size * size; i++) {
+                    nextNeigh = getFirstValidNeighInSpiral(grid, lastAdded, i);
+
+                    grid[nextNeigh.x][nextNeigh.y] = curentPlayer;
+                    valoare = minimax(grid, depth - 1, Type.X, nextNeigh, alpha, beta);
+                    bestMove = Integer.min(bestMove, valoare);
+                    beta = Integer.min(beta, valoare);
+                    grid[nextNeigh.x][nextNeigh.y] = Type.notOpened;
+                    if (beta <= alpha) {
+                        i = size;
+                        break;
                     }
                 }
                 return bestMove;
