@@ -1,6 +1,7 @@
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.*;
 
+
 enum Type {
     notOpened, X, Y;
 };
@@ -17,6 +18,16 @@ class MyList<T> extends ArrayList<T> {
             return null;
         }
         return super.get(index);
+    }
+}
+
+class coordonates {
+    public int x;
+    public int y;
+
+    public coordonates(int _x, int _y) {
+        x = _x;
+        y = _y;
     }
 }
 
@@ -212,7 +223,8 @@ public class Brain extends Actor {
                 if (AiMatrix[i][j] == Type.notOpened) {
                     // avem un copil valid
                     AiMatrix[i][j] = Type.X;
-                    valoare = minimax(AiMatrix, AiLevel, Type.Y);
+                    valoare = minimax(AiMatrix, AiLevel, Type.Y, new coordonates(i, j));
+                    // System.out.println(i + " " + j + " " + valoare);
                     if (valoare > bestMove) {
                         bestMove = valoare;
                         nextMove = Elements.get(i).get(j);
@@ -224,17 +236,113 @@ public class Brain extends Actor {
         return nextMove;
     }
 
-    private int minimax(Type[][] grid, int depth, Type curentPlayer) {
-      
-        if (depth == 0) {
+    private boolean checkWon(Type[][] grid, Type curentPlayer, coordonates lastAdded) {
+        int lineLenght;
+        int auxi, auxj;
+        // check up + down
+        auxi = lastAdded.x - 1;
+        auxj = lastAdded.y;
+        lineLenght = 0;
+        while (auxi >= 0 && grid[auxi][auxj] == curentPlayer) {
+            lineLenght++;
+            auxi--;
+        }
+        auxi = lastAdded.x;
+        while (auxi < size && grid[auxi][auxj] == curentPlayer) {
+            lineLenght++;
+            auxi++;
+        }
+        if (lineLenght >= winReq) {
+            return true;
+        }
+        // check left + right
+        auxi = lastAdded.x;
+        auxj = lastAdded.y - 1;
+        lineLenght = 0;
+        while (auxj >= 0 && grid[auxi][auxj] == curentPlayer) {
+            lineLenght++;
+            auxj--;
+        }
+        auxj = lastAdded.y;
+        while (auxj < size && grid[auxi][auxj] == curentPlayer) {
+            lineLenght++;
+            auxj++;
+        }
+        if (lineLenght >= winReq) {
+            return true;
+        }
+        // check first diagonal
+        auxi = lastAdded.x - 1;
+        auxj = lastAdded.y - 1;
+        lineLenght = 0;
+        while (auxi >= 0 && auxj >= 0 && grid[auxi][auxj] == curentPlayer) {
+            lineLenght++;
+            auxi--;
+            auxj--;
+        }
+        auxi = lastAdded.x;
+        auxj = lastAdded.y;
+        while (auxi < size && auxj < size && grid[auxi][auxj] == curentPlayer) {
+            lineLenght++;
+            auxi++;
+            auxj++;
+        }
+        if (lineLenght >= winReq) {
+            return true;
+        }
+        // check second diagonal
+        auxi = lastAdded.x - 1;
+        auxj = lastAdded.y + 1;
+        lineLenght = 0;
+        while (auxi >= 0 && auxj < size && grid[auxi][auxj] == curentPlayer) {
+            lineLenght++;
+            auxi--;
+            auxj++;
+        }
+        auxi = lastAdded.x;
+        auxj = lastAdded.y;
+        while (auxi < size && auxj >= 0 && grid[auxi][auxj] == curentPlayer) {
+            lineLenght++;
+            auxi++;
+            auxj--;
+        }
+        if (lineLenght >= winReq) {
+            return true;
+        }
+        return false;
+    }
+
+    private Type inversType(Type oldOne) {
+        if (oldOne == Type.X)
+            return Type.Y;
+        else
+            return Type.X;
+    }
+
+    private int minimax(Type[][] grid, int depth, Type curentPlayer, coordonates lastAdded) {
+
+        if (checkWon(grid, inversType(curentPlayer), lastAdded)) {
+            for (int i = 0; i < size; i++) {
+                System.out.println(
+                        grid[i][0] + " " + grid[i][1] + " " + grid[i][2] + " " + grid[i][3] + " " + grid[i][4]);
+            }
+            System.out.println("\n");
+            if (curentPlayer == Type.X)
+                return -1;
+            else
+                return 1;
+        } else if (depth == 0) {
             // check static evaluation
-            return 0;
+            if (curentPlayer == Type.X)
+                return 2;
+            else
+                return -2;
         } else {
             int bestMove;
             int valoare;
             // adaugam in mod normal**
             // terminal condition if won
-            
+
             if (curentPlayer == Type.X) {
                 bestMove = Integer.MIN_VALUE;
                 for (int i = 0; i < size; i++) {
@@ -242,12 +350,13 @@ public class Brain extends Actor {
                         if (grid[i][j] == Type.notOpened) {
                             // avem un copil valid
                             grid[i][j] = curentPlayer;
-                            valoare = minimax(grid, depth - 1, Type.Y);
+                            valoare = minimax(grid, depth - 1, Type.Y, new coordonates(i, j));
                             bestMove = Integer.max(bestMove, valoare);
                             grid[i][j] = Type.notOpened;
                         }
                     }
                 }
+
                 return bestMove;
             } else {
                 bestMove = Integer.MAX_VALUE;
@@ -256,7 +365,7 @@ public class Brain extends Actor {
                         if (grid[i][j] == Type.notOpened) {
                             // avem un copil valid
                             grid[i][j] = curentPlayer;
-                            valoare = minimax(grid, depth - 1, Type.X);
+                            valoare = minimax(grid, depth - 1, Type.X, new coordonates(i, j));
                             bestMove = Integer.min(bestMove, valoare);
                             grid[i][j] = Type.notOpened;
                         }
@@ -313,7 +422,6 @@ public class Brain extends Actor {
     }
 
     private Element temp;
-    private int ct = 0;
 
     public void act() {
         if (ok) {
@@ -324,8 +432,7 @@ public class Brain extends Actor {
         if (size > 20) {
             movePointer();
         }
-        ct++;
-        if (ct > 10 && CurrentPlayer == Type.X) {
+        if (CurrentPlayer == Type.X) {
             CurrentPlayer = Type.Y;
             temp = AiMove();
         }
