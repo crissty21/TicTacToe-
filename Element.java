@@ -10,7 +10,7 @@ public class Element extends Actor {
     private boolean selected;
     private int contor;
     private Gun refToGun;
-
+    private final int[][] offsetNeigh = { { -1, -1, -1, 0, 0, 1, 1, 1 }, { -1, 0, 1, -1, 1, -1, 0, 1 } }; // offsetul la
     private static GreenfootImage xImg = new GreenfootImage("as.png");
     private static GreenfootImage oImg = new GreenfootImage("os.png");
     private static GreenfootImage[] explozie = {
@@ -60,11 +60,10 @@ public class Element extends Actor {
         return Val;
     }
 
-    public coordonates getCoordonates()
-    {
+    public coordonates getCoordonates() {
         return new coordonates(y, x);
     }
-   
+
     public int getLineLenght(int index) {
         return Lines.get(index).size();
     }
@@ -77,27 +76,49 @@ public class Element extends Actor {
         return y;
     }
 
-   
     public void addOnLine(int index, Element vecin) {
         Lines.get(index).add(vecin);
     }
 
-    
     public void addLineOnLine(int index, List<Element> newLine) {
         Lines.get(index).addAll(newLine);
     }
 
-    
     public List<Element> getLine(int index) {
         return Lines.get(index);
     }
 
-  
     public boolean containsOnLine(int line, Element second) {
         return Lines.get(line).contains(second);
     }
 
-   
+    public boolean addNeigh(int i) {
+        boolean added;
+        MyList<Element> desiredLine;
+        Element desiredNeigh = null;
+        added = false;
+        desiredLine = Brain.Elements.get(x + offsetNeigh[0][i]);
+        if (desiredLine != null) {
+            desiredNeigh = desiredLine.get(y + offsetNeigh[1][i]);
+        } else {
+            return added;
+        }
+        if (desiredNeigh != null) // avem vecin in careu
+        {
+            if (desiredNeigh.getStatus() == Val) {
+                // trebuie sa stim in ce lista de linii il adaugam
+                addLineOnLine(Brain.mapNeigh[i], desiredNeigh.getLine(Brain.mapNeigh[i]));
+                added = true;
+            }
+        }
+        return added;
+    }
+
+    public void selfAdd() {
+        for (int i = 0; i <= 3; i++)
+            addOnLine(i, this);
+    }
+
     public void sincLines() {
         for (int line = 0; line <= 3; line++) {
             int sizeOfLine = Lines.get(line).size();
@@ -139,6 +160,7 @@ public class Element extends Actor {
         Next.start1 = true;
         Brain.gameState = State.waitForMove;
     }
+
     public void openIt() {
         refToGun.lookAtMe(this);
         Cocos.startAnimation = true;
@@ -174,7 +196,6 @@ public class Element extends Actor {
             }
         }
     }
-
 
     public static float resizeImgs(int size) {
         int initialSpace = 50,

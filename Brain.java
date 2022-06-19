@@ -37,7 +37,7 @@ class coordonates {
 }
 
 public class Brain extends Actor {
-    private static MyList<MyList<Element>> Elements = new MyList<>();
+    public static MyList<MyList<Element>> Elements = new MyList<>();
     // 0 -> -
     // 1 -> |
     // 2 -> \
@@ -53,7 +53,7 @@ public class Brain extends Actor {
     private float raport;
     private boolean ok;// semafor folosit pentru crearea unui eveniment begin play
     private Gun refToGun;
-    private int[] mapNeigh;// mapeaza vecinii pe linii, in functie de oridinea lor
+    public static int[] mapNeigh;// mapeaza vecinii pe linii, in functie de oridinea lor
     private final int[][] offsetNeigh = { { -1, -1, -1, 0, 0, 1, 1, 1 }, { -1, 0, 1, -1, 1, -1, 0, 1 } }; // offsetul la
     // care se
     private final int[][] offsetPointer = {
@@ -65,6 +65,7 @@ public class Brain extends Actor {
     private coordonates LastAddedElement;
     // change name here
     List<List<coordonates>> allWays = new ArrayList<>();
+    private Element temp;
 
     public Brain() {
     }
@@ -520,33 +521,18 @@ public class Brain extends Actor {
 
     protected void clicked(Element Clicked) {
         boolean added;
-        MyList<Element> desiredLine;
-        Element desiredNeigh;
+
         Clicked.setStatus(CurrentPlayer);
         LastAddedElement = Clicked.getCoordonates();
-        System.out.println(LastAddedElement.x + " " + LastAddedElement.y);
+
         // ne adaugam pe noi pe liniile componente
-        for (int i = 0; i <= 3; i++)
-            Clicked.addOnLine(i, Clicked);
+        Clicked.selfAdd();
 
         // verificam vecinii si adaugam pe linie daca sunt deschisi
         // avem 8 vecini
         for (int i = 0; i < 8; i++) {
-            added = false;
-            desiredLine = Elements.get(Clicked.getCoordX() + offsetNeigh[0][i]);
-            if (desiredLine != null) {
-                desiredNeigh = desiredLine.get(Clicked.getCoordY() + offsetNeigh[1][i]);
-            } else {
-                continue;
-            }
-            if (desiredNeigh != null) // avem vecin in careu
-            {
-                if (desiredNeigh.getStatus() == Clicked.getStatus()) {
-                    // trebuie sa stim in ce lista de linii il adaugam
-                    Clicked.addLineOnLine(mapNeigh[i], desiredNeigh.getLine(mapNeigh[i]));
-                    added = true;
-                }
-            }
+            added = Clicked.addNeigh(i);
+            //
             if (added) {
                 if (Clicked.won(mapNeigh[i])) {
                     // adding the Lines
@@ -564,7 +550,6 @@ public class Brain extends Actor {
         Clicked.sincLines();
     }
 
-    private Element temp;
 
     public void act() {
         if (ok) {
