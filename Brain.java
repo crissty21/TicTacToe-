@@ -506,11 +506,9 @@ public class Brain extends Actor {
         int max = 0;
         int sum = 0;
         for (int i : lenghts) {
-            if (i == max / 2 && i != 1) {
-                sum++;
-            }
+            
             if (i > max) {
-                max = i * 2;
+                max = i;
                 sum = max;
             }
         }

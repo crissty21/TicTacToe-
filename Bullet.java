@@ -31,7 +31,7 @@ public class Bullet extends Actor {
         if (ct == 20) {
             setImage(glont);
         }
-        newLocation = lerp(moveHere, 10);
+        newLocation = lerp(moveHere, 20);
         if (reachedDestination()) {
             Brain.gameState = State.animationOn;
             getWorld().removeObject(this);
