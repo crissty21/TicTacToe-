@@ -28,6 +28,12 @@ class coordonates {
         x = _x;
         y = _y;
     }
+
+    public int convertToIndex(int size) {
+        int rezultat;
+        rezultat = x * size + y;
+        return rezultat;
+    }
 }
 
 public class Brain extends Actor {
@@ -84,7 +90,7 @@ public class Brain extends Actor {
             raport = -1;
         GreenfootImage img = new GreenfootImage(500, 500);
         setImage(img);
-        AiLevel = 3;
+        AiLevel = 5;
 
         AiMatrix = new Type[_size][_size];
     }
@@ -210,17 +216,18 @@ public class Brain extends Actor {
         }
     }
 
-    private coordonates getFirstValidNeighInSpiral(Type[][] matrix, coordonates startPosition, int noNeighb) {
-        //returneaza primul vecin valid pornind intro spirala de la un set de coordonate
+    private List<coordonates> getParcurgere(coordonates startPosition) {
+        List<coordonates> parcurgeri = new ArrayList<>();
+        // creaza pentru elementul de la pozita startPosition, parcurferea in spirala a
+        // unei matrici de dim size x size
         int rowIndex = startPosition.x;
         int colIndex = startPosition.y;
-        if (matrix[rowIndex][colIndex] == Type.notOpened) {
-            return startPosition;
-        }
         final int UP = 0;
         final int LEFT = 1;
         final int RIGHT = 2;
         final int DOWN = 3;
+
+        parcurgeri.add(startPosition);
 
         // incepem spre stanga
         int nextDirection = LEFT;
@@ -236,12 +243,7 @@ public class Brain extends Actor {
                     colIndex -= 1;
                     if (colIndex >= 0 && rowIndex >= 0 && colIndex < size) {
                         i++;
-                        if (AiMatrix[rowIndex][colIndex] == Type.notOpened) {
-                            // avem un copil valid
-                            noNeighb--;
-                            if (noNeighb == 0)
-                                return new coordonates(rowIndex, colIndex);
-                        }
+                        parcurgeri.add(new coordonates(rowIndex, colIndex));
                     }
                     movesIter--;
                     if (movesIter == 0) {
@@ -254,18 +256,13 @@ public class Brain extends Actor {
                         movesIter = movesGlobal;
                         nextDirection = DOWN;
                     }
-
                     break;
 
                 case DOWN:
                     rowIndex += 1;
                     if (rowIndex < size && colIndex >= 0 && rowIndex >= 0) {
                         i++;
-                        if (AiMatrix[rowIndex][colIndex] == Type.notOpened) {
-                            noNeighb--;
-                            if (noNeighb == 0)
-                                return new coordonates(rowIndex, colIndex);
-                        }
+                        parcurgeri.add(new coordonates(rowIndex, colIndex));
                     }
                     movesIter--;
                     if (movesIter == 0) {
@@ -284,11 +281,7 @@ public class Brain extends Actor {
                     colIndex += 1;
                     if (colIndex < size && rowIndex < size && colIndex >= 0) {
                         i++;
-                        if (AiMatrix[rowIndex][colIndex] == Type.notOpened) {
-                            noNeighb--;
-                            if (noNeighb == 0)
-                                return new coordonates(rowIndex, colIndex);
-                        }
+                        parcurgeri.add(new coordonates(rowIndex, colIndex));
                     }
                     movesIter--;
                     if (movesIter == 0) {
@@ -307,11 +300,7 @@ public class Brain extends Actor {
                     rowIndex -= 1;
                     if (rowIndex >= 0 && colIndex < size && rowIndex < size) {
                         i++;
-                        if (AiMatrix[rowIndex][colIndex] == Type.notOpened) {
-                            noNeighb--;
-                            if (noNeighb == 0)
-                                return new coordonates(rowIndex, colIndex);
-                        }
+                        parcurgeri.add(new coordonates(rowIndex, colIndex));
                     }
                     movesIter--;
                     if (movesIter == 0) {
@@ -331,63 +320,62 @@ public class Brain extends Actor {
             case LEFT:
                 rowIndex = 0;
                 colIndex = size - 1;
-                if (AiMatrix[rowIndex][colIndex] == Type.notOpened) {
-                    return new coordonates(rowIndex, colIndex);
-                }
+                parcurgeri.add(new coordonates(rowIndex, colIndex));
                 break;
 
             case DOWN:
                 colIndex = 0;
                 rowIndex = 0;
-
-                if (AiMatrix[rowIndex][colIndex] == Type.notOpened) {
-                    return new coordonates(rowIndex, colIndex);
-                }
+                parcurgeri.add(new coordonates(rowIndex, colIndex));
                 break;
 
             case RIGHT:
                 rowIndex = size - 1;
                 colIndex = 0;
-                if (AiMatrix[rowIndex][colIndex] == Type.notOpened) {
-                    return new coordonates(rowIndex, colIndex);
-                }
+                parcurgeri.add(new coordonates(rowIndex, colIndex));
                 break;
 
             case UP:
                 colIndex = size - 1;
                 rowIndex = size - 1;
-                if (AiMatrix[rowIndex][colIndex] == Type.notOpened) {
-                    return new coordonates(rowIndex, colIndex);
-                }
+                parcurgeri.add(new coordonates(rowIndex, colIndex));
                 break;
         }
-        return new coordonates(0, 0);
+        return parcurgeri;
     }
 
-    protected Element AiMove() {
+    // change name here
+    List<List<coordonates>> allWays = new ArrayList<>();
+
+    private void createAllParcurgeri() {
+        for (int i = 0; i < size; i++)
+            for (int j = 0; j < size; j++)
+                allWays.add(getParcurgere(new coordonates(i, j)));
+
+    }
+
+    protected Element AiMove(coordonates lastAdded) {
         int bestMove = Integer.MIN_VALUE;
         int valoare;
         Element nextMove = null;
         // temp
         transcriptGrid();
 
-        int rowIndex = 1;
-        int colIndex = 2;
-
         // preia primul vecini
-        coordonates nextNeigh;
-
-        for (int i = 1; i <= size * size; i++) {
-            nextNeigh = getFirstValidNeighInSpiral(AiMatrix, new coordonates(rowIndex, colIndex), i);
-
-            AiMatrix[nextNeigh.x][nextNeigh.y] = Type.X;
-            valoare = minimax(AiMatrix, AiLevel, Type.Y, nextNeigh, Integer.MIN_VALUE,
-                    Integer.MAX_VALUE);
-            if (valoare > bestMove) {
-                bestMove = valoare;
-                nextMove = Elements.get(nextNeigh.x).get(nextNeigh.y);
+        List<coordonates> MyParcurgere = allWays.get(lastAdded.convertToIndex(size));
+        System.out.println(lastAdded.convertToIndex(size));
+        for (coordonates nextNeigh : MyParcurgere) {
+            if (AiMatrix[nextNeigh.x][nextNeigh.y] == Type.notOpened) {
+                AiMatrix[nextNeigh.x][nextNeigh.y] = Type.X;
+                valoare = minimax(AiMatrix, AiLevel, Type.Y, nextNeigh, Integer.MIN_VALUE,
+                        Integer.MAX_VALUE);
+                System.out.println(nextNeigh.x + " " + nextNeigh.y + " " + valoare);
+                if (valoare > bestMove) {
+                    bestMove = valoare;
+                    nextMove = Elements.get(nextNeigh.x).get(nextNeigh.y);
+                }
+                AiMatrix[nextNeigh.x][nextNeigh.y] = Type.notOpened;
             }
-            AiMatrix[nextNeigh.x][nextNeigh.y] = Type.notOpened;
         }
 
         return nextMove;
@@ -492,49 +480,48 @@ public class Brain extends Actor {
             int valoare;
             // adaugam in mod normal**
             // terminal condition if won
-            coordonates nextNeigh;
 
+            List<coordonates> MyParcurgere = allWays.get(lastAdded.convertToIndex(size));
             if (curentPlayer == Type.X) {
                 bestMove = Integer.MIN_VALUE;
-                for (int i = 1; i <= size * size; i++) {
-                    nextNeigh = getFirstValidNeighInSpiral(grid, lastAdded, i);
+                for (coordonates nextNeigh : MyParcurgere) {
+                    if (grid[nextNeigh.x][nextNeigh.y] == Type.notOpened) {
 
-                    grid[nextNeigh.x][nextNeigh.y] = curentPlayer;
-                    valoare = minimax(grid, depth - 1, Type.Y, nextNeigh, alpha, beta);
-                    bestMove = Integer.max(bestMove, valoare);
-                    alpha = Integer.max(alpha, valoare);
-                    grid[nextNeigh.x][nextNeigh.y] = Type.notOpened;
-                    if (beta <= alpha) {
-                        i = size;
-                        break;
+                        grid[nextNeigh.x][nextNeigh.y] = curentPlayer;
+                        valoare = minimax(grid, depth - 1, Type.Y, nextNeigh, alpha, beta);
+                        bestMove = Integer.max(bestMove, valoare);
+                        alpha = Integer.max(alpha, valoare);
+                        grid[nextNeigh.x][nextNeigh.y] = Type.notOpened;
+                        if (beta <= alpha) {
+                            break;
+                        }
                     }
                 }
                 return bestMove;
             } else {
                 bestMove = Integer.MAX_VALUE;
-                for (int i = 1; i <= size * size; i++) {
-                    nextNeigh = getFirstValidNeighInSpiral(grid, lastAdded, i);
-
-                    grid[nextNeigh.x][nextNeigh.y] = curentPlayer;
-                    valoare = minimax(grid, depth - 1, Type.X, nextNeigh, alpha, beta);
-                    bestMove = Integer.min(bestMove, valoare);
-                    beta = Integer.min(beta, valoare);
-                    grid[nextNeigh.x][nextNeigh.y] = Type.notOpened;
-                    if (beta <= alpha) {
-                        i = size;
-                        break;
+                for (coordonates nextNeigh : MyParcurgere) {
+                    if (grid[nextNeigh.x][nextNeigh.y] == Type.notOpened) {
+                        grid[nextNeigh.x][nextNeigh.y] = curentPlayer;
+                        valoare = minimax(grid, depth - 1, Type.X, nextNeigh, alpha, beta);
+                        bestMove = Integer.min(bestMove, valoare);
+                        beta = Integer.min(beta, valoare);
+                        grid[nextNeigh.x][nextNeigh.y] = Type.notOpened;
+                        if (beta <= alpha) {
+                            break;
+                        }
                     }
                 }
                 return bestMove;
             }
         }
+
     }
 
     protected void clicked(Element Clicked) {
         boolean added;
         MyList<Element> desiredLine;
         Element desiredNeigh;
-
         Clicked.setStatus(CurrentPlayer);
 
         // ne adaugam pe noi pe liniile componente
@@ -570,6 +557,8 @@ public class Brain extends Actor {
                 }
             }
         }
+        temp = AiMove(new coordonates(Clicked.getCoordX(), Clicked.getCoordY()));
+        System.out.println(temp.getCoordX() + " " + temp.getCoordY());
         // dupa ce am gasit toti vecinii, sincronizam listele lor, cu lista din
         // elementul curent
         Clicked.sincLines();
@@ -581,6 +570,7 @@ public class Brain extends Actor {
         if (ok) {
             // begin play
             ok = false;
+            createAllParcurgeri();
             createGrid(size);
         }
         if (size > 20) {
@@ -588,8 +578,8 @@ public class Brain extends Actor {
         }
         if (CurrentPlayer == Type.X) {
             CurrentPlayer = Type.Y;
-            temp = AiMove();
-            System.out.println(temp.getCoordX() + " " + temp.getCoordY());
+            // AiMove(new coordonates(Greenfoot.getRandomNumber(size - 1),
+            // Greenfoot.getRandomNumber(size - 1)));
         }
     }
 
