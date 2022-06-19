@@ -2,15 +2,11 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 import java.util.*;
 
-public class Element extends Actor {
-    private int x, y;
-    private List<List<Element>> Lines; // lista cu linile din care face parte obiectul
-    private Type Val;
+public class Element extends GridElement {
     private Brain refToBrain;
     private boolean selected;
     private int contor;
     private Gun refToGun;
-    private final int[][] offsetNeigh = { { -1, -1, -1, 0, 0, 1, 1, 1 }, { -1, 0, 1, -1, 1, -1, 0, 1 } }; // offsetul la
     private static GreenfootImage xImg = new GreenfootImage("as.png");
     private static GreenfootImage oImg = new GreenfootImage("os.png");
     private static GreenfootImage[] explozie = {
@@ -29,113 +25,18 @@ public class Element extends Actor {
             new GreenfootImage("box13.png")
     };
 
-    public Element() {
-        setImage(explozie[0]);
-        x = y = 0;
-        Val = Val.notOpened;
-        Lines = new ArrayList<>();
-        selected = false;
-        for (int i = 0; i < 4; i++)
-            Lines.add(new ArrayList<Element>());
-        contor = 0;
-    }
 
     public Element(int CoordX, int CoordY) {
-        this();
-        x = CoordX;
-        y = CoordY;
+        super(CoordX, CoordY);
+        setImage(explozie[0]);
+        selected = false;
+        contor = 0;
     }
 
     public Element(int CoordX, int CoordY, Brain refToOwner, Gun _refToGun) {
         this(CoordX, CoordY);
         refToBrain = refToOwner;
         refToGun = _refToGun;
-    }
-
-    public void setStatus(Type newStatus) {
-        Val = newStatus;
-    }
-
-    public Type getStatus() {
-        return Val;
-    }
-
-    public coordonates getCoordonates() {
-        return new coordonates(y, x);
-    }
-
-    public int getLineLenght(int index) {
-        return Lines.get(index).size();
-    }
-
-    public int getCoordX() {
-        return x;
-    }
-
-    public int getCoordY() {
-        return y;
-    }
-
-    public void addOnLine(int index, Element vecin) {
-        Lines.get(index).add(vecin);
-    }
-
-    public void addLineOnLine(int index, List<Element> newLine) {
-        Lines.get(index).addAll(newLine);
-    }
-
-    public List<Element> getLine(int index) {
-        return Lines.get(index);
-    }
-
-    public boolean containsOnLine(int line, Element second) {
-        return Lines.get(line).contains(second);
-    }
-
-    public boolean addNeigh(int i) {
-        boolean added;
-        MyList<Element> desiredLine;
-        Element desiredNeigh = null;
-        added = false;
-        desiredLine = Brain.Elements.get(x + offsetNeigh[0][i]);
-        if (desiredLine != null) {
-            desiredNeigh = desiredLine.get(y + offsetNeigh[1][i]);
-        } else {
-            return added;
-        }
-        if (desiredNeigh != null) // avem vecin in careu
-        {
-            if (desiredNeigh.getStatus() == Val) {
-                // trebuie sa stim in ce lista de linii il adaugam
-                addLineOnLine(Brain.mapNeigh[i], desiredNeigh.getLine(Brain.mapNeigh[i]));
-                added = true;
-            }
-        }
-        return added;
-    }
-
-    public void selfAdd() {
-        for (int i = 0; i <= 3; i++)
-            addOnLine(i, this);
-    }
-
-    public void sincLines() {
-        for (int line = 0; line <= 3; line++) {
-            int sizeOfLine = Lines.get(line).size();
-            // luam fiecare vecin
-            for (int i = 1; i < sizeOfLine; i++) {
-                // adaugam in lista vecinului, toate elemente ce lipsesc
-                for (int j = 0; j < sizeOfLine; j++) {
-                    if (Lines.get(line).get(i).containsOnLine(line, Lines.get(line).get(j)) == false) {
-                        Lines.get(line).get(i).addOnLine(line, Lines.get(line).get(j));
-                    }
-                }
-            }
-        }
-    }
-
-    public boolean won(int index) {
-        return Lines.get(index).size() >= Brain.winReq;
     }
 
     public int imgDisplayed() {

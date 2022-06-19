@@ -37,7 +37,7 @@ class coordonates {
 }
 
 public class Brain extends Actor {
-    public static MyList<MyList<Element>> Elements = new MyList<>();
+    public static MyList<MyList<? extends GridElement>> Elements = new MyList<>();
     // 0 -> -
     // 1 -> |
     // 2 -> \
@@ -54,8 +54,7 @@ public class Brain extends Actor {
     private boolean ok;// semafor folosit pentru crearea unui eveniment begin play
     private Gun refToGun;
     public static int[] mapNeigh;// mapeaza vecinii pe linii, in functie de oridinea lor
-    private final int[][] offsetNeigh = { { -1, -1, -1, 0, 0, 1, 1, 1 }, { -1, 0, 1, -1, 1, -1, 0, 1 } }; // offsetul la
-    // care se
+
     private final int[][] offsetPointer = {
             { -2, -2, -2, -2, -2, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2 },
             { -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2 } };
@@ -94,7 +93,7 @@ public class Brain extends Actor {
             raport = -1;
         GreenfootImage img = new GreenfootImage(500, 500);
         setImage(img);
-        AiLevel = 5;
+        AiLevel = 3;
         LastAddedElement = new coordonates(Greenfoot.getRandomNumber(size), Greenfoot.getRandomNumber(size));
         AiMatrix = new Type[_size][_size];
     }
@@ -355,7 +354,7 @@ public class Brain extends Actor {
 
     }
 
-    protected Element AiMove(coordonates lastAdded) {
+    protected GridElement AiMove(coordonates lastAdded) {
         int bestMove = Integer.MIN_VALUE;
         int valoare;
         Element nextMove = null;
@@ -373,7 +372,11 @@ public class Brain extends Actor {
                 System.out.println(nextNeigh.x + " " + nextNeigh.y + " " + valoare);
                 if (valoare > bestMove) {
                     bestMove = valoare;
-                    nextMove = Elements.get(nextNeigh.y).get(nextNeigh.x);
+                    nextMove = (Element) Elements.get(nextNeigh.y).get(nextNeigh.x);
+                    if (nextMove == null) {
+                        System.err.println("null pointer class brain cast failed");
+                        break;
+                    }
                 }
                 AiMatrix[nextNeigh.x][nextNeigh.y] = Type.notOpened;
             }
@@ -536,7 +539,7 @@ public class Brain extends Actor {
             if (added) {
                 if (Clicked.won(mapNeigh[i])) {
                     // adding the Lines
-                    for (Element iter : Clicked.getLine(mapNeigh[i])) {
+                    for (GridElement iter : Clicked.getLine(mapNeigh[i])) {
                         getWorld().addObject(new Line(mapNeigh[i]), turnXinCoord(iter.getCoordX(), size),
                                 turnYinCoord(iter.getCoordY(), size));
                     }
@@ -550,7 +553,6 @@ public class Brain extends Actor {
         Clicked.sincLines();
     }
 
-
     public void act() {
         if (ok) {
             // begin play
@@ -563,8 +565,11 @@ public class Brain extends Actor {
         }
         if (CurrentPlayer == Type.X) {
             if (Brain.gameState == State.waitForMove) {
-                temp = AiMove(LastAddedElement);
-                temp.openIt();
+                temp = (Element) AiMove(LastAddedElement);
+                if (temp != null)
+                    temp.openIt();
+                else
+                    System.err.println("null pointer cast failed");
             }
         }
     }
