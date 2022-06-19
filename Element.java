@@ -60,7 +60,10 @@ public class Element extends Actor {
         return Val;
     }
 
-   
+    public coordonates getCoordonates()
+    {
+        return new coordonates(y, x);
+    }
    
     public int getLineLenght(int index) {
         return Lines.get(index).size();
@@ -136,6 +139,15 @@ public class Element extends Actor {
         Next.start1 = true;
         Brain.gameState = State.waitForMove;
     }
+    public void openIt() {
+        refToGun.lookAtMe(this);
+        Cocos.startAnimation = true;
+        Brain.mutari++;
+        Val = Brain.CurrentPlayer;
+        Brain.gameState = State.WaitingForBullet;
+        selected = true;
+        contor = 0;
+    }
 
     public void act() {
         if (Greenfoot.mouseClicked(this) && Brain.CurrentPlayer == Type.Y) {
@@ -143,13 +155,7 @@ public class Element extends Actor {
             if (Brain.gameState == State.waitForMove) {
                 if (Val == Type.notOpened) // verifica daca nu a fost deschisa cutia
                 {
-                    refToGun.lookAtMe(this);
-                    Cocos.startAnimation = true;
-                    Brain.mutari++;
-                    Val = Brain.CurrentPlayer;
-                    Brain.gameState = State.WaitingForBullet;
-                    selected = true;
-                    contor = 0;
+                    openIt();
                 }
             }
         }
@@ -168,6 +174,7 @@ public class Element extends Actor {
             }
         }
     }
+
 
     public static float resizeImgs(int size) {
         int initialSpace = 50,

@@ -55,13 +55,16 @@ public class Brain extends Actor {
     private Gun refToGun;
     private int[] mapNeigh;// mapeaza vecinii pe linii, in functie de oridinea lor
     private final int[][] offsetNeigh = { { -1, -1, -1, 0, 0, 1, 1, 1 }, { -1, 0, 1, -1, 1, -1, 0, 1 } }; // offsetul la
-                                                                                                          // care se
+    // care se
     private final int[][] offsetPointer = {
             { -2, -2, -2, -2, -2, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2 },
             { -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2 } };
 
     private List<pointer> crossair = new ArrayList<>();
     Type[][] AiMatrix;
+    private coordonates LastAddedElement;
+    // change name here
+    List<List<coordonates>> allWays = new ArrayList<>();
 
     public Brain() {
     }
@@ -91,7 +94,7 @@ public class Brain extends Actor {
         GreenfootImage img = new GreenfootImage(500, 500);
         setImage(img);
         AiLevel = 5;
-
+        LastAddedElement = new coordonates(Greenfoot.getRandomNumber(size), Greenfoot.getRandomNumber(size));
         AiMatrix = new Type[_size][_size];
     }
 
@@ -344,9 +347,6 @@ public class Brain extends Actor {
         return parcurgeri;
     }
 
-    // change name here
-    List<List<coordonates>> allWays = new ArrayList<>();
-
     private void createAllParcurgeri() {
         for (int i = 0; i < size; i++)
             for (int j = 0; j < size; j++)
@@ -372,7 +372,7 @@ public class Brain extends Actor {
                 System.out.println(nextNeigh.x + " " + nextNeigh.y + " " + valoare);
                 if (valoare > bestMove) {
                     bestMove = valoare;
-                    nextMove = Elements.get(nextNeigh.x).get(nextNeigh.y);
+                    nextMove = Elements.get(nextNeigh.y).get(nextNeigh.x);
                 }
                 AiMatrix[nextNeigh.x][nextNeigh.y] = Type.notOpened;
             }
@@ -523,7 +523,8 @@ public class Brain extends Actor {
         MyList<Element> desiredLine;
         Element desiredNeigh;
         Clicked.setStatus(CurrentPlayer);
-
+        LastAddedElement = Clicked.getCoordonates();
+        System.out.println(LastAddedElement.x + " " + LastAddedElement.y);
         // ne adaugam pe noi pe liniile componente
         for (int i = 0; i <= 3; i++)
             Clicked.addOnLine(i, Clicked);
@@ -557,8 +558,7 @@ public class Brain extends Actor {
                 }
             }
         }
-        temp = AiMove(new coordonates(Clicked.getCoordX(), Clicked.getCoordY()));
-        System.out.println(temp.getCoordX() + " " + temp.getCoordY());
+
         // dupa ce am gasit toti vecinii, sincronizam listele lor, cu lista din
         // elementul curent
         Clicked.sincLines();
@@ -577,9 +577,10 @@ public class Brain extends Actor {
             movePointer();
         }
         if (CurrentPlayer == Type.X) {
-            CurrentPlayer = Type.Y;
-            // AiMove(new coordonates(Greenfoot.getRandomNumber(size - 1),
-            // Greenfoot.getRandomNumber(size - 1)));
+            if (Brain.gameState == State.waitForMove) {
+                temp = AiMove(LastAddedElement);
+                temp.openIt();
+            }
         }
     }
 
