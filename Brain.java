@@ -369,7 +369,7 @@ public class Brain extends Actor {
         do {
             if (bestMove <= 15 && localAiLevel == 6) {
                 staticEval = true;
-                localAiLevel=0;
+                localAiLevel = 0;
             }
             timesChanged = 0;
             bestMove = Integer.MIN_VALUE;
@@ -383,7 +383,19 @@ public class Brain extends Actor {
                     else
                         valoare = minimax(AiMatrix, localAiLevel, Type.Y, nextNeigh, Integer.MIN_VALUE,
                                 Integer.MAX_VALUE, staticEval);
-                    System.out.println(nextNeigh.x + " " + nextNeigh.y + " " + valoare + " " + bestMove + " " + localAiLevel);
+                    System.out.println(
+                            nextNeigh.x + " " + nextNeigh.y + " " + valoare + " " + bestMove + " " + localAiLevel);
+                    /*
+                     * if (valoare == bestMove) {
+                     * if (Greenfoot.getRandomNumber(2) == 1) {
+                     * nextMove = (Element) Elements.get(nextNeigh.y).get(nextNeigh.x);
+                     * if (nextMove == null) {
+                     * System.err.println("null pointer class brain cast failed");
+                     * break;
+                     * }
+                     * }
+                     * }
+                     */
                     if (valoare > bestMove) {
                         bestMove = valoare;
                         nextMove = (Element) Elements.get(nextNeigh.y).get(nextNeigh.x);
@@ -399,7 +411,7 @@ public class Brain extends Actor {
             }
             localAiLevel++;
 
-        } while (bestMove <= 15 && worstMove>-15 && staticEval == false);
+        } while (bestMove <= 15 && worstMove > -15 && staticEval == false);
 
         return nextMove;
     }
@@ -494,6 +506,23 @@ public class Brain extends Actor {
         return lenghts;
     }
 
+    private int staticEvaluation(int[] lenghts) {
+        int max = 0;
+        int sum=0;
+        for (int i : lenghts) {
+            if(i == max/2 && i != 1)
+            {
+                sum++;
+            }
+            if(i>max)
+            {
+                max = i*2;
+                sum = max;
+            }
+        }
+        return sum;
+    }
+
     private int minimax(Type[][] grid, int depth, Type curentPlayer, coordonates lastAdded, int alpha, int beta,
             boolean staticEval) {
         int[] lenghts = checkLenghts(grid, inversType(curentPlayer), lastAdded);
@@ -504,14 +533,11 @@ public class Brain extends Actor {
                 return 15 * (depth + 1); // good II
         } else if (depth == 0) {
             if (staticEval) {
-                int sum = 0;
-                for (int i : lenghts) {
-                    sum += i;
-                }
+
                 if (curentPlayer == Type.X)
-                    return -sum; // bad I
+                    return -staticEvaluation(lenghts); // bad I
                 else
-                    return sum; // good II
+                    return staticEvaluation(lenghts); // good II
             } else
                 return 0;
         } else {
