@@ -93,7 +93,7 @@ public class Brain extends Actor {
             raport = -1;
         GreenfootImage img = new GreenfootImage(500, 500);
         setImage(img);
-        AiLevel = 3;
+        AiLevel = 1;
         LastAddedElement = new coordonates(Greenfoot.getRandomNumber(size), Greenfoot.getRandomNumber(size));
         AiMatrix = new Type[_size][_size];
     }
@@ -385,6 +385,13 @@ public class Brain extends Actor {
         return nextMove;
     }
 
+    private Type inversType(Type oldOne) {
+        if (oldOne == Type.X)
+            return Type.Y;
+        else
+            return Type.X;
+    }
+
     private boolean checkWon(Type[][] grid, Type curentPlayer, coordonates lastAdded) {
         int lineLenght;
         int auxi, auxj;
@@ -461,21 +468,14 @@ public class Brain extends Actor {
         return false;
     }
 
-    private Type inversType(Type oldOne) {
-        if (oldOne == Type.X)
-            return Type.Y;
-        else
-            return Type.X;
-    }
-
     private int minimax(Type[][] grid, int depth, Type curentPlayer, coordonates lastAdded, int alpha, int beta) {
 
         if (checkWon(grid, inversType(curentPlayer), lastAdded)) {
-
+            System.out.println("__________________");
             if (curentPlayer == Type.X)
-                return -1; // bad I
+                return -1*(depth+1); // bad I
             else
-                return 1; // good II
+                return 1*(depth+1); // good II
         } else if (depth == 0) {
             // check static evaluation
             return 0; // III
@@ -516,6 +516,7 @@ public class Brain extends Actor {
                         }
                     }
                 }
+                
                 return bestMove;
             }
         }
