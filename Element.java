@@ -1,7 +1,5 @@
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
-import java.util.*;
-
 public class Element extends GridElement {
     private Brain refToBrain;
     private boolean selected;
@@ -25,6 +23,9 @@ public class Element extends GridElement {
             new GreenfootImage("box13.png")
     };
 
+    public GridElement turnToSuperClass() {
+        return new GridElement(x, y, Val);
+    }
 
     public Element(int CoordX, int CoordY) {
         super(CoordX, CoordY);

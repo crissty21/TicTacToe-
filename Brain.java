@@ -60,7 +60,7 @@ public class Brain extends Actor {
             { -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2 } };
 
     private List<pointer> crossair = new ArrayList<>();
-    Type[][] AiMatrix;
+    GridElement[][] AiMatrix;
     private coordonates LastAddedElement;
     // change name here
     List<List<coordonates>> allWays = new ArrayList<>();
@@ -95,7 +95,7 @@ public class Brain extends Actor {
         setImage(img);
         AiLevel = 3;
         LastAddedElement = new coordonates(Greenfoot.getRandomNumber(size), Greenfoot.getRandomNumber(size));
-        AiMatrix = new Type[_size][_size];
+        AiMatrix = new GridElement[_size][_size];
     }
 
     private void createMap() {
@@ -210,10 +210,14 @@ public class Brain extends Actor {
     }
 
     private void transcriptGrid() {
-        Type temp;
+        GridElement temp;
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                temp = Elements.get(j).get(i).getStatus();
+                temp = ((Element) (Elements.get(j).get(i))).turnToSuperClass();
+                if (temp == null) {
+                    System.err.println("null pointer cast faild in brain");
+                    break;
+                }
                 AiMatrix[i][j] = temp;
             }
         }
@@ -354,6 +358,13 @@ public class Brain extends Actor {
 
     }
 
+    private void AiAdd(GridElement element)
+    {
+        element.setStatus(Type.X);
+        element.selfAdd();
+        element.addAllNeigh();
+        element.sincLines();
+    }
     protected GridElement AiMove(coordonates lastAdded) {
         int bestMove = Integer.MIN_VALUE;
         int valoare;
@@ -363,10 +374,13 @@ public class Brain extends Actor {
 
         // preia primul vecini
         List<coordonates> MyParcurgere = allWays.get(lastAdded.convertToIndex(size));
-        System.out.println(lastAdded.convertToIndex(size));
+
         for (coordonates nextNeigh : MyParcurgere) {
-            if (AiMatrix[nextNeigh.x][nextNeigh.y] == Type.notOpened) {
-                AiMatrix[nextNeigh.x][nextNeigh.y] = Type.X;
+            if (AiMatrix[nextNeigh.x][nextNeigh.y].getStatus() == Type.notOpened) {
+                
+                
+                AiAdd(AiMatrix[nextNeigh.x][nextNeigh.y]);
+
                 valoare = minimax(AiMatrix, AiLevel, Type.Y, nextNeigh, Integer.MIN_VALUE,
                         Integer.MAX_VALUE);
                 System.out.println(nextNeigh.x + " " + nextNeigh.y + " " + valoare);
@@ -378,100 +392,102 @@ public class Brain extends Actor {
                         break;
                     }
                 }
-                AiMatrix[nextNeigh.x][nextNeigh.y] = Type.notOpened;
+                AiMatrix[nextNeigh.x][nextNeigh.y].reinit();;
             }
         }
 
         return nextMove;
     }
 
-    private boolean checkWon(Type[][] grid, Type curentPlayer, coordonates lastAdded) {
-        int lineLenght;
-        int auxi, auxj;
-        // check up + down
-        auxi = lastAdded.x - 1;
-        auxj = lastAdded.y;
-        lineLenght = 0;
-        while (auxi >= 0 && grid[auxi][auxj] == curentPlayer) {
-            lineLenght++;
-            auxi--;
-        }
-        auxi = lastAdded.x;
-        while (auxi < size && grid[auxi][auxj] == curentPlayer) {
-            lineLenght++;
-            auxi++;
-        }
-        if (lineLenght >= winReq) {
-            return true;
-        }
-        // check left + right
-        auxi = lastAdded.x;
-        auxj = lastAdded.y - 1;
-        lineLenght = 0;
-        while (auxj >= 0 && grid[auxi][auxj] == curentPlayer) {
-            lineLenght++;
-            auxj--;
-        }
-        auxj = lastAdded.y;
-        while (auxj < size && grid[auxi][auxj] == curentPlayer) {
-            lineLenght++;
-            auxj++;
-        }
-        if (lineLenght >= winReq) {
-            return true;
-        }
-        // check first diagonal
-        auxi = lastAdded.x - 1;
-        auxj = lastAdded.y - 1;
-        lineLenght = 0;
-        while (auxi >= 0 && auxj >= 0 && grid[auxi][auxj] == curentPlayer) {
-            lineLenght++;
-            auxi--;
-            auxj--;
-        }
-        auxi = lastAdded.x;
-        auxj = lastAdded.y;
-        while (auxi < size && auxj < size && grid[auxi][auxj] == curentPlayer) {
-            lineLenght++;
-            auxi++;
-            auxj++;
-        }
-        if (lineLenght >= winReq) {
-            return true;
-        }
-        // check second diagonal
-        auxi = lastAdded.x - 1;
-        auxj = lastAdded.y + 1;
-        lineLenght = 0;
-        while (auxi >= 0 && auxj < size && grid[auxi][auxj] == curentPlayer) {
-            lineLenght++;
-            auxi--;
-            auxj++;
-        }
-        auxi = lastAdded.x;
-        auxj = lastAdded.y;
-        while (auxi < size && auxj >= 0 && grid[auxi][auxj] == curentPlayer) {
-            lineLenght++;
-            auxi++;
-            auxj--;
-        }
-        if (lineLenght >= winReq) {
-            return true;
-        }
-        return false;
-    }
+    /*
+     * private boolean checkWon(GridElement[][] grid, Type curentPlayer, coordonates
+     * lastAdded) {
+     * int lineLenght;
+     * int auxi, auxj;
+     * // check up + down
+     * auxi = lastAdded.x - 1;
+     * auxj = lastAdded.y;
+     * lineLenght = 0;
+     * while (auxi >= 0 && grid[auxi][auxj] == curentPlayer) {
+     * lineLenght++;
+     * auxi--;
+     * }
+     * auxi = lastAdded.x;
+     * while (auxi < size && grid[auxi][auxj] == curentPlayer) {
+     * lineLenght++;
+     * auxi++;
+     * }
+     * if (lineLenght >= winReq) {
+     * return true;
+     * }
+     * // check left + right
+     * auxi = lastAdded.x;
+     * auxj = lastAdded.y - 1;
+     * lineLenght = 0;
+     * while (auxj >= 0 && grid[auxi][auxj] == curentPlayer) {
+     * lineLenght++;
+     * auxj--;
+     * }
+     * auxj = lastAdded.y;
+     * while (auxj < size && grid[auxi][auxj] == curentPlayer) {
+     * lineLenght++;
+     * auxj++;
+     * }
+     * if (lineLenght >= winReq) {
+     * return true;
+     * }
+     * // check first diagonal
+     * auxi = lastAdded.x - 1;
+     * auxj = lastAdded.y - 1;
+     * lineLenght = 0;
+     * while (auxi >= 0 && auxj >= 0 && grid[auxi][auxj] == curentPlayer) {
+     * lineLenght++;
+     * auxi--;
+     * auxj--;
+     * }
+     * auxi = lastAdded.x;
+     * auxj = lastAdded.y;
+     * while (auxi < size && auxj < size && grid[auxi][auxj] == curentPlayer) {
+     * lineLenght++;
+     * auxi++;
+     * auxj++;
+     * }
+     * if (lineLenght >= winReq) {
+     * return true;
+     * }
+     * // check second diagonal
+     * auxi = lastAdded.x - 1;
+     * auxj = lastAdded.y + 1;
+     * lineLenght = 0;
+     * while (auxi >= 0 && auxj < size && grid[auxi][auxj] == curentPlayer) {
+     * lineLenght++;
+     * auxi--;
+     * auxj++;
+     * }
+     * auxi = lastAdded.x;
+     * auxj = lastAdded.y;
+     * while (auxi < size && auxj >= 0 && grid[auxi][auxj] == curentPlayer) {
+     * lineLenght++;
+     * auxi++;
+     * auxj--;
+     * }
+     * if (lineLenght >= winReq) {
+     * return true;
+     * }
+     * return false;
+     * }
+     * 
+     * private Type inversType(Type oldOne) {
+     * if (oldOne == Type.X)
+     * return Type.Y;
+     * else
+     * return Type.X;
+     * }
+     */
+    private int minimax(GridElement[][] grid, int depth, Type curentPlayer, coordonates lastAdded, int alpha,
+            int beta) {
 
-    private Type inversType(Type oldOne) {
-        if (oldOne == Type.X)
-            return Type.Y;
-        else
-            return Type.X;
-    }
-
-    private int minimax(Type[][] grid, int depth, Type curentPlayer, coordonates lastAdded, int alpha, int beta) {
-
-        if (checkWon(grid, inversType(curentPlayer), lastAdded)) {
-
+        if (grid[lastAdded.x][lastAdded.y].wonOnAnyLine()) {
             if (curentPlayer == Type.X)
                 return -1; // bad I
             else
@@ -489,13 +505,15 @@ public class Brain extends Actor {
             if (curentPlayer == Type.X) {
                 bestMove = Integer.MIN_VALUE;
                 for (coordonates nextNeigh : MyParcurgere) {
-                    if (grid[nextNeigh.x][nextNeigh.y] == Type.notOpened) {
+                    if (grid[nextNeigh.x][nextNeigh.y].getStatus() == Type.notOpened) {
 
-                        grid[nextNeigh.x][nextNeigh.y] = curentPlayer;
+
+
+                        grid[nextNeigh.x][nextNeigh.y].setStatus(curentPlayer);
                         valoare = minimax(grid, depth - 1, Type.Y, nextNeigh, alpha, beta);
                         bestMove = Integer.max(bestMove, valoare);
                         alpha = Integer.max(alpha, valoare);
-                        grid[nextNeigh.x][nextNeigh.y] = Type.notOpened;
+                        grid[nextNeigh.x][nextNeigh.y].setStatus(Type.notOpened);
                         if (beta <= alpha) {
                             break;
                         }
@@ -505,12 +523,12 @@ public class Brain extends Actor {
             } else {
                 bestMove = Integer.MAX_VALUE;
                 for (coordonates nextNeigh : MyParcurgere) {
-                    if (grid[nextNeigh.x][nextNeigh.y] == Type.notOpened) {
-                        grid[nextNeigh.x][nextNeigh.y] = curentPlayer;
+                    if (grid[nextNeigh.x][nextNeigh.y].getStatus() == Type.notOpened) {
+                        grid[nextNeigh.x][nextNeigh.y].setStatus(curentPlayer);
                         valoare = minimax(grid, depth - 1, Type.X, nextNeigh, alpha, beta);
                         bestMove = Integer.min(bestMove, valoare);
                         beta = Integer.min(beta, valoare);
-                        grid[nextNeigh.x][nextNeigh.y] = Type.notOpened;
+                        grid[nextNeigh.x][nextNeigh.y].setStatus(Type.notOpened);
                         if (beta <= alpha) {
                             break;
                         }

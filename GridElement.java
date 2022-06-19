@@ -7,8 +7,8 @@ public class GridElement extends Actor {
     protected Type Val;
     private final int[][] offsetNeigh = { { -1, -1, -1, 0, 0, 1, 1, 1 }, { -1, 0, 1, -1, 1, -1, 0, 1 } }; // offsetul la
 
-    public GridElement(){
-        x=y=0;
+    public GridElement() {
+        x = y = 0;
         Val = Val.notOpened;
         Lines = new ArrayList<>();
         for (int i = 0; i < 4; i++)
@@ -20,6 +20,41 @@ public class GridElement extends Actor {
         x = CoordX;
         y = CoordY;
     }
+
+    public GridElement(int CoordX, int CoordY, Type _val) {
+        this(CoordX, CoordY);
+        Val = _val;
+    }
+
+    public void reinit()
+    {
+        Val = Val.notOpened;
+        Lines.clear();
+        for (int i = 0; i < 4; i++)
+            Lines.add(new ArrayList<GridElement>());
+        desincLines();
+    }
+
+    private void desincLines() {
+        for (int line = 0; line <= 3; line++) {
+            int sizeOfLine = Lines.get(line).size();
+            // luam fiecare vecin
+            for (int i = 1; i < sizeOfLine; i++) {
+                // adaugam in lista vecinului, toate elemente ce lipsesc
+                for (int j = 0; j < sizeOfLine; j++) {
+                    if (Lines.get(line).get(i).containsOnLine(line, Lines.get(line).get(j))) {
+                        Lines.get(line).get(i).removeFromLine(line, Lines.get(line).get(j));
+                    }
+                }
+            }
+        }
+    }
+
+    public void addAllNeigh() {
+        for (int i = 0; i < 8; i++)
+            addNeigh(i);
+    }
+
     public boolean addNeigh(int i) {
         boolean added;
         MyList<? extends GridElement> desiredLine;
@@ -44,6 +79,10 @@ public class GridElement extends Actor {
 
     public void addOnLine(int index, GridElement vecin) {
         Lines.get(index).add(vecin);
+    }
+    private void removeFromLine(int index, GridElement vecin)
+    {
+        Lines.get(index).remove(vecin);
     }
 
     public void addLineOnLine(int index, List<GridElement> newLine) {
@@ -76,6 +115,14 @@ public class GridElement extends Actor {
 
     public boolean won(int index) {
         return Lines.get(index).size() >= Brain.winReq;
+    }
+
+    public boolean wonOnAnyLine() {
+        for (int i = 0; i <= 3; i++) {
+            if (won(i))
+                return true;
+        }
+        return false;
     }
 
     public List<GridElement> getLine(int index) {
