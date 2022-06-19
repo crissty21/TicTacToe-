@@ -360,7 +360,6 @@ public class Brain extends Actor {
         Element nextMove = null;
         // temp
         transcriptGrid();
-        int timesChanged = 0;
         int localAiLevel = 0;
         int worstMove;
         // preia primul vecini
@@ -371,7 +370,6 @@ public class Brain extends Actor {
                 staticEval = true;
                 localAiLevel = 0;
             }
-            timesChanged = 0;
             bestMove = Integer.MIN_VALUE;
             worstMove = Integer.MAX_VALUE;
             for (coordonates nextNeigh : MyParcurgere) {
@@ -402,7 +400,6 @@ public class Brain extends Actor {
                             System.err.println("null pointer class brain cast failed");
                             break;
                         }
-                        timesChanged++;
                     }
                     worstMove = Integer.min(worstMove, valoare);
                     AiMatrix[nextNeigh.x][nextNeigh.y] = Type.notOpened;

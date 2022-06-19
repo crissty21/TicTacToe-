@@ -1,7 +1,5 @@
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
-import java.util.*;
-
 public class Element extends GridElement {
     private Brain refToBrain;
     private boolean selected;
