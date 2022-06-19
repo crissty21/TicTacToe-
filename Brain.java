@@ -93,7 +93,7 @@ public class Brain extends Actor {
             raport = -1;
         GreenfootImage img = new GreenfootImage(500, 500);
         setImage(img);
-        AiLevel = 1;
+        AiLevel = 0;
         LastAddedElement = new coordonates(Greenfoot.getRandomNumber(size), Greenfoot.getRandomNumber(size));
         AiMatrix = new Type[_size][_size];
     }
@@ -360,27 +360,36 @@ public class Brain extends Actor {
         Element nextMove = null;
         // temp
         transcriptGrid();
-
+        int timesChanged = 0;
+        int localAiLevel = 0;
+        
         // preia primul vecini
         List<coordonates> MyParcurgere = allWays.get(lastAdded.convertToIndex(size));
         System.out.println(lastAdded.convertToIndex(size));
-        for (coordonates nextNeigh : MyParcurgere) {
-            if (AiMatrix[nextNeigh.x][nextNeigh.y] == Type.notOpened) {
-                AiMatrix[nextNeigh.x][nextNeigh.y] = Type.X;
-                valoare = minimax(AiMatrix, AiLevel, Type.Y, nextNeigh, Integer.MIN_VALUE,
-                        Integer.MAX_VALUE);
-                System.out.println(nextNeigh.x + " " + nextNeigh.y + " " + valoare);
-                if (valoare > bestMove) {
-                    bestMove = valoare;
-                    nextMove = (Element) Elements.get(nextNeigh.y).get(nextNeigh.x);
-                    if (nextMove == null) {
-                        System.err.println("null pointer class brain cast failed");
-                        break;
+        do {
+            System.out.println(localAiLevel);
+            timesChanged = 0;
+            bestMove = Integer.MIN_VALUE;
+            for (coordonates nextNeigh : MyParcurgere) {
+                if (AiMatrix[nextNeigh.x][nextNeigh.y] == Type.notOpened) {
+                    AiMatrix[nextNeigh.x][nextNeigh.y] = Type.X;
+                    valoare = minimax(AiMatrix, localAiLevel, Type.Y, nextNeigh, Integer.MIN_VALUE,
+                            Integer.MAX_VALUE);
+                    //System.out.println(nextNeigh.x + " " + nextNeigh.y + " " + valoare);
+                    if (valoare > bestMove) {
+                        bestMove = valoare;
+                        nextMove = (Element) Elements.get(nextNeigh.y).get(nextNeigh.x);
+                        if (nextMove == null) {
+                            System.err.println("null pointer class brain cast failed");
+                            break;
+                        }
+                        timesChanged++;
                     }
+                    AiMatrix[nextNeigh.x][nextNeigh.y] = Type.notOpened;
                 }
-                AiMatrix[nextNeigh.x][nextNeigh.y] = Type.notOpened;
             }
-        }
+            localAiLevel++;
+        } while (bestMove == 0 && timesChanged==1 && localAiLevel != 9);
 
         return nextMove;
     }
@@ -471,11 +480,10 @@ public class Brain extends Actor {
     private int minimax(Type[][] grid, int depth, Type curentPlayer, coordonates lastAdded, int alpha, int beta) {
 
         if (checkWon(grid, inversType(curentPlayer), lastAdded)) {
-            System.out.println("__________________");
             if (curentPlayer == Type.X)
-                return -1*(depth+1); // bad I
+                return -1 * (depth + 1); // bad I
             else
-                return 1*(depth+1); // good II
+                return 1 * (depth + 1); // good II
         } else if (depth == 0) {
             // check static evaluation
             return 0; // III
@@ -516,7 +524,7 @@ public class Brain extends Actor {
                         }
                     }
                 }
-                
+
                 return bestMove;
             }
         }
