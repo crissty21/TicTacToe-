@@ -93,7 +93,7 @@ public class Brain extends Actor {
             raport = -1;
         GreenfootImage img = new GreenfootImage(500, 500);
         setImage(img);
-        AiLevel = 0;
+        AiLevel = 6;
         LastAddedElement = new coordonates(Greenfoot.getRandomNumber(size), Greenfoot.getRandomNumber(size));
         AiMatrix = new Type[_size][_size];
     }
@@ -367,7 +367,7 @@ public class Brain extends Actor {
         List<coordonates> MyParcurgere = allWays.get(lastAdded.convertToIndex(size));
         boolean staticEval = false;
         do {
-            if (bestMove <= 15 && localAiLevel == 6) {
+            if (bestMove <= 15 && localAiLevel == AiLevel) {
                 staticEval = true;
                 localAiLevel = 0;
             }
@@ -385,17 +385,16 @@ public class Brain extends Actor {
                                 Integer.MAX_VALUE, staticEval);
                     System.out.println(
                             nextNeigh.x + " " + nextNeigh.y + " " + valoare + " " + bestMove + " " + localAiLevel);
-                    /*
-                     * if (valoare == bestMove) {
-                     * if (Greenfoot.getRandomNumber(2) == 1) {
-                     * nextMove = (Element) Elements.get(nextNeigh.y).get(nextNeigh.x);
-                     * if (nextMove == null) {
-                     * System.err.println("null pointer class brain cast failed");
-                     * break;
-                     * }
-                     * }
-                     * }
-                     */
+                    if (valoare == bestMove) {
+                        if (Greenfoot.getRandomNumber(2) == 1) {
+                            nextMove = (Element) Elements.get(nextNeigh.y).get(nextNeigh.x);
+                            if (nextMove == null) {
+                                System.err.println("null pointer class brain cast failed");
+                                break;
+                            }
+                        }
+                    }
+
                     if (valoare > bestMove) {
                         bestMove = valoare;
                         nextMove = (Element) Elements.get(nextNeigh.y).get(nextNeigh.x);
@@ -508,15 +507,13 @@ public class Brain extends Actor {
 
     private int staticEvaluation(int[] lenghts) {
         int max = 0;
-        int sum=0;
+        int sum = 0;
         for (int i : lenghts) {
-            if(i == max/2 && i != 1)
-            {
+            if (i == max / 2 && i != 1) {
                 sum++;
             }
-            if(i>max)
-            {
-                max = i*2;
+            if (i > max) {
+                max = i * 2;
                 sum = max;
             }
         }
