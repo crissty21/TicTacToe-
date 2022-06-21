@@ -3,7 +3,6 @@ class.Brain.image=blue-draught.png
 class.Decor.image=blue-draught.png
 class.Gun.image=gunmov.png
 class.Line.image=linie.png
-class.da.image=1.png
 dependency1.from=Lvl10X10
 dependency1.to=Gun
 dependency1.type=UsesDependency
