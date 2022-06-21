@@ -95,6 +95,7 @@ public class Brain extends Actor {
         setImage(img);
         AiLevel = 6;
         LastAddedElement = new coordonates(Greenfoot.getRandomNumber(size), Greenfoot.getRandomNumber(size));
+        System.err.println(LastAddedElement.x + " " + LastAddedElement.y);
         AiMatrix = new Type[_size][_size];
     }
 
@@ -384,8 +385,10 @@ public class Brain extends Actor {
                     System.out.println(
                             nextNeigh.x + " " + nextNeigh.y + " " + valoare + " " + bestMove + " " + localAiLevel);
                     if (valoare == bestMove) {
-                        if (Greenfoot.getRandomNumber(2) == 1) {
+                        
+                        if (Greenfoot.getRandomNumber(300) == 100) {
                             nextMove = (Element) Elements.get(nextNeigh.y).get(nextNeigh.x);
+                            System.err.println("sda");
                             if (nextMove == null) {
                                 System.err.println("null pointer class brain cast failed");
                                 break;
@@ -506,7 +509,7 @@ public class Brain extends Actor {
         int max = 0;
         int sum = 0;
         for (int i : lenghts) {
-            
+            // repair this
             if (i > max) {
                 max = i;
                 sum = max;

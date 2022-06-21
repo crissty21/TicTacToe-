@@ -20,4 +20,5 @@ public class Lvl10X10 extends World
         setPaintOrder( Decor.class, Gun.class, Bullet.class, Element.class, pointer.class);
     }
     
+    
 }
