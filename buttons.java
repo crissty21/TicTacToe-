@@ -27,7 +27,7 @@ public abstract class buttons extends decorations {
         limitd = _limitd;
     }
 
-    public void act() { 
+    public void act() {
         super.act();
         if (Greenfoot.mouseMoved(this)) {
             setImage(hoverImage);
