@@ -8,11 +8,6 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class MainMenu extends World
 {
-
-    /**
-     * Constructor for objects of class MainMenu.
-     * 
-     */
     private decorations pressClick;
     private boolean once;
     private buttons start;

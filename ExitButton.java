@@ -1,5 +1,4 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
-import javafx.scene.paint.Stop;
 
 
 public class ExitButton extends buttons
