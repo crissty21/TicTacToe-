@@ -11,7 +11,7 @@ public class Lvl10X10 extends World {
 
     public static greenfoot.Font BurstFont;
 
-    public Lvl10X10() {
+    public Lvl10X10(int gridSize, int linesToWin) {
         // se plaseaza obiectele in functie de raportul din clasa variabile
         super(900, 700, 1);
 
@@ -20,7 +20,7 @@ public class Lvl10X10 extends World {
         Gun refToGun = new Gun();
         addObject(new Cocos(refToGun), 48, 554);
         addObject(refToGun, 90, 610);
-        addObject(new Brain(10, 5, refToGun), 580, 290);
+        addObject(new Brain(gridSize, linesToWin, refToGun), 580, 290);
         addObject(new Next(), 530, 630);
         addObject(new Decor(1), 90, 644);
         setBackground(new GreenfootImage("background 2.png"));
