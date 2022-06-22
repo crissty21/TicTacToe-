@@ -1,5 +1,12 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 /**
  * Write a description of class MainMenu here.
  * 
@@ -8,6 +15,8 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class MainMenu extends World
 {
+    public static greenfoot.Font BurstFont;
+    
     private decorations pressClick;
     private boolean once;
     private buttons start;
@@ -36,7 +45,7 @@ public class MainMenu extends World
                 new GreenfootImage("images\\exit_select.png"));
 
         setPaintOrder(decorations.class, buttons.class);
-
+        createFont();
     }
 
     public void act() {
@@ -50,5 +59,30 @@ public class MainMenu extends World
                 exit.moveFromTo(new coordonates(300, 100), new coordonates(300, 260), 5);
             }
         }
+    }
+    private void createFont() {
+
+        File f = new File("C:\\Users\\Cristi\\java proj\\greenfoot\\Burst_numeric_little-Regular.ttf");
+        try {
+            FileInputStream in = new FileInputStream(f);
+            Font dynamicFont, dynamicFont32;
+
+            dynamicFont = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(f));
+            dynamicFont32 = dynamicFont.deriveFont(24f);
+
+            java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(dynamicFont32);
+            BurstFont = new greenfoot.Font(dynamicFont32.getName(), dynamicFont32.getStyle() % 2 == 1,
+                    dynamicFont32.getStyle() / 2 == 1, dynamicFont32.getSize());
+            in.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (FontFormatException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 }
