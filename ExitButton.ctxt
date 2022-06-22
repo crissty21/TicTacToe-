@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=ExitButton
+comment1.params=normal\ hoverImage
+comment1.target=ExitButton(greenfoot.GreenfootImage,\ greenfoot.GreenfootImage)
+comment2.params=
+comment2.target=void\ act()
+numComments=3

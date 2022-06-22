@@ -1,0 +1,12 @@
+#BlueJ class context
+comment0.target=StartButton
+comment0.text=\r\n\ Write\ a\ description\ of\ class\ StartButton\ here.\r\n\ \r\n\ @author\ (your\ name)\r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment1.params=normal\ hoverImage
+comment1.target=StartButton(greenfoot.GreenfootImage,\ greenfoot.GreenfootImage)
+comment2.params=x
+comment2.target=int\ function1(int)
+comment3.params=x
+comment3.target=int\ function2(int)
+comment4.params=
+comment4.target=void\ act()
+numComments=5
