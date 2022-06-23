@@ -22,10 +22,12 @@ public class Element extends GridElement {
             new GreenfootImage("box12.png"),
             new GreenfootImage("box13.png")
     };
-
+    private static boolean AI;
+    
 
     public Element(int CoordX, int CoordY) {
         super(CoordX, CoordY);
+        //initImgs();
         setImage(explozie[0]);
         selected = false;
         contor = 0;
@@ -35,6 +37,10 @@ public class Element extends GridElement {
         this(CoordX, CoordY);
         refToBrain = refToOwner;
         refToGun = _refToGun;
+    }
+
+    public static void setAi(boolean value) {
+        AI = value;
     }
 
     public int imgDisplayed() {
@@ -71,14 +77,28 @@ public class Element extends GridElement {
     }
 
     public void act() {
-        if (Greenfoot.mouseClicked(this) && Brain.CurrentPlayer == Type.Y) {
-            // cooldown
-            if (Brain.gameState == State.waitForMove) {
-                if (Val == Type.notOpened) // verifica daca nu a fost deschisa cutia
-                {
-                    openIt();
+
+        if (Greenfoot.mouseClicked(this)) {
+            if (AI) {
+                // in cazul acesta, putem adauga doar daca e randul jucatorului Y
+                if (Brain.CurrentPlayer == Type.Y) {
+                    // cooldown
+                    if (Brain.gameState == State.waitForMove) {
+                        if (Val == Type.notOpened) // verifica daca nu a fost deschisa cutia
+                        {
+                            openIt();
+                        }
+                    }
+                }
+            } else {
+                if (Brain.gameState == State.waitForMove) {
+                    if (Val == Type.notOpened) // verifica daca nu a fost deschisa cutia
+                    {
+                        openIt();
+                    }
                 }
             }
+
         }
         if (selected && Brain.gameState == State.animationOn) {
             contor++;
@@ -123,7 +143,6 @@ public class Element extends GridElement {
             }
             iter.scale(newWidth, newHeight);
             temp = new GreenfootImage((int) (initialSpace / raport), (int) (initialSpace / raport));
-            // temp.fillRect(0, 0, (int)(initialSpace/raport),(int)(initialSpace/raport));
             temp.drawImage(iter, 0, 0);
             explozie[i++] = temp;
         }
@@ -133,6 +152,7 @@ public class Element extends GridElement {
     public static void initImgs() {
         xImg = new GreenfootImage("as.png");
         oImg = new GreenfootImage("os.png");
+        
         explozie[0] = new GreenfootImage("box1.png");
         explozie[1] = new GreenfootImage("box2.png");
         explozie[2] = new GreenfootImage("box3.png");

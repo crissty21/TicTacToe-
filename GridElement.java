@@ -6,9 +6,10 @@ public class GridElement extends Actor {
     protected List<List<GridElement>> Lines; // lista cu linile din care face parte obiectul
     protected Type Val;
     private final int[][] offsetNeigh = { { -1, -1, -1, 0, 0, 1, 1, 1 }, { -1, 0, 1, -1, 1, -1, 0, 1 } }; // offsetul la
+    // private int hasLineOver = -1;
 
-    public GridElement(){
-        x=y=0;
+    public GridElement() {
+        x = y = 0;
         Val = Val.notOpened;
         Lines = new ArrayList<>();
         for (int i = 0; i < 4; i++)
@@ -20,6 +21,17 @@ public class GridElement extends Actor {
         x = CoordX;
         y = CoordY;
     }
+
+    /*
+     * public void addLineOver(int orientare)
+     * {
+     * hasLineOver = orientare;
+     * }
+     * public int getLineOver()
+     * {
+     * return hasLineOver;
+     * }
+     */
     public boolean addNeigh(int i) {
         boolean added;
         MyList<? extends GridElement> desiredLine;

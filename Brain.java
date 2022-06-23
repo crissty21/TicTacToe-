@@ -66,18 +66,21 @@ public class Brain extends Actor {
     List<List<coordonates>> allWays = new ArrayList<>();
     private Element temp;
 
+    private boolean AI;
+
     public Brain() {
     }
 
-    public Brain(int _size, int _winReq, Gun _refToGun) {
+    public Brain(int _size, int _winReq, Gun _refToGun, boolean AiOn) {
         this();
-        init(_size, _winReq, _refToGun);
+        init(_size, _winReq, _refToGun, AiOn);
         createMap();
         // setImage(new GreenfootImage("placa mov.png"));
     }
 
-    private void init(int _size, int _winReq, Gun _refToGun) {
+    private void init(int _size, int _winReq, Gun _refToGun, boolean AiOn) {
         // initializeaza variabile
+        AI = AiOn;
         refToGun = _refToGun;
         gameState = State.waitForMove;
         size = _size;
@@ -93,10 +96,12 @@ public class Brain extends Actor {
             raport = -1;
         GreenfootImage img = new GreenfootImage(500, 500);
         setImage(img);
-        AiLevel = 6;
-        LastAddedElement = new coordonates(Greenfoot.getRandomNumber(size), Greenfoot.getRandomNumber(size));
-        //System.err.println(LastAddedElement.x + " " + LastAddedElement.y);
-        AiMatrix = new Type[_size][_size];
+        if (AI) {
+            // se executa doar daca se joaca contra calculatorului
+            AiLevel = 6;
+            LastAddedElement = new coordonates(Greenfoot.getRandomNumber(size), Greenfoot.getRandomNumber(size));
+            AiMatrix = new Type[_size][_size];
+        }
     }
 
     private void createMap() {
@@ -188,6 +193,7 @@ public class Brain extends Actor {
 
     public void createGrid(int n) {
         // creaza gridul
+        setLocation(turnXinCoord(n / 2, n), turnYinCoord(n / 2, n));
         Elements.clear();
         MyList<Element> TempList;
         for (int i = 0; i < n; i++) {
@@ -196,20 +202,23 @@ public class Brain extends Actor {
                 Element temp = new Element(i, j, this, refToGun);
                 TempList.add(temp);
                 getWorld().addObject(temp, turnXinCoord(i, n), turnYinCoord(j, n));
+
             }
             Elements.add(TempList);
         }
-        setLocation(turnXinCoord(n / 2, n), turnYinCoord(n / 2, n));
 
+    }
+
+    private void createPointers() {
         pointer temp;
         for (int i = 0; i < 25; i++) {
             temp = new pointer(raport, i);
             getWorld().addObject(temp, 100, 100);
             crossair.add(temp);
         }
-        ZoomElement.scaleImgs();
     }
 
+    // ai function
     private void transcriptGrid() {
         Type temp;
         for (int i = 0; i < size; i++) {
@@ -220,6 +229,7 @@ public class Brain extends Actor {
         }
     }
 
+    // ai function
     private List<coordonates> getParcurgere(coordonates startPosition) {
         List<coordonates> parcurgeri = new ArrayList<>();
         // creaza pentru elementul de la pozita startPosition, parcurferea in spirala a
@@ -348,6 +358,7 @@ public class Brain extends Actor {
         return parcurgeri;
     }
 
+    // ai function
     private void createAllParcurgeri() {
         for (int i = 0; i < size; i++)
             for (int j = 0; j < size; j++)
@@ -355,6 +366,7 @@ public class Brain extends Actor {
 
     }
 
+    // ai function
     protected GridElement AiMove(coordonates lastAdded) {
         int bestMove = Integer.MIN_VALUE;
         int valoare;
@@ -382,13 +394,16 @@ public class Brain extends Actor {
                     else
                         valoare = minimax(AiMatrix, localAiLevel, Type.Y, nextNeigh, Integer.MIN_VALUE,
                                 Integer.MAX_VALUE, staticEval);
-                    /*System.out.println(
-                            nextNeigh.x + " " + nextNeigh.y + " " + valoare + " " + bestMove + " " + localAiLevel);*/
+                    /*
+                     * System.out.println(
+                     * nextNeigh.x + " " + nextNeigh.y + " " + valoare + " " + bestMove + " " +
+                     * localAiLevel);
+                     */
                     if (valoare == bestMove) {
-                        
+
                         if (Greenfoot.getRandomNumber(300) == 100) {
                             nextMove = (Element) Elements.get(nextNeigh.y).get(nextNeigh.x);
-                            //System.err.println("sda");
+                            // System.err.println("sda");
                             if (nextMove == null) {
                                 System.err.println("null pointer class brain cast failed");
                                 break;
@@ -415,6 +430,7 @@ public class Brain extends Actor {
         return nextMove;
     }
 
+    // ai function
     private Type inversType(Type oldOne) {
         if (oldOne == Type.X)
             return Type.Y;
@@ -422,6 +438,7 @@ public class Brain extends Actor {
             return Type.X;
     }
 
+    // ai function
     private boolean checkWon(int[] lenghts) {
         for (int i : lenghts) {
             if (i >= winReq)
@@ -430,6 +447,7 @@ public class Brain extends Actor {
         return false;
     }
 
+    // ai function
     private int[] checkLenghts(Type[][] grid, Type curentPlayer, coordonates lastAdded) {
         int[] lenghts = { 0, 0, 0, 0 };
 
@@ -505,6 +523,7 @@ public class Brain extends Actor {
         return lenghts;
     }
 
+    // ai function
     private int staticEvaluation(int[] lenghts) {
         int max = 0;
         int sum = 0;
@@ -518,6 +537,7 @@ public class Brain extends Actor {
         return sum;
     }
 
+    // ai function
     private int minimax(Type[][] grid, int depth, Type curentPlayer, coordonates lastAdded, int alpha, int beta,
             boolean staticEval) {
         int[] lenghts = checkLenghts(grid, inversType(curentPlayer), lastAdded);
@@ -581,13 +601,10 @@ public class Brain extends Actor {
 
     protected void clicked(Element Clicked) {
         boolean added;
-
         Clicked.setStatus(CurrentPlayer);
         LastAddedElement = Clicked.getCoordonates();
-
         // ne adaugam pe noi pe liniile componente
         Clicked.selfAdd();
-
         // verificam vecinii si adaugam pe linie daca sunt deschisi
         // avem 8 vecini
         for (int i = 0; i < 8; i++) {
@@ -597,8 +614,13 @@ public class Brain extends Actor {
                 if (Clicked.won(mapNeigh[i])) {
                     // adding the Lines
                     for (GridElement iter : Clicked.getLine(mapNeigh[i])) {
-                        getWorld().addObject(new Line(mapNeigh[i]), turnXinCoord(iter.getCoordX(), size),
-                                turnYinCoord(iter.getCoordY(), size));
+                        if (raport == -1) {
+                            getWorld().addObject(new Line(mapNeigh[i]), (int) (iter.getX()),
+                                    (int) (iter.getY()));
+                        } else {
+                            getWorld().addObject(new Line(mapNeigh[i]), (int) (iter.getX() - 6 / raport),
+                                    (int) (iter.getY() - 6 / raport));
+                        } // iter.addLineOver(mapNeigh[i]);
                     }
                     break;
                 }
@@ -613,20 +635,27 @@ public class Brain extends Actor {
     public void act() {
         if (ok) {
             // begin play
-            ok = false;
-            createAllParcurgeri();
+            if (AI) {
+                createAllParcurgeri();
+            }
             createGrid(size);
+            createPointers();
+            ZoomElement.scaleImgs();
+            ok = false;
         }
         if (size > 20) {
             movePointer();
         }
-        if (CurrentPlayer == Type.X) {
-            if (Brain.gameState == State.waitForMove) {
-                temp = (Element) AiMove(LastAddedElement);
-                if (temp != null)
-                    temp.openIt();
-                else
-                    System.err.println("null pointer cast failed");
+        if (AI) {
+            // se executa doar daca jucam contra Ai-ului
+            if (CurrentPlayer == Type.X) {
+                if (Brain.gameState == State.waitForMove) {
+                    temp = (Element) AiMove(LastAddedElement);
+                    if (temp != null)
+                        temp.openIt();
+                    else
+                        System.err.println("null pointer cast failed");
+                }
             }
         }
     }
@@ -637,6 +666,10 @@ public class Brain extends Actor {
             int index = 0;
             int cordx, cordy;
             for (pointer iter : crossair) {
+                if (iter == null) {
+                    System.err.println("null pointer in class brain");
+                    break;
+                }
                 cordx = mouse.getX() + (int) (50 / raport * offsetPointer[0][index]);
                 cordy = mouse.getY() + (int) (50 / raport * offsetPointer[1][index]);
                 iter.setLocation(cordx, cordy);
@@ -645,9 +678,3 @@ public class Brain extends Actor {
         }
     }
 }
-/*
- * "java.project.referencedLibraries": [
- * "lib/doua stelute sus/*.jar",
- * "c:\\path\\to\\jarfile\\commons-logging-1.1.1.jar"
- * ]
- */

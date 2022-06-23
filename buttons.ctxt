@@ -1,14 +1,18 @@
 #BlueJ class context
 comment0.target=buttons
-comment0.text=\r\n\ Write\ a\ description\ of\ class\ buttons\ here.\r\n\ \r\n\ @author\ (your\ name)\r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
-comment1.params=kid
-comment1.target=void\ setChild(ShowText)
-comment2.params=
-comment2.target=buttons()
-comment3.params=normal\ _hoverImage
-comment3.target=buttons(greenfoot.GreenfootImage,\ greenfoot.GreenfootImage)
+comment0.text=\r\n\ clasa\ abstracta\ ce\ implementeaza\ functii\ pentru\ butoane\r\n
+comment1.params=
+comment1.target=buttons()
+comment2.params=normal\ _hoverImage
+comment2.target=buttons(greenfoot.GreenfootImage,\ greenfoot.GreenfootImage)
+comment2.text=\r\n\ constructorul\ clasei\ buttons\r\n\ @param\ normal\ imaginea\ butonului\ in\ starea\ idle\r\n\ @param\ _hoverImage\ imaginea\ butonului\ in\ stare\ de\ hover\r\n
+comment3.params=kid
+comment3.target=void\ setChild(ShowText)
+comment3.text=\r\n\ leaga\ un\ obiect\ al\ clasei\ {@link\ ShowText}\ de\ obiectul\ curent\r\n\ acest\ obiect\ va\ fi\ responsabil\ de\ afisarea\ valori\ retinute\ in\ variabila\ value\r\n\ @param\ kid\ obiectul\ clasei\ ShowText\r\n
 comment4.params=_limits\ _limitd
 comment4.target=void\ allowMoveLR(int,\ int)
+comment4.text=\r\n\ permite\ butonului\ sa\ se\ miste\ stanga\ dreapta,\ intre\ doua\ limite\r\n\ @param\ _limits\ limita\ stanga\r\n\ @param\ _limitd\ limita\ dreapta\r\n
 comment5.params=
 comment5.target=void\ act()
+comment5.text=\r\n\ act()\ este\ responsabil\ de\ miscarea\ butonului\r\n\ de\ rularea\ animatiilor\ din\ clasa\ {@link\ decorations}\ \r\n
 numComments=6

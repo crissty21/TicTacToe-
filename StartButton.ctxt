@@ -1,10 +1,12 @@
 #BlueJ class context
 comment0.target=StartButton
-comment0.text=\r\n\ Write\ a\ description\ of\ class\ StartButton\ here.\r\n\ \r\n\ @author\ (your\ name)\r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment0.text=\r\n\ butonul\ ce\ porneste\ jocul\r\n
 comment1.params=normal\ hoverImage
 comment1.target=StartButton(greenfoot.GreenfootImage,\ greenfoot.GreenfootImage)
+comment1.text=\r\n\ constructorul\ clasei\ cand\ se\ stiu\ imaginiile\ starii\ de\ idel\ si\ starii\ de\ hover\r\n\ @param\ normal\ \ \ \ imaginea\ starii\ de\ idel\r\n\ @param\ hoverImage\ \ \ \ imaginea\ starii\ de\ hover\r\n
 comment2.params=x
 comment2.target=int\ function1(int)
+comment2.text=\r\n\ transforma\ variabila\ intreaga\ x,\ in\ coordonate\ in\ lume\r\n
 comment3.params=x
 comment3.target=int\ function2(int)
 comment4.params=

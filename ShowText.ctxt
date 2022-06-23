@@ -1,14 +1,19 @@
 #BlueJ class context
 comment0.target=ShowText
-comment0.text=\r\n\ Write\ a\ description\ of\ class\ ShowText\ here.\r\n\ \r\n\ @author\ (your\ name)\r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment0.text=\r\n\ Clasa\ responsabila\ de\ afisarea\ de\ text\r\n
 comment1.params=x\ _parent
 comment1.target=ShowText(int,\ decorations)
+comment1.text=\r\n\ constructorul\ clasei\ cand\ se\ stie\ doar\ parintele\ si\ valoare\ initiala\r\n\ \r\n\ @param\ x\ \ \ \ \ \ \ //valoarea\ initiala\ ce\ va\ fi\ afisata\ la\ crearea\ obiectului\r\n\ @param\ _parent\ //parintele\ obiectului\r\n
 comment2.params=x\ _parent\ mwp
 comment2.target=ShowText(int,\ decorations,\ boolean)
+comment2.text=\r\n\ constructorul\ clasei\ cand\ se\ stie\ valoare\ initiala,\ parintele\ si\ daca\ se\ va\r\n\ misca\ sau\ nu\ cu\ acesta\r\n\ \r\n\ @param\ x\ \ \ \ \ \ \ valoarea\ initiala\r\n\ @param\ _parent\ parintele\r\n\ @param\ mwp\ \ \ \ \ true\ \=\ Move\ With\ Parent\ /\ false\ \=\ stay\ still\r\n
 comment3.params=x\ _parent\ mwp\ textColor\ fontDim
 comment3.target=ShowText(int,\ decorations,\ boolean,\ greenfoot.Color,\ int)
+comment3.text=\r\n\ constructorul\ clasei\ cand\ se\ stie\ valoarea\ initiala,\ culoarea\ textului,\r\n\ dimensiunea\ acestuia,\ parintele,\ si\ daca\ se\ va\ misca\ sau\ nu\ obiectul\ cu\r\n\ acesta\r\n\ \r\n\ @param\ x\ \ \ \ \ \ \ \ \ valoarea\ initiala\r\n\ @param\ _parent\ \ \ parintele\r\n\ @param\ mwp\ \ \ \ \ \ \ true\ \=\ Move\ With\ Parent\ /\ false\ \=\ stay\ still\r\n\ @param\ textColor\ culoarea\ textului\r\n\ @param\ fontDim\ \ \ dimensiunea\ textului\r\n
 comment4.params=x
 comment4.target=void\ updateImage(int)
+comment4.text=\r\n\ updatateaza\ imaginea\ obiectului,\ astfel\ incat\ aceasta\ va\ arata\ valoare\r\n\ parametrului\ x\r\n\ \r\n\ @param\ x\ noua\ valoare\ de\ afisat\r\n
 comment5.params=
 comment5.target=void\ act()
+comment5.text=\r\n\ act()\ -\ este\ responsabil\ de\ miscarea\ obiectului\ cu\ parintele,\ daca\ este\ permis\r\n
 numComments=6

@@ -1,11 +1,14 @@
 import java.util.List;
+
+import javax.print.FlavorException;
+
 import greenfoot.*;
 
 public class Bullet extends Actor {
     private Element refToTarget;
     private GreenfootImage glont;
-    private Vector2d newLocation, moveHere;
-    private int ct;
+    private coordonates newLocation, moveHere;
+    private boolean once;
     public static float raport = 1;
 
     public Bullet(Element target) {
@@ -22,14 +25,15 @@ public class Bullet extends Actor {
     private void initVars(Element target) {
         glont = new GreenfootImage("bullet.png");
         refToTarget = target;
-        ct = 0;
-        moveHere = new Vector2d(refToTarget.getX(), refToTarget.getY());
+        once = true;
+        moveHere = new coordonates(refToTarget.getX(), refToTarget.getY());
     }
 
     public void act() {
-        ct++;
-        if (ct == 20) {
+
+        if (isTouching(Gun.class) == false && once) {
             setImage(glont);
+            once = false;
         }
         newLocation = lerp(moveHere, 20);
         if (reachedDestination()) {
@@ -39,7 +43,7 @@ public class Bullet extends Actor {
     }
 
     private boolean reachedDestination() {
-        setLocation(newLocation.getX(), newLocation.getY());
+        setLocation(newLocation.x, newLocation.y);
         if (isTouching(Element.class)) {
             List<Element> intersectingObjs = getIntersectingObjects(Element.class);
             for (Element iter : intersectingObjs) {
@@ -51,13 +55,13 @@ public class Bullet extends Actor {
         return false;
     }
 
-    private Vector2d lerp(Vector2d other, double speed) {
+    private coordonates lerp(coordonates other, double speed) {
         // interpolare liniara
-        double dx = other.getX() - getX(), dy = other.getY() - getY();
+        double dx = other.x - getX(), dy = other.y - getY();
         double direction = Math.atan2(dy, dx);
         double x = getX() + (speed * Math.cos(direction));
         double y = getY() + (speed * Math.sin(direction));
-        return new Vector2d(x, y);
+        return new coordonates((int) x, (int) y);
     }
 
     private void resizeImg() {
@@ -69,27 +73,5 @@ public class Bullet extends Actor {
         if (newHeight == 0)
             newHeight = 1;
         glont.scale(newWidth, newHeight);
-    }
-}
-
-class Vector2d {
-    private int X, Y;
-
-    public Vector2d(int x, int y) {
-        X = x;
-        Y = y;
-    }
-
-    public Vector2d(Double x, Double y) {
-        X = x.intValue();
-        Y = y.intValue();
-    }
-
-    public int getX() {
-        return X;
-    }
-
-    public int getY() {
-        return Y;
     }
 }

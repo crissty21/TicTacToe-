@@ -48,52 +48,52 @@ public class StartButton extends buttons {
 
             //backgroundul ferestrei de setari
             decorations setting = new decorations(new GreenfootImage("images\\settings_screen.png"));
-            getWorld().addObject(setting, 300, 240);
+            getWorld().addObject(setting, 300, 200);
             objsToBeRemoved.add(setting);
             //backgroundul ferestrei responsabile de setarea dimensiunii liniei de win
             decorations changeLineSizeBg = new decorations(new GreenfootImage("images\\size_change.png"));
-            getWorld().addObject(changeLineSizeBg, 265, 340);
+            getWorld().addObject(changeLineSizeBg, 265, 300);
             objsToBeRemoved.add(changeLineSizeBg);
 
             //butonul ce modifica dimensiunea tablei de joc 
             ChangeSize adjGridSize = new ChangeSize(new GreenfootImage("images\\progress_pointer_idle.png"),
                     new GreenfootImage("images\\progress_pointer_select.png"));
-            getWorld().addObject(adjGridSize, 204, 282);
+            getWorld().addObject(adjGridSize, 204, 242);
             objsToBeRemoved.add(adjGridSize);
             adjGridSize.allowMoveLR(239, 361);
-            adjGridSize.moveFromTo(new coordonates(239, 282), new coordonates(function1(ChangeSize.size), 282), 3);
+            adjGridSize.moveFromTo(new coordonates(239, 242), new coordonates(function1(ChangeSize.size), 242), 3);
 
             // butonul ce modifica dimensiunea linie cu care se castiga
             ChangeLine adjLineSize = new ChangeLine(new GreenfootImage("images\\progress_pointer_idle.png"),
                     new GreenfootImage("images\\progress_pointer_select.png"));
-            getWorld().addObject(adjLineSize, 192, 350);
+            getWorld().addObject(adjLineSize, 192, 310);
             objsToBeRemoved.add(adjLineSize);
             adjLineSize.allowMoveLR(192, 314);
-            adjLineSize.moveFromTo(new coordonates(227, 350), new coordonates(function2(ChangeLine.lineSize), 350), 3);
+            adjLineSize.moveFromTo(new coordonates(227, 310), new coordonates(function2(ChangeLine.lineSize), 310), 3);
             
             //butonul ce inchide fereastra 
             back = new BackX(new GreenfootImage("images\\back_idle.png"),
                     new GreenfootImage("images\\back_select.png"));
-            getWorld().addObject(back, 200, 220);
+            getWorld().addObject(back, 200, 180);
             objsToBeRemoved.add(back);
 
             //butonul de done, ce simbolizeaza salvarea setarilor si inceperea jocului
             StartGame start = new StartGame(new GreenfootImage("images\\done_idle.png"),
                     new GreenfootImage("images\\done_select.png"));
-            getWorld().addObject(start, 390, 335);
+            getWorld().addObject(start, 390, 295);
             objsToBeRemoved.add(start);
 
             //scrisul ce arata dimensiunea liniei 
             ShowText showText = new ShowText(ChangeLine.lineSize, adjLineSize, false, new Color(12, 12, 13),19);
-            getWorld().addObject(showText,345,346);
+            getWorld().addObject(showText,345,306);
 
             //scrisul ce arata dimensiunea liniei de castig
             showText = new ShowText(ChangeLine.lineSize, adjGridSize, true);
             getWorld().addObject(showText,adjGridSize.getX(),adjGridSize.getY() - 27);
 
             //butoanele din care selectezi contra cui joci 
-            getWorld().addObject(new Oponent(new GreenfootImage("images\\player_machine_idle.png"), new GreenfootImage("images\\player_machine_select.png"), true), 230, 375);
-            getWorld().addObject(new Oponent(new GreenfootImage("images\\player_player_idle.png"), new GreenfootImage("images\\player_player_select.png"), false), 380, 375);
+            getWorld().addObject(new Oponent(new GreenfootImage("images\\player_machine_idle.png"), new GreenfootImage("images\\player_machine_select.png"), true), 230, 340);
+            getWorld().addObject(new Oponent(new GreenfootImage("images\\player_player_idle.png"), new GreenfootImage("images\\player_player_select.png"), false), 380, 340);
 
         }
         //apasarea butonului de back

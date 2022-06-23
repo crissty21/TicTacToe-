@@ -22,12 +22,19 @@ public class ZoomElement extends Actor {
             new GreenfootImage("box13.png")
     };
 
+    /*
+     * private Line lineOver;
+     * private boolean AddedLine;
+     */
     public ZoomElement(Type _tip, Element _refToCopied) {
         refToCopied = _refToCopied;
         tip = _tip;
         choose();
         curentImg = -5;
-
+        /*
+         * lineOver = null;
+         * AddedLine = false;
+         */
     }
 
     private void choose() {
@@ -69,5 +76,22 @@ public class ZoomElement extends Actor {
                     setImage(explozie[img]);
             }
         }
+        /*
+         * /
+         * int temp = refToCopied.getLineOver();
+         * if (temp != -1 && AddedLine==false) {
+         * lineOver = new Line(temp);
+         * getWorld().addObject(lineOver, getX(), getY());
+         * AddedLine = true;
+         * }
+         */
     }
+    /*
+     * protected void finalize() {
+     * if(AddedLine)
+     * {
+     * getWorld().removeObject(lineOver);
+     * }
+     * }
+     */
 }

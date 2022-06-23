@@ -1,10 +1,13 @@
 #BlueJ class context
 comment0.target=MainMenu
-comment0.text=\r\n\ Write\ a\ description\ of\ class\ MainMenu\ here.\r\n\ \r\n\ @author\ (your\ name)\ \r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment0.text=\r\n\ lumea\ meniului\ principal\r\n\ aceasta\ se\ ocupa\ cu\ setarea\ valorilor\ initiale\ ale\ jocului\ \r\n\ si\ de\ pornirea\ acestuia\r\n
 comment1.params=
 comment1.target=MainMenu()
+comment1.text=\r\n\ default\ constructor\ \r\n
 comment2.params=
 comment2.target=void\ act()
+comment2.text=\r\n\ act()\ se\ ocupa\ de\ animatii\r\n
 comment3.params=
 comment3.target=void\ createFont()
+comment3.text=\r\n\ functie\ ce\ creaza\ fontul\ utilizand\ un\ fisier\ True\ Type\ Font\r\n
 numComments=4

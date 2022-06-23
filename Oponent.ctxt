@@ -1,7 +1,9 @@
 #BlueJ class context
 comment0.target=Oponent
-comment0.text=\r\n\ Write\ a\ description\ of\ class\ Oponent\ here.\r\n\ \r\n\ @author\ (your\ name)\ \r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
-comment1.params=
-comment1.target=void\ act()
-comment1.text=\r\n\ Act\ -\ do\ whatever\ the\ Oponent\ wants\ to\ do.\ This\ method\ is\ called\ whenever\r\n\ the\ 'Act'\ or\ 'Run'\ button\ gets\ pressed\ in\ the\ environment.\r\n
-numComments=2
+comment0.text=\r\n\ ii\ permite\ jucatorului\ sa\ selecteze\ daca\ va\ juca\ contra\ altui\ jucator\ sau\r\n\ contra\ calculatorului\r\n
+comment1.params=normal\ hoverImage\ _pORc
+comment1.target=Oponent(greenfoot.GreenfootImage,\ greenfoot.GreenfootImage,\ boolean)
+comment1.text=\r\n\ constructor\ cand\ se\ stiu\ imaginile\ celor\ doua\ stari\:\ de\ idle\ si\ hover\r\n\ si\ tipul\ butonului\r\n\ \r\n\ @param\ normal\ \ \ \ \ imaginea\ starii\ de\ idle\r\n\ @param\ hoverImage\ imaginea\ starii\ de\ hover\r\n\ @param\ _pORc\ \ \ \ \ \ true\ \=\ se\ va\ juca\ contra\ ai\ /\ false\ \=\ se\ va\ juca\ contra\ alt\r\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ jucator\r\n
+comment2.params=
+comment2.target=void\ act()
+numComments=3
