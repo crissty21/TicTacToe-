@@ -8,29 +8,26 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class ChangeLine extends buttons {
     public static int lineSize = 14;
-    private int localLineSize = lineSize;
-    private ShowText child;
+  
 
     public ChangeLine(GreenfootImage normal, GreenfootImage hoverImage) {
         super(normal, hoverImage);
+        value = lineSize;
     }
-    public void setChild(ShowText kid)
-    {
-        child = kid;
-    }
+    
     private int function(int x)
     {
         return (int)Math.round((x-175.471)/7.176)+1;
     }
     public void act() {
         super.act();
-        lineSize = function(getX());
+        value = function(getX());
         if (Greenfoot.mouseDragEnded(this)) {
-            lineSize = localLineSize;
+            lineSize = value;
         }
         if(child != null)
         {
-            child.updateImage(lineSize);
+            child.updateImage(value);
         }
     }
 

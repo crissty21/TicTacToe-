@@ -19,10 +19,10 @@ public class ShowText extends decorations {
         updateImage(x);
         parent = _parent;
         moveWithParrent = false;
-        ChangeLine parentAsCL = (ChangeLine) parent;
-        if (parentAsCL != null) {
+        buttons parentAsCL = (buttons) parent;
+    
             parentAsCL.setChild(this);
-        }
+    
     }
 
     public ShowText(int x, decorations _parent, boolean mwp) {
@@ -38,10 +38,8 @@ public class ShowText extends decorations {
         parent = _parent;
         moveWithParrent = mwp;
         moveWithParrent = false;
-        ChangeLine parentAsCL = (ChangeLine) parent;
-        if (parentAsCL != null) {
-            parentAsCL.setChild(this);
-        }
+        buttons parentAsCL = (buttons) parent;
+        parentAsCL.setChild(this);
 
     }
 
@@ -58,6 +56,9 @@ public class ShowText extends decorations {
     }
 
     public void act() {
-
+        if(moveWithParrent)
+        {
+            setLocation(parent.getX(), getY());
+        }
     }
 }

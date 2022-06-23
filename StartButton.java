@@ -65,9 +65,9 @@ public class StartButton extends buttons {
             ShowText firShowText = new ShowText(ChangeLine.lineSize, adjSettings, false, new Color(12, 12, 13),19);
             getWorld().addObject(firShowText,345,346);
 
-            ////// fix this
-            /*firShowText = new ShowText(ChangeLine.lineSize, adjChangeSize, true);
-            getWorld().addObject(firShowText,adjChangeSize.getX(),adjChangeSize.getY() - 27);*/
+          
+            firShowText = new ShowText(ChangeLine.lineSize, adjChangeSize, true);
+            getWorld().addObject(firShowText,adjChangeSize.getX(),adjChangeSize.getY() - 27);
 
 
         }

@@ -8,9 +8,9 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class ChangeSize extends buttons {
     public static int size = 80;
-    private int localSize = size;
     public ChangeSize(GreenfootImage normal, GreenfootImage hoverImage) {
         super(normal, hoverImage);
+        value = size;
     }
 
     private int function(int x)
@@ -19,9 +19,10 @@ public class ChangeSize extends buttons {
     }
     public void act() {
         super.act();
-        size = function(getX());
+        value = function(getX());
+        child.updateImage(value);
         if (Greenfoot.mouseDragEnded(this)) {
-            size = localSize;
+            size = value;
         }
     }
 }

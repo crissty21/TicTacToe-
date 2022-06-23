@@ -11,7 +11,12 @@ public abstract class buttons extends decorations {
     private GreenfootImage hoverImage;
     private boolean moveLR;
     private int limits, limitd;
-
+    public int value;
+    protected ShowText child;
+    public void setChild(ShowText kid)
+    {
+        child = kid;
+    }
     public buttons() {
     }
 

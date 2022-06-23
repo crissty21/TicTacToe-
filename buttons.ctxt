@@ -1,12 +1,14 @@
 #BlueJ class context
 comment0.target=buttons
 comment0.text=\r\n\ Write\ a\ description\ of\ class\ buttons\ here.\r\n\ \r\n\ @author\ (your\ name)\r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
-comment1.params=
-comment1.target=buttons()
-comment2.params=normal\ _hoverImage
-comment2.target=buttons(greenfoot.GreenfootImage,\ greenfoot.GreenfootImage)
-comment3.params=_limits\ _limitd
-comment3.target=void\ allowMoveLR(int,\ int)
-comment4.params=
-comment4.target=void\ act()
-numComments=5
+comment1.params=kid
+comment1.target=void\ setChild(ShowText)
+comment2.params=
+comment2.target=buttons()
+comment3.params=normal\ _hoverImage
+comment3.target=buttons(greenfoot.GreenfootImage,\ greenfoot.GreenfootImage)
+comment4.params=_limits\ _limitd
+comment4.target=void\ allowMoveLR(int,\ int)
+comment5.params=
+comment5.target=void\ act()
+numComments=6
