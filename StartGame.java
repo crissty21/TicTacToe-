@@ -6,7 +6,7 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class StartGame extends buttons {
     /**
      * constructorul clasei cand se cunosc cele doua imagini ale butonului: de idle
-     * si hover
+     * si hover 
      * functioneaza prin apelarea constructorului superclasei
      * 
      * @param normal     imaginea starii de idle
@@ -19,7 +19,7 @@ public class StartGame extends buttons {
     public void act() {
         super.act();
         if (Greenfoot.mouseClicked(this)) {
-            Greenfoot.setWorld(new Lvl10X10(ChangeSize.size, ChangeLine.lineSize));
+            Greenfoot.setWorld(new Lvl10X10(ChangeSize.size, ChangeLine.lineSize, Oponent.pOrC));
         }
     }
 }

@@ -91,6 +91,9 @@ public class StartButton extends buttons {
             showText = new ShowText(ChangeLine.lineSize, adjGridSize, true);
             getWorld().addObject(showText,adjGridSize.getX(),adjGridSize.getY() - 27);
 
+            //butoanele din care selectezi contra cui joci 
+            getWorld().addObject(new Oponent(new GreenfootImage("images\\player_machine_idle.png"), new GreenfootImage("images\\player_machine_select.png"), true), 230, 375);
+            getWorld().addObject(new Oponent(new GreenfootImage("images\\player_player_idle.png"), new GreenfootImage("images\\player_player_select.png"), false), 380, 375);
 
         }
         //apasarea butonului de back
