@@ -4,73 +4,96 @@ import java.util.List;
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class StartButton here.
- * 
- * @author (your name)
- * @version (a version number or a date)
+ * butonul ce porneste jocul
  */
 public class StartButton extends buttons {
+    /**
+     * aceasta clasa va afisa meniul de setari
+     */
+    //back este un obiect din coltul clasei, care apasat, va inchide fereastra de setari 
     private BackX back;
+    //obiectele din fereastra, ce vor fi sterse in cazul apasarii butonului back
     private List<decorations> objsToBeRemoved;
+ 
 
+    /**
+     * constructorul clasei cand se stiu imaginiile starii de idel si starii de hover
+     * @param normal    imaginea starii de idel
+     * @param hoverImage    imaginea starii de hover
+     */
     public StartButton(GreenfootImage normal, GreenfootImage hoverImage) {
         super(normal, hoverImage);
         objsToBeRemoved = new ArrayList<>();
     }
 
+    /**
+     * transforma variabila intreaga x, in coordonate in lume
+     */
     private int function1(int x) {
         return (int) (1.271 * x + 235.188);
     }
-
     private int function2(int x) {
         return (int) (7.176 * x + 205.471);
     }
-    private int offset = 27;
+    
     public void act() {
         super.act();
         if (Greenfoot.mouseClicked(this) == true) {
             getWorld().setPaintOrder(decorations.class);
+            //fundalul negru semitrasparent
             decorations blackBack = new decorations(new GreenfootImage("images\\mask.png"));
             getWorld().addObject(blackBack, 300, 200);
             blackBack.fadeIn(5);
             objsToBeRemoved.add(blackBack);
+
+            //backgroundul ferestrei de setari
             decorations setting = new decorations(new GreenfootImage("images\\settings_screen.png"));
             getWorld().addObject(setting, 300, 240);
             objsToBeRemoved.add(setting);
-            decorations changeSize = new decorations(new GreenfootImage("images\\size_change.png"));
-            getWorld().addObject(changeSize, 265, 340);
-            objsToBeRemoved.add(changeSize);
-            ChangeSize adjChangeSize = new ChangeSize(new GreenfootImage("images\\progress_pointer_idle.png"),
+            //backgroundul ferestrei responsabile de setarea dimensiunii liniei de win
+            decorations changeLineSizeBg = new decorations(new GreenfootImage("images\\size_change.png"));
+            getWorld().addObject(changeLineSizeBg, 265, 340);
+            objsToBeRemoved.add(changeLineSizeBg);
+
+            //butonul ce modifica dimensiunea tablei de joc 
+            ChangeSize adjGridSize = new ChangeSize(new GreenfootImage("images\\progress_pointer_idle.png"),
                     new GreenfootImage("images\\progress_pointer_select.png"));
-            getWorld().addObject(adjChangeSize, 204, 282);
-            objsToBeRemoved.add(adjChangeSize);
-            adjChangeSize.allowMoveLR(239, 361);
-            adjChangeSize.moveFromTo(new coordonates(239, 282), new coordonates(function1(ChangeSize.size), 282), 3);
-            ChangeLine adjSettings = new ChangeLine(new GreenfootImage("images\\progress_pointer_idle.png"),
+            getWorld().addObject(adjGridSize, 204, 282);
+            objsToBeRemoved.add(adjGridSize);
+            adjGridSize.allowMoveLR(239, 361);
+            adjGridSize.moveFromTo(new coordonates(239, 282), new coordonates(function1(ChangeSize.size), 282), 3);
+
+            // butonul ce modifica dimensiunea linie cu care se castiga
+            ChangeLine adjLineSize = new ChangeLine(new GreenfootImage("images\\progress_pointer_idle.png"),
                     new GreenfootImage("images\\progress_pointer_select.png"));
-            getWorld().addObject(adjSettings, 192, 350);
-            objsToBeRemoved.add(adjSettings);
-            adjSettings.allowMoveLR(192, 314);
-            adjSettings.moveFromTo(new coordonates(227, 350), new coordonates(function2(ChangeLine.lineSize), 350), 3);
+            getWorld().addObject(adjLineSize, 192, 350);
+            objsToBeRemoved.add(adjLineSize);
+            adjLineSize.allowMoveLR(192, 314);
+            adjLineSize.moveFromTo(new coordonates(227, 350), new coordonates(function2(ChangeLine.lineSize), 350), 3);
+            
+            //butonul ce inchide fereastra 
             back = new BackX(new GreenfootImage("images\\back_idle.png"),
                     new GreenfootImage("images\\back_select.png"));
             getWorld().addObject(back, 200, 220);
             objsToBeRemoved.add(back);
 
+            //butonul de done, ce simbolizeaza salvarea setarilor si inceperea jocului
             StartGame start = new StartGame(new GreenfootImage("images\\done_idle.png"),
                     new GreenfootImage("images\\done_select.png"));
             getWorld().addObject(start, 390, 335);
             objsToBeRemoved.add(start);
 
-            ShowText firShowText = new ShowText(ChangeLine.lineSize, adjSettings, false, new Color(12, 12, 13),19);
-            getWorld().addObject(firShowText,345,346);
+            //scrisul ce arata dimensiunea liniei 
+            ShowText showText = new ShowText(ChangeLine.lineSize, adjLineSize, false, new Color(12, 12, 13),19);
+            getWorld().addObject(showText,345,346);
 
-          
-            firShowText = new ShowText(ChangeLine.lineSize, adjChangeSize, true);
-            getWorld().addObject(firShowText,adjChangeSize.getX(),adjChangeSize.getY() - 27);
+            //scrisul ce arata dimensiunea liniei de castig
+            showText = new ShowText(ChangeLine.lineSize, adjGridSize, true);
+            getWorld().addObject(showText,adjGridSize.getX(),adjGridSize.getY() - 27);
 
 
         }
+        //apasarea butonului de back
         if (back != null) {
             if (Greenfoot.mouseClicked(back)) {
                 getWorld().removeObjects(objsToBeRemoved);

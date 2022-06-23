@@ -1,22 +1,25 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class StartGame here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
+ * clasa responsabila de initierea lumii unde se va desfasura jocul
  */
-public class StartGame extends buttons
-{
+public class StartGame extends buttons {
+    /**
+     * constructorul clasei cand se cunosc cele doua imagini ale butonului: de idle
+     * si hover
+     * functioneaza prin apelarea constructorului superclasei
+     * 
+     * @param normal     imaginea starii de idle
+     * @param hoverImage imaginea starii de hover
+     */
     public StartGame(GreenfootImage normal, GreenfootImage hoverImage) {
         super(normal, hoverImage);
     }
-    public void act() 
-    {
+
+    public void act() {
         super.act();
-        if(Greenfoot.mouseClicked(this))
-        {
-            Greenfoot.setWorld(new Lvl10X10(ChangeSize.size,ChangeLine.lineSize));
+        if (Greenfoot.mouseClicked(this)) {
+            Greenfoot.setWorld(new Lvl10X10(ChangeSize.size, ChangeLine.lineSize));
         }
-    }    
+    }
 }
