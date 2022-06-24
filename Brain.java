@@ -61,7 +61,7 @@ class coordonates {
  * jucatori a castigat, controleaza miscarile calculatorului
  */
 public class Brain extends Actor {
-    //Lista ce retine obiectele de pe plansa
+    // Lista ce retine obiectele de pe plansa
     public static MyList<MyList<? extends GridElement>> Elements = new MyList<>();
     // 0 -> -
     // 1 -> |
@@ -69,46 +69,54 @@ public class Brain extends Actor {
     // 3 -> /
     // pt a putea indentifica egalitatea
     // daca mutari == 100 => egalitate
-    public static int mutari; 
+    public static int mutari;
     // numarul de elemente consecutive necesare castigarii
-    public static int winReq; 
+    public static int winReq;
     // mapeaza vecinii pe linii, in functie de oridinea lor
     public static int[] mapNeigh;
     // tine minte care jucator urmeaza
     protected static Type currentPlayer;
-    // retine starea curenta a jocului 
+    // retine starea curenta a jocului
     protected static State gameState;
     // dimensiunea careului
-    private static int size; 
+    private static int size;
 
-    //divelul de adancime a inteligentei artificiale
+    // divelul de adancime a inteligentei artificiale
     private int AiLevel;
-    //variabila folosita pentru scalarea imaginilor
-    //este folosita in situatia unui careu cu mai mult de 10 elemente
+    // variabila folosita pentru scalarea imaginilor
+    // este folosita in situatia unui careu cu mai mult de 10 elemente
     private float raport;
     // semafor folosit pentru crearea unui eveniment begin play
     private boolean once;
-    //referinta la tun 
+    // referinta la tun
     private Gun refToGun;
-    
-    //in cazul in care se joaca cu mai mult de 20 de elemente pe o linie, dimensiuniile acestora devin foarte mici, si astfel va fi necesar sa cream o lupa
-    //aceasta clasa retine un set de 25 de puncte, care citesc cele 25 de obiecte ale clasei Element, si le maresc 
+
+    // in cazul in care se joaca cu mai mult de 20 de elemente pe o linie,
+    // dimensiuniile acestora devin foarte mici, si astfel va fi necesar sa cream o
+    // lupa
+    // aceasta clasa retine un set de 25 de puncte, care citesc cele 25 de obiecte
+    // ale clasei Element, si le maresc
     private List<pointer> crossair = new ArrayList<>();
-    //offsetul la care se adauga pointerii 
+    // offsetul la care se adauga pointerii
     private final int[][] offsetPointer = {
             { -2, -2, -2, -2, -2, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2 },
             { -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2 } };
-            //variabila folosita de inteligenta artificiala pentru a citi plansa de joc 
+    // variabila folosita de inteligenta artificiala pentru a citi plansa de joc
     private Type[][] AiMatrix;
-    //ultimul element adaugat pe plansa 
+    // ultimul element adaugat pe plansa
     private coordonates LastAddedElement;
-    //pentru a optimiza Algoritmul de alegere a urmatoarei miscari a calculatorului, am optat pentru o parcurgere in spirala a careului
-    //aceasta superlista retine cate o lista cu coordonatele parcurgerii in spirala, incepand de la fiecare element
+    // pentru a optimiza Algoritmul de alegere a urmatoarei miscari a
+    // calculatorului, am optat pentru o parcurgere in spirala a careului
+    // aceasta superlista retine cate o lista cu coordonatele parcurgerii in
+    // spirala, incepand de la fiecare element
     List<List<coordonates>> a = new ArrayList<>();
-    //elementul ales de Algoritmul calculatorului
+    // elementul ales de Algoritmul calculatorului
     private Element aiElement;
-    //retine daca jucam impotriva altui jucator sau a calculatorului
+    // retine daca jucam impotriva altui jucator sau a calculatorului
     private boolean AI;
+    // imaginea de fundal
+    // se va modifica in functie de dimensiunea placii de joc
+    private GreenfootImage backBoard = new GreenfootImage("images\\back_board.png");
 
     public Brain() {
     }
@@ -136,14 +144,14 @@ public class Brain extends Actor {
             Bullet.raport = raport;
         } else
             raport = -1;
-        GreenfootImage img = new GreenfootImage(500, 500);
-        setImage(img);
+
         if (AI) {
             // se executa doar daca se joaca contra calculatorului
             AiLevel = 6;
             LastAddedElement = new coordonates(Greenfoot.getRandomNumber(size), Greenfoot.getRandomNumber(size));
             AiMatrix = new Type[_size][_size];
         }
+
     }
 
     private void createMap() {
@@ -193,7 +201,7 @@ public class Brain extends Actor {
         }
         if (raport == -1)
             return (x + offset) * 50 + 305;
-        return (int) ((x + offset) * (50 / raport) + 305 + 50 / raport / 2);
+        return (int) ((x + offset) * (50 / raport) + 305 + 50 / 2);
     }
 
     private int turnYinCoord(int y, int dim) {
@@ -230,12 +238,11 @@ public class Brain extends Actor {
         }
         if (raport == -1)
             return (y + offset) * 50 + 15;
-        return (int) ((y + offset) * (50 / raport) + 15 + 50 / raport / 2);
+        return (int) ((y + offset) * (50 / raport) + 15 + 50 / 2);
     }
 
     public void createGrid(int n) {
         // creaza gridul
-        setLocation(turnXinCoord(n / 2, n), turnYinCoord(n / 2, n));
         Elements.clear();
         MyList<Element> TempList;
         for (int i = 0; i < n; i++) {
@@ -248,6 +255,22 @@ public class Brain extends Actor {
             }
             Elements.add(TempList);
         }
+
+    }
+
+    private void setBoard(int n) {
+        if (n < 10) {
+            backBoard.scale(backBoard.getWidth() - 50 * (10 - n), backBoard.getHeight() - 50 * (10 - n));
+        }
+
+        if (n % 2 == 0) {
+            setLocation((int) (turnXinCoord(n / 2, n) - 25 / Math.abs(raport)),
+                    (int) (turnYinCoord(n / 2, n) - 25 / Math.abs(raport)));
+
+        } else {
+            setLocation(turnXinCoord(n / 2, n), turnYinCoord(n / 2, n));
+        }
+        setImage(backBoard);
 
     }
 
@@ -682,6 +705,7 @@ public class Brain extends Actor {
             }
             createGrid(size);
             createPointers();
+            setBoard(size);
             ZoomElement.scaleImgs();
             once = false;
         }

@@ -2,6 +2,7 @@
 comment0.target=ZoomElement
 comment1.params=_tip\ _refToCopied
 comment1.target=ZoomElement(Type,\ Element)
+comment1.text=\r\n\ private\ Line\ lineOver;\r\n\ private\ boolean\ AddedLine;\r\n
 comment2.params=
 comment2.target=void\ choose()
 comment3.params=

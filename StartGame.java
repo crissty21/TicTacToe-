@@ -19,7 +19,8 @@ public class StartGame extends buttons {
     public void act() {
         super.act();
         if (Greenfoot.mouseClicked(this)) {
-            Greenfoot.setWorld(new Lvl10X10(ChangeSize.size, ChangeLine.lineSize, Oponent.pOrC));
+            //Greenfoot.setWorld(new Lvl10X10(ChangeSize.size, ChangeLine.lineSize, Oponent.pOrC));
+            Greenfoot.setWorld(new Lvl10X10());
         }
     }
 }
