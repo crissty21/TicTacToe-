@@ -118,6 +118,7 @@ public class Brain extends Actor {
     // se va modifica in functie de dimensiunea placii de joc
     private GreenfootImage backBoard = new GreenfootImage("images\\back_board.png");
 
+    private int elementDimension = 48;
     public Brain() {
     }
 
@@ -200,8 +201,8 @@ public class Brain extends Actor {
                 break;
         }
         if (raport == -1)
-            return (x + offset) * 50 + 305;
-        return (int) ((x + offset) * (50 / raport) + 305 + 50 / 2);
+            return (x + offset) * elementDimension + 305;
+        return (int) ((x + offset) * (elementDimension / raport) + 305 + elementDimension / 2);
     }
 
     private int turnYinCoord(int y, int dim) {
@@ -237,18 +238,29 @@ public class Brain extends Actor {
                 break;
         }
         if (raport == -1)
-            return (y + offset) * 50 + 15;
-        return (int) ((y + offset) * (50 / raport) + 15 + 50 / 2);
+            return (y + offset) * elementDimension + 15;
+        return (int) ((y + offset) * (elementDimension / raport) + 15 + elementDimension / 2);
     }
 
     public void createGrid(int n) {
         // creaza gridul
         Elements.clear();
         MyList<Element> TempList;
+        int tip;
         for (int i = 0; i < n; i++) {
+            if (i == 0)
+                tip = 0;
+            else if (i < n - 1)
+                tip = 3;
+            else
+                tip = 6;
             TempList = new MyList<>();
             for (int j = 0; j < n; j++) {
-                Element aiElement = new Element(i, j, this, refToGun);
+                if (j > 0 && tip % 3 == 0)
+                    tip++;
+                if (j == n - 1)
+                    tip++;
+                Element aiElement = new Element(i, j, this, refToGun, tip);
                 TempList.add(aiElement);
                 getWorld().addObject(aiElement, turnXinCoord(i, n), turnYinCoord(j, n));
 
@@ -260,12 +272,12 @@ public class Brain extends Actor {
 
     private void setBoard(int n) {
         if (n < 10) {
-            backBoard.scale(backBoard.getWidth() - 50 * (10 - n), backBoard.getHeight() - 50 * (10 - n));
+            backBoard.scale(backBoard.getWidth() - elementDimension * (10 - n), backBoard.getHeight() - elementDimension * (10 - n));
         }
 
         if (n % 2 == 0) {
-            setLocation((int) (turnXinCoord(n / 2, n) - 25 / Math.abs(raport)),
-                    (int) (turnYinCoord(n / 2, n) - 25 / Math.abs(raport)));
+            setLocation((int) (turnXinCoord(n / 2, n) - (elementDimension/2) / Math.abs(raport)),
+                    (int) (turnYinCoord(n / 2, n) - (elementDimension/2) / Math.abs(raport)));
 
         } else {
             setLocation(turnXinCoord(n / 2, n), turnYinCoord(n / 2, n));
@@ -736,8 +748,8 @@ public class Brain extends Actor {
                     System.err.println("null pointer in class brain");
                     break;
                 }
-                cordx = mouse.getX() + (int) (50 / raport * offsetPointer[0][index]);
-                cordy = mouse.getY() + (int) (50 / raport * offsetPointer[1][index]);
+                cordx = mouse.getX() + (int) (elementDimension / raport * offsetPointer[0][index]);
+                cordy = mouse.getY() + (int) (elementDimension / raport * offsetPointer[1][index]);
                 iter.setLocation(cordx, cordy);
                 index++;
             }

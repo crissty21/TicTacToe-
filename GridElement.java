@@ -9,7 +9,7 @@ public class GridElement extends Actor {
     // private int hasLineOver = -1;
 
     public GridElement() {
-        myCoordonates.x = myCoordonates.y = 0;
+        myCoordonates = new coordonates(0, 0);
         Val = Val.notOpened;
         Lines = new ArrayList<>();
         for (int i = 0; i < 4; i++)
