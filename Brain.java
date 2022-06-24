@@ -1,16 +1,29 @@
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.*;
 
+/**
+ * enum pentru cele trei stari in care se poate afla un obiect al clasei
+ * {@link GridElement}
+ * notOpened - nu a fost deschisa
+ * X - este a jucatorului cu x
+ * Y - este a jucatorului cu y
+ */
 enum Type {
     notOpened, X, Y;
 };
 
+/**
+ * enum ce retine starile jocului
+ */
 enum State {
     waitForMove, WaitingForBullet, animationOn;
 }
 
-// clasa folosita pentru override la metoda get()
+/**
+ * clasa folosita pentru override la metoda get()
+ */
 class MyList<T> extends ArrayList<T> {
+    // ne asiguram ca indexul se afla pe plansa
     @Override
     public T get(int index) {
         if (index < 0 || index > size() - 1) {
@@ -20,6 +33,10 @@ class MyList<T> extends ArrayList<T> {
     }
 }
 
+/**
+ * clasa folosita la retinerea unui vector2
+ * este utilizata in retinerea de coordonate
+ */
 class coordonates {
     public int x;
     public int y;
@@ -29,6 +46,8 @@ class coordonates {
         y = _y;
     }
 
+    // in functie de dimensiunea tablei de joc, aceasta functie returneaza al
+    // catelea element este cel retinut in coordonate
     public int convertToIndex(int size) {
         int rezultat;
         rezultat = x * size + y;
@@ -36,36 +55,59 @@ class coordonates {
     }
 }
 
+/**
+ * Clasa Principala a jocului
+ * Aceasta creaza plansa jocului, retine miscarile, decide cand unul dintre
+ * jucatori a castigat, controleaza miscarile calculatorului
+ */
 public class Brain extends Actor {
+    //Lista ce retine obiectele de pe plansa
     public static MyList<MyList<? extends GridElement>> Elements = new MyList<>();
     // 0 -> -
     // 1 -> |
     // 2 -> \
     // 3 -> /
-
-    protected static Type CurrentPlayer; // tine minte care jucator urmeaza
-    public static int winReq; // numarul de elemente consecutive necesare castigarii
-    private static int size; // dimensiunea careului
-    public static int mutari; // pt a putea indentifica egalitatea
+    // pt a putea indentifica egalitatea
     // daca mutari == 100 => egalitate
+    public static int mutari; 
+    // numarul de elemente consecutive necesare castigarii
+    public static int winReq; 
+    // mapeaza vecinii pe linii, in functie de oridinea lor
+    public static int[] mapNeigh;
+    // tine minte care jucator urmeaza
+    protected static Type currentPlayer;
+    // retine starea curenta a jocului 
     protected static State gameState;
-    private int AiLevel;
-    private float raport;
-    private boolean ok;// semafor folosit pentru crearea unui eveniment begin play
-    private Gun refToGun;
-    public static int[] mapNeigh;// mapeaza vecinii pe linii, in functie de oridinea lor
+    // dimensiunea careului
+    private static int size; 
 
+    //divelul de adancime a inteligentei artificiale
+    private int AiLevel;
+    //variabila folosita pentru scalarea imaginilor
+    //este folosita in situatia unui careu cu mai mult de 10 elemente
+    private float raport;
+    // semafor folosit pentru crearea unui eveniment begin play
+    private boolean once;
+    //referinta la tun 
+    private Gun refToGun;
+    
+    //in cazul in care se joaca cu mai mult de 20 de elemente pe o linie, dimensiuniile acestora devin foarte mici, si astfel va fi necesar sa cream o lupa
+    //aceasta clasa retine un set de 25 de puncte, care citesc cele 25 de obiecte ale clasei Element, si le maresc 
+    private List<pointer> crossair = new ArrayList<>();
+    //offsetul la care se adauga pointerii 
     private final int[][] offsetPointer = {
             { -2, -2, -2, -2, -2, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2 },
             { -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2, -2, -1, 0, 1, 2 } };
-
-    private List<pointer> crossair = new ArrayList<>();
-    Type[][] AiMatrix;
+            //variabila folosita de inteligenta artificiala pentru a citi plansa de joc 
+    private Type[][] AiMatrix;
+    //ultimul element adaugat pe plansa 
     private coordonates LastAddedElement;
-    // change name here
-    List<List<coordonates>> allWays = new ArrayList<>();
-    private Element temp;
-
+    //pentru a optimiza Algoritmul de alegere a urmatoarei miscari a calculatorului, am optat pentru o parcurgere in spirala a careului
+    //aceasta superlista retine cate o lista cu coordonatele parcurgerii in spirala, incepand de la fiecare element
+    List<List<coordonates>> a = new ArrayList<>();
+    //elementul ales de Algoritmul calculatorului
+    private Element aiElement;
+    //retine daca jucam impotriva altui jucator sau a calculatorului
     private boolean AI;
 
     public Brain() {
@@ -85,9 +127,9 @@ public class Brain extends Actor {
         gameState = State.waitForMove;
         size = _size;
         winReq = _winReq;
-        ok = true;
+        once = true;
         mutari = 0;
-        CurrentPlayer = Type.X;
+        currentPlayer = Type.X;
         if (size > 10) {
             raport = Element.resizeImgs(size);
             Line.resizeImgs(raport);
@@ -199,9 +241,9 @@ public class Brain extends Actor {
         for (int i = 0; i < n; i++) {
             TempList = new MyList<>();
             for (int j = 0; j < n; j++) {
-                Element temp = new Element(i, j, this, refToGun);
-                TempList.add(temp);
-                getWorld().addObject(temp, turnXinCoord(i, n), turnYinCoord(j, n));
+                Element aiElement = new Element(i, j, this, refToGun);
+                TempList.add(aiElement);
+                getWorld().addObject(aiElement, turnXinCoord(i, n), turnYinCoord(j, n));
 
             }
             Elements.add(TempList);
@@ -210,21 +252,21 @@ public class Brain extends Actor {
     }
 
     private void createPointers() {
-        pointer temp;
+        pointer aiElement;
         for (int i = 0; i < 25; i++) {
-            temp = new pointer(raport, i);
-            getWorld().addObject(temp, 100, 100);
-            crossair.add(temp);
+            aiElement = new pointer(raport, i);
+            getWorld().addObject(aiElement, 100, 100);
+            crossair.add(aiElement);
         }
     }
 
     // ai function
     private void transcriptGrid() {
-        Type temp;
+        Type aiElement;
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                temp = Elements.get(j).get(i).getStatus();
-                AiMatrix[i][j] = temp;
+                aiElement = Elements.get(j).get(i).getStatus();
+                AiMatrix[i][j] = aiElement;
             }
         }
     }
@@ -362,7 +404,7 @@ public class Brain extends Actor {
     private void createAllParcurgeri() {
         for (int i = 0; i < size; i++)
             for (int j = 0; j < size; j++)
-                allWays.add(getParcurgere(new coordonates(i, j)));
+                a.add(getParcurgere(new coordonates(i, j)));
 
     }
 
@@ -371,12 +413,12 @@ public class Brain extends Actor {
         int bestMove = Integer.MIN_VALUE;
         int valoare;
         Element nextMove = null;
-        // temp
+        // aiElement
         transcriptGrid();
         int localAiLevel = 0;
         int worstMove;
         // preia primul vecini
-        List<coordonates> MyParcurgere = allWays.get(lastAdded.convertToIndex(size));
+        List<coordonates> MyParcurgere = a.get(lastAdded.convertToIndex(size));
         boolean staticEval = false;
         do {
             if (bestMove <= 15 && localAiLevel == AiLevel) {
@@ -561,7 +603,7 @@ public class Brain extends Actor {
             // adaugam in mod normal**
             // terminal condition if won
 
-            List<coordonates> MyParcurgere = allWays.get(lastAdded.convertToIndex(size));
+            List<coordonates> MyParcurgere = a.get(lastAdded.convertToIndex(size));
             if (curentPlayer == Type.X) {
                 bestMove = Integer.MIN_VALUE;
                 for (coordonates nextNeigh : MyParcurgere) {
@@ -601,7 +643,7 @@ public class Brain extends Actor {
 
     protected void clicked(Element Clicked) {
         boolean added;
-        Clicked.setStatus(CurrentPlayer);
+        Clicked.setStatus(currentPlayer);
         LastAddedElement = Clicked.getCoordonates();
         // ne adaugam pe noi pe liniile componente
         Clicked.selfAdd();
@@ -633,7 +675,7 @@ public class Brain extends Actor {
     }
 
     public void act() {
-        if (ok) {
+        if (once) {
             // begin play
             if (AI) {
                 createAllParcurgeri();
@@ -641,18 +683,18 @@ public class Brain extends Actor {
             createGrid(size);
             createPointers();
             ZoomElement.scaleImgs();
-            ok = false;
+            once = false;
         }
         if (size > 20) {
             movePointer();
         }
         if (AI) {
             // se executa doar daca jucam contra Ai-ului
-            if (CurrentPlayer == Type.X) {
+            if (currentPlayer == Type.X) {
                 if (Brain.gameState == State.waitForMove) {
-                    temp = (Element) AiMove(LastAddedElement);
-                    if (temp != null)
-                        temp.openIt();
+                    aiElement = (Element) AiMove(LastAddedElement);
+                    if (aiElement != null)
+                        aiElement.openIt();
                     else
                         System.err.println("null pointer cast failed");
                 }

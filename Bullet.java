@@ -1,7 +1,5 @@
 import java.util.List;
 
-import javax.print.FlavorException;
-
 import greenfoot.*;
 
 public class Bullet extends Actor {

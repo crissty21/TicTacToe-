@@ -29,7 +29,7 @@ public class Next extends Brain {
         if (start) {
             ct++;
             if (ct % 5 == 0)
-                if (CurrentPlayer == Type.X)
+                if (currentPlayer == Type.X)
                     setImage(np[ct / 5]);
                 else
                     setImage(np[4 - (ct / 5)]);
@@ -39,7 +39,7 @@ public class Next extends Brain {
             }
         }
         if (start1) {
-            if (CurrentPlayer == Type.X)
+            if (currentPlayer == Type.X)
                 setImage(np[0]);
             else
                 setImage(np[4]);

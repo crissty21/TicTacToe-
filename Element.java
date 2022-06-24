@@ -55,11 +55,11 @@ public class Element extends GridElement {
     public void choose() // selecteaza x sau 0 pt caseta
     {
         refToBrain.clicked(this);
-        if (Brain.CurrentPlayer == Type.X) {
-            Brain.CurrentPlayer = Type.Y;
+        if (Brain.currentPlayer == Type.X) {
+            Brain.currentPlayer = Type.Y;
             setImage(xImg);
         } else {
-            Brain.CurrentPlayer = Type.X;
+            Brain.currentPlayer = Type.X;
             setImage(oImg);
         }
         Next.start1 = true;
@@ -70,7 +70,7 @@ public class Element extends GridElement {
         refToGun.lookAtMe(this);
         Cocos.startAnimation = true;
         Brain.mutari++;
-        Val = Brain.CurrentPlayer;
+        Val = Brain.currentPlayer;
         Brain.gameState = State.WaitingForBullet;
         selected = true;
         contor = 0;
@@ -81,7 +81,7 @@ public class Element extends GridElement {
         if (Greenfoot.mouseClicked(this)) {
             if (AI) {
                 // in cazul acesta, putem adauga doar daca e randul jucatorului Y
-                if (Brain.CurrentPlayer == Type.Y) {
+                if (Brain.currentPlayer == Type.Y) {
                     // cooldown
                     if (Brain.gameState == State.waitForMove) {
                         if (Val == Type.notOpened) // verifica daca nu a fost deschisa cutia
