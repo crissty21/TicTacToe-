@@ -1,5 +1,3 @@
-import java.util.List;
-
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
@@ -9,16 +7,12 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @version (a version number or a date)
  */
 public class SidePanel extends buttons {
-    public SidePanel(GreenfootImage idle, GreenfootImage selected) {
-        super(idle, selected);
-        doSuper = true;
-        simboluri[0] = new Symbols(Greenfoot.getRandomNumber(8));
-        simboluri[1] = new Symbols(Greenfoot.getRandomNumber(8));
-        simboluri[2] = new Symbols(Greenfoot.getRandomNumber(8));
-
-    }
-
     private boolean doSuper;
+    private decorations secreteBG = new decorations(new GreenfootImage(1, 1));
+    private decorations bau = new decorations(new GreenfootImage(1, 1));
+    private boolean animOn = false;
+    private int contor = 0;
+    private int animSpeed = 15;
 
     private Symbols[] simboluri = new Symbols[3];
     private GreenfootImage[] easterEgg = {
@@ -41,60 +35,64 @@ public class SidePanel extends buttons {
             new GreenfootImage("images\\secret_ending_17.png"),
             new GreenfootImage("images\\secret_ending_18.png"),
     };
-    private decorations secreteBG;
-    private decorations bau = new decorations();
-    private boolean animOn = false;
-    private int contor = 0;
-    private int animSpeed = 15;
+
+    public SidePanel(GreenfootImage idle, GreenfootImage selected) {
+        super(idle, selected);
+        doSuper = true;
+        simboluri[0] = new Symbols(5);
+        simboluri[1] = new Symbols(3);
+        simboluri[2] = new Symbols(0);
+    }
 
     public void act() {
-        if (Brain.gameState != State.ended) {
-            if (doSuper) {
 
-                super.act();
-            }
-            if (Greenfoot.mouseClicked(this) && doSuper) {
-                doSuper = false;
-                decorations backLight = new decorations(new GreenfootImage("images\\computer_light.png"));
-                getWorld().addObject(backLight, 875, 645);
-                backLight.pulseFor(20, 5);
-                getWorld().addObject(new decorations(new GreenfootImage("images\\computer_stripes.png")), 875, 645);
-                resetimage();
-                getWorld().addObject(simboluri[0], 875, 615);
-                getWorld().addObject(simboluri[1], 875, 645);
-                getWorld().addObject(simboluri[2], 875, 675);
-            }
-            if (simboluri[0].tip == 1 && simboluri[1].tip == 2 && simboluri[2].tip == 3 && animOn == false) {
-                getWorld().setPaintOrder(decorations.class);
-                secreteBG = new decorations(new GreenfootImage("images\\secret_background.png"));
-                secreteBG.goInvisible();
-                getWorld().addObject(secreteBG, 450, 350);
-                // secreteBG.fadeIn(5);
-                getWorld().addObject(bau, 450, 350);
-                animOn = true;
-            }
-            if (animOn) {
-                contor++;
-                if (contor > 50 && contor / animSpeed - ((int) 50 / animSpeed) < easterEgg.length) {
-                    if (contor % animSpeed == 0)
-                        bau.setImage(easterEgg[contor / animSpeed - ((int) 50 / animSpeed)]);
+        if (doSuper) {
 
-                }
-                if (contor / animSpeed - ((int) 50 / animSpeed) == easterEgg.length + 3) {
-                    bau.setMyImage(new GreenfootImage("images\\secret_writing.png"));
-                    bau.goInvisible();
-                    secreteBG.getImage().setTransparency(255);
-                    bau.fadeIn(10);
-
-                }
-                if (contor / animSpeed - ((int) 50 / animSpeed) > easterEgg.length + 25) {
-                    getWorld().removeObject(bau);
-                    getWorld().removeObject(secreteBG);
-                    animOn = false;
-                    Greenfoot.setWorld(new MainMenu());
-                }
-
-            }
+            super.act();
         }
+        if (Greenfoot.mouseClicked(this) && doSuper) {
+            doSuper = false;
+            decorations backLight = new decorations(new GreenfootImage("images\\computer_light.png"));
+            getWorld().addObject(backLight, 875, 645);
+            backLight.pulseFor(20, 5);
+            getWorld().addObject(new decorations(new GreenfootImage("images\\computer_stripes.png")), 875, 645);
+            resetimage();
+            getWorld().addObject(simboluri[0], 875, 615);
+            getWorld().addObject(simboluri[1], 875, 645);
+            getWorld().addObject(simboluri[2], 875, 675);
+        }
+        if (simboluri[0].tip == 1 && simboluri[1].tip == 2 && simboluri[2].tip == 3 && animOn == false) {
+            getWorld().setPaintOrder(decorations.class);
+            secreteBG = new decorations(new GreenfootImage("images\\secret_background.png"));
+            secreteBG.goInvisible();
+            getWorld().addObject(secreteBG, 450, 350);
+            // secreteBG.fadeIn(5);
+            getWorld().addObject(bau, 450, 350);
+            animOn = true;
+            Brain.gameState = State.ended;
+        }
+        if (animOn) {
+            contor++;
+            if (contor > 50 && contor / animSpeed - ((int) 50 / animSpeed) < easterEgg.length) {
+                if (contor % animSpeed == 0)
+                    bau.setImage(easterEgg[contor / animSpeed - ((int) 50 / animSpeed)]);
+
+            }
+            if (contor / animSpeed - ((int) 50 / animSpeed) == easterEgg.length + 3) {
+                bau.setMyImage(new GreenfootImage("images\\secret_writing.png"));
+                bau.goInvisible();
+                secreteBG.getImage().setTransparency(255);
+                bau.fadeIn(10);
+
+            }
+            if (contor / animSpeed - ((int) 50 / animSpeed) > easterEgg.length + 25) {
+                getWorld().removeObject(bau);
+                getWorld().removeObject(secreteBG);
+                animOn = false;
+                Greenfoot.setWorld(new MainMenu());
+            }
+
+        }
+
     }
 }

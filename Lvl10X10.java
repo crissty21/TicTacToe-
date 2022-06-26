@@ -6,7 +6,7 @@ public class Lvl10X10 extends World {
     public Lvl10X10() {
         // se plaseaza obiectele in functie de raportul din clasa variabile
         super(900, 700, 1);
-        int gridSize = 3;
+        int gridSize = 10;
         int linesToWin = 3;
         boolean againstAi = false;
         Element.initImgs();

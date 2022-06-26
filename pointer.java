@@ -1,6 +1,10 @@
 import greenfoot.*;
 
 public class pointer extends Actor {
+    
+        private int index;
+        private Element inter, oldInter;
+        private ZoomElement added;
     public pointer(float _raport, int _index) {
         int dim = 1;
         GreenfootImage image = new GreenfootImage(dim, dim);
@@ -9,10 +13,6 @@ public class pointer extends Actor {
         setImage(image);
         index = _index;
     }
-
-    private int index;
-    private Element inter, oldInter;
-    private ZoomElement added;
 
     public void act() {
         if (Greenfoot.mouseMoved(null)) {

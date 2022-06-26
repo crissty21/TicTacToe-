@@ -1,10 +1,15 @@
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 public class Element extends GridElement {
+    private int img;
+    private int openAnimationSpeed = 5;
+    private static int drawOffset = 9;
     private Brain refToBrain;
     private boolean selected;
     private int contor;
     private static boolean AI;
+    private boolean mouseOver = false;
+    GreenfootImage temp;
     private static GreenfootImage[] tiles = {
             new GreenfootImage("back_tile_1.png"),
             new GreenfootImage("back_tile_4.png"),
@@ -80,9 +85,6 @@ public class Element extends GridElement {
         selected = true;
         contor = 0;
     }
-
-    private boolean mouseOver = false;
-    GreenfootImage temp;
 
     public void act() {
 
@@ -164,10 +166,6 @@ public class Element extends GridElement {
             }
         }
     }
-
-    private int img;
-    private int openAnimationSpeed = 5;
-    private static int drawOffset = 9;
 
     public static float resizeImgs(int size) {
         int initialSpace = 48,
