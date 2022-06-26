@@ -3,12 +3,9 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class Lvl10X10 extends World {
 
     // public Lvl10X10(int gridSize, int linesToWin, boolean againstAi) {
-    public Lvl10X10() {
+    public Lvl10X10(int gridSize, int linesToWin, boolean againstAi) {
         // se plaseaza obiectele in functie de raportul din clasa variabile
         super(900, 700, 1);
-        int gridSize = 10;
-        int linesToWin = 3;
-        boolean againstAi = false;
         Element.initImgs();
         Line.initImgs();
         Cocos biro = new Cocos();

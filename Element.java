@@ -3,13 +3,13 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class Element extends GridElement {
     private int img;
     private int openAnimationSpeed = 5;
-    private static int drawOffset = 9;
-    private Brain refToBrain;
-    private boolean selected;
     private int contor;
-    private static boolean AI;
+    private boolean selected;
     private boolean mouseOver = false;
-    GreenfootImage temp;
+    private Brain refToBrain;
+    private static int drawOffset = 9;
+    private static boolean AI;
+    private GreenfootImage temp;
     private static GreenfootImage[] tiles = {
             new GreenfootImage("back_tile_1.png"),
             new GreenfootImage("back_tile_4.png"),
@@ -52,6 +52,7 @@ public class Element extends GridElement {
         setImage(tiles[tip]);
         MyImage = tiles[tip];
         refToBrain = refToOwner;
+        AI = false;
     }
 
     public static void setAi(boolean value) {
@@ -248,6 +249,7 @@ public class Element extends GridElement {
 
     public static void initImgs() {
 
+        drawOffset = 9;
         tiles[0] = new GreenfootImage("back_tile_1.png");
         tiles[1] = new GreenfootImage("back_tile_4.png");
         tiles[2] = new GreenfootImage("back_tile_7.png");

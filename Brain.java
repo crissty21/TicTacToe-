@@ -139,6 +139,7 @@ public class Brain extends Actor {
         once = true;
         mutari = 0;
         currentPlayer = Type.Y;
+        Element.initImgs();
         if (size > 10) {
             raport = Element.resizeImgs(size);
             Line.resizeImgs(raport);

@@ -7,6 +7,7 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @version (a version number or a date)
  */
 public class Symbols extends buttons {
+    public int tip;
     private static GreenfootImage[] images = {
             new GreenfootImage("images\\symbol_1.png"),
             new GreenfootImage("images\\symbol_2.png"),
@@ -18,7 +19,6 @@ public class Symbols extends buttons {
             new GreenfootImage("images\\symbol_8.png"),
             new GreenfootImage("images\\symbol_9.png")
     };
-    public int tip;
 
     public Symbols(int type) {
         setImage(images[type]);
