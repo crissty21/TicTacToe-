@@ -16,9 +16,12 @@ public class Lvl10X10 extends World {
         addObject(new Next(), 530, 630);
         addObject(new Decor(1), 90, 644);
         setBackground(new GreenfootImage("background 2.png"));
-        addObject(new Decor(2), 130, 150);
+        
         setPaintOrder(Decor.class, Gun.class, Bullet.class, Line.class, Element.class, pointer.class);
-
+        if(gridSize>20)
+        {
+            addObject(new decorations(new GreenfootImage("images\\magnifier.png")), 130, 150);
+        }
     }
 
 }

@@ -260,7 +260,7 @@ public class Brain extends Actor {
                     tip++;
                 if (j == n - 1)
                     tip++;
-                Element aiElement = new Element(i, j, this, refToGun, tip);
+                Element aiElement = new Element(i, j, this, tip);
                 TempList.add(aiElement);
                 getWorld().addObject(aiElement, turnXinCoord(i, n), turnYinCoord(j, n));
 

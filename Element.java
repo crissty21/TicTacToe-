@@ -4,7 +4,6 @@ public class Element extends GridElement {
     private Brain refToBrain;
     private boolean selected;
     private int contor;
-    private Gun refToGun;
     private static boolean AI;
     private static GreenfootImage[] tiles = {
             new GreenfootImage("back_tile_1.png"),
@@ -43,12 +42,11 @@ public class Element extends GridElement {
         contor = 0;
     }
 
-    public Element(int CoordX, int CoordY, Brain refToOwner, Gun _refToGun, int tip) {
+    public Element(int CoordX, int CoordY, Brain refToOwner, int tip) {
         this(CoordX, CoordY);
         setImage(tiles[tip]);
         MyImage = tiles[tip];
         refToBrain = refToOwner;
-        refToGun = _refToGun;
     }
 
     public static void setAi(boolean value) {
@@ -56,12 +54,7 @@ public class Element extends GridElement {
     }
 
     public int imgDisplayed() {
-        GreenfootImage curentImage = getImage();
-        if (curentImage == animationX[3])
-            return -1;
-        if (curentImage == animationO[3])
-            return -2;
-        return contor / openAnimationSpeed;
+        return img;
     }
 
     public void choose() // selecteaza x sau 0 pt caseta
@@ -79,11 +72,11 @@ public class Element extends GridElement {
     }
 
     public void openIt() {
-        //refToGun.lookAtMe(this);
-        //Cocos.startAnimation = true;
+        // refToGun.lookAtMe(this);
+        // Cocos.startAnimation = true;
         Brain.mutari++;
         Val = Brain.currentPlayer;
-        //Brain.gameState = State.WaitingForBullet;
+        // Brain.gameState = State.WaitingForBullet;
         Brain.gameState = State.animationOn;
         selected = true;
         contor = 0;
@@ -122,6 +115,7 @@ public class Element extends GridElement {
                 if (contor % openAnimationSpeed == 0) {
                     temp = new GreenfootImage(MyImage);
                     temp.drawImage(animationX[contor / openAnimationSpeed - 1], drawOffset, drawOffset);
+                    img = 2*10 + contor / openAnimationSpeed - 1;
                     setImage(temp);
                 }
                 if (contor == openAnimationSpeed * 3) {
@@ -136,6 +130,7 @@ public class Element extends GridElement {
                 if (contor % openAnimationSpeed == 0) {
                     temp = new GreenfootImage(MyImage);
                     temp.drawImage(animationO[contor / openAnimationSpeed - 1], drawOffset, drawOffset);
+                    img = -2*10 - contor / openAnimationSpeed + 1;
                     setImage(temp);
                 }
                 if (contor == openAnimationSpeed * 3) {
@@ -151,20 +146,25 @@ public class Element extends GridElement {
         if (!mouseOver && Val == Type.notOpened) {
             if (Greenfoot.mouseMoved(this)) {
                 temp = new GreenfootImage(MyImage);
-                if (Brain.currentPlayer == Type.X)
+                if (Brain.currentPlayer == Type.X) {
                     temp.drawImage(drawOver[0], drawOffset, drawOffset);
-                else
+                    img = 1;
+                } else {
                     temp.drawImage(drawOver[1], drawOffset, drawOffset);
+                    img = -1;
+                }
                 setImage(temp);
                 mouseOver = true;
             }
         }
         if (mouseOver && Val == Type.notOpened && Greenfoot.mouseMoved(null) && !Greenfoot.mouseMoved(this)) {
             setImage(MyImage);
+            img = 0;
             mouseOver = false;
         }
     }
 
+    private int img;
     private int openAnimationSpeed = 5;
     private static int drawOffset = 9;
 
@@ -179,7 +179,6 @@ public class Element extends GridElement {
 
         drawOffset = (int) (drawOffset / raport);
 
-       
         for (GreenfootImage iter : tiles) {
             newWidth = (int) (iter.getWidth() / raport);
             newHeight = (int) (iter.getHeight() / raport);
@@ -195,7 +194,7 @@ public class Element extends GridElement {
             auxiliar.drawImage(iter, 0, 0);
             tiles[i++] = auxiliar;
         }
-    
+
         i = 0;
         for (GreenfootImage iter : drawOver) {
             newWidth = (int) (iter.getWidth() / raport);

@@ -2,8 +2,8 @@
 comment0.target=Element
 comment1.params=CoordX\ CoordY
 comment1.target=Element(int,\ int)
-comment2.params=CoordX\ CoordY\ refToOwner\ _refToGun
-comment2.target=Element(int,\ int,\ Brain,\ Gun)
+comment2.params=CoordX\ CoordY\ refToOwner\ _refToGun\ tip
+comment2.target=Element(int,\ int,\ Brain,\ Gun,\ int)
 comment3.params=value
 comment3.target=void\ setAi(boolean)
 comment4.params=
