@@ -15,7 +15,10 @@ public class Next extends Brain {
         initImgs();
         start = start1 = false;
         ct = 0;
-        setImage(xtoo[0]);
+        if (Brain.currentPlayer == Type.X)
+            setImage(xtoo[0]);
+        else
+            setImage(otox[0]);
     }
 
     private void initImgs() {
@@ -41,17 +44,19 @@ public class Next extends Brain {
     }
 
     public void act() {
-        if (start) {
-            ct++;
-            if (ct>5 && ct % 5 == 0)
-                if (currentPlayer == Type.Y)
-                    setImage(xtoo[ct / 5-2]);
-                else
-                    setImage(otox[ct/5-2]);
-            if (ct == 50) {
-                ct = 0;
-                start = false;
-                Brain.gameState = State.waitForMove;
+        if (Brain.gameState != State.ended) {
+            if (start) {
+                ct++;
+                if (ct > 5 && ct % 5 == 0)
+                    if (currentPlayer == Type.Y)
+                        setImage(xtoo[ct / 5 - 2]);
+                    else
+                        setImage(otox[ct / 5 - 2]);
+                if (ct == 50) {
+                    ct = 0;
+                    start = false;
+                    Brain.gameState = State.waitForMove;
+                }
             }
         }
     }

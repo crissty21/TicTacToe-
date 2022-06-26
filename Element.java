@@ -86,11 +86,20 @@ public class Element extends GridElement {
 
     public void act() {
 
-        if (Greenfoot.mouseClicked(this)) {
-            if (AI) {
-                // in cazul acesta, putem adauga doar daca e randul jucatorului Y
-                if (Brain.currentPlayer == Type.Y) {
-                    // cooldown
+        if (Brain.gameState != State.ended) {
+            if (Greenfoot.mouseClicked(this)) {
+                if (AI) {
+                    // in cazul acesta, putem adauga doar daca e randul jucatorului Y
+                    if (Brain.currentPlayer == Type.Y) {
+                        // cooldown
+                        if (Brain.gameState == State.waitForMove) {
+                            if (Val == Type.notOpened) // verifica daca nu a fost deschisa cutia
+                            {
+                                openIt();
+                            }
+                        }
+                    }
+                } else {
                     if (Brain.gameState == State.waitForMove) {
                         if (Val == Type.notOpened) // verifica daca nu a fost deschisa cutia
                         {
@@ -98,68 +107,61 @@ public class Element extends GridElement {
                         }
                     }
                 }
-            } else {
-                if (Brain.gameState == State.waitForMove) {
-                    if (Val == Type.notOpened) // verifica daca nu a fost deschisa cutia
-                    {
-                        openIt();
+
+            }
+            if (selected && Brain.gameState == State.animationOn) {
+                contor++;
+                if (Brain.currentPlayer == Type.X) {
+                    if (contor % openAnimationSpeed == 0) {
+                        temp = new GreenfootImage(MyImage);
+                        temp.drawImage(animationX[contor / openAnimationSpeed - 1], drawOffset, drawOffset);
+                        img = 2 * 10 + contor / openAnimationSpeed - 1;
+                        setImage(temp);
+                    }
+                    if (contor == openAnimationSpeed * 3) {
+                        Next.start = true;
+                    }
+                    if (contor >= openAnimationSpeed * 4) {
+                        selected = false;
+                        choose();
+                        contor = 0;
+                    }
+                } else {
+                    if (contor % openAnimationSpeed == 0) {
+                        temp = new GreenfootImage(MyImage);
+                        temp.drawImage(animationO[contor / openAnimationSpeed - 1], drawOffset, drawOffset);
+                        img = -2 * 10 - contor / openAnimationSpeed + 1;
+                        setImage(temp);
+                    }
+                    if (contor == openAnimationSpeed * 3) {
+                        Next.start = true;
+                    }
+                    if (contor >= openAnimationSpeed * 4) {
+                        selected = false;
+                        choose();
+                        contor = 0;
                     }
                 }
             }
-
-        }
-        if (selected && Brain.gameState == State.animationOn) {
-            contor++;
-            if (Brain.currentPlayer == Type.X) {
-                if (contor % openAnimationSpeed == 0) {
+            if (!mouseOver && Val == Type.notOpened) {
+                if (Greenfoot.mouseMoved(this)) {
                     temp = new GreenfootImage(MyImage);
-                    temp.drawImage(animationX[contor / openAnimationSpeed - 1], drawOffset, drawOffset);
-                    img = 2*10 + contor / openAnimationSpeed - 1;
+                    if (Brain.currentPlayer == Type.X) {
+                        temp.drawImage(drawOver[0], drawOffset, drawOffset);
+                        img = 1;
+                    } else {
+                        temp.drawImage(drawOver[1], drawOffset, drawOffset);
+                        img = -1;
+                    }
                     setImage(temp);
-                }
-                if (contor == openAnimationSpeed * 3) {
-                    Next.start = true;
-                }
-                if (contor >= openAnimationSpeed * 4) {
-                    selected = false;
-                    choose();
-                    contor = 0;
-                }
-            } else {
-                if (contor % openAnimationSpeed == 0) {
-                    temp = new GreenfootImage(MyImage);
-                    temp.drawImage(animationO[contor / openAnimationSpeed - 1], drawOffset, drawOffset);
-                    img = -2*10 - contor / openAnimationSpeed + 1;
-                    setImage(temp);
-                }
-                if (contor == openAnimationSpeed * 3) {
-                    Next.start = true;
-                }
-                if (contor >= openAnimationSpeed * 4) {
-                    selected = false;
-                    choose();
-                    contor = 0;
+                    mouseOver = true;
                 }
             }
-        }
-        if (!mouseOver && Val == Type.notOpened) {
-            if (Greenfoot.mouseMoved(this)) {
-                temp = new GreenfootImage(MyImage);
-                if (Brain.currentPlayer == Type.X) {
-                    temp.drawImage(drawOver[0], drawOffset, drawOffset);
-                    img = 1;
-                } else {
-                    temp.drawImage(drawOver[1], drawOffset, drawOffset);
-                    img = -1;
-                }
-                setImage(temp);
-                mouseOver = true;
+            if (mouseOver && Val == Type.notOpened && Greenfoot.mouseMoved(null) && !Greenfoot.mouseMoved(this)) {
+                setImage(MyImage);
+                img = 0;
+                mouseOver = false;
             }
-        }
-        if (mouseOver && Val == Type.notOpened && Greenfoot.mouseMoved(null) && !Greenfoot.mouseMoved(this)) {
-            setImage(MyImage);
-            img = 0;
-            mouseOver = false;
         }
     }
 

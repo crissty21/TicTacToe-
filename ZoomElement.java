@@ -69,23 +69,25 @@ public class ZoomElement extends Actor {
 
     public void act() {
 
-        int img = refToCopied.imgDisplayed();
-        if (curentImg != img) {
-            curentImg = img;
-            if (img == 0) {
-                setImage(new GreenfootImage(20, 20));
-            }
-            if (img > 0) {
-                if (img == 1) {
-                    setImage(drawOver[0]);
-                } else if (img / 10 == 2) {
-                    setImage(animationX[img % 10]);
+        if (Brain.gameState != State.ended) {
+            int img = refToCopied.imgDisplayed();
+            if (curentImg != img) {
+                curentImg = img;
+                if (img == 0) {
+                    setImage(new GreenfootImage(20, 20));
                 }
-            } else {
-                if (img == -1) {
-                    setImage(drawOver[1]);
-                } else if (img / 10 == -2) {
-                    setImage(animationO[-1*img % 10]);
+                if (img > 0) {
+                    if (img == 1) {
+                        setImage(drawOver[0]);
+                    } else if (img / 10 == 2) {
+                        setImage(animationX[img % 10]);
+                    }
+                } else {
+                    if (img == -1) {
+                        setImage(drawOver[1]);
+                    } else if (img / 10 == -2) {
+                        setImage(animationO[-1 * img % 10]);
+                    }
                 }
             }
         }

@@ -115,6 +115,11 @@ public class decorations extends Actor {
         image.setTransparency(0);
     }
 
+    public void setMyImage(GreenfootImage newImage)
+    {
+        setImage(newImage);
+        image = newImage;
+    }
     public void fadeOutAndRemove(int speed) {
         fadeOut(speed);
         remove = true;
