@@ -68,7 +68,6 @@ public class Element extends GridElement {
             // setImage(oImg);
         }
         Next.start1 = true;
-        Brain.gameState = State.waitForMove;
     }
 
     public void openIt() {

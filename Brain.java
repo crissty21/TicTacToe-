@@ -88,8 +88,6 @@ public class Brain extends Actor {
     private float raport;
     // semafor folosit pentru crearea unui eveniment begin play
     private boolean once;
-    // referinta la tun
-    private Gun refToGun;
 
     // in cazul in care se joaca cu mai mult de 20 de elemente pe o linie,
     // dimensiuniile acestora devin foarte mici, si astfel va fi necesar sa cream o
@@ -122,17 +120,16 @@ public class Brain extends Actor {
     public Brain() {
     }
 
-    public Brain(int _size, int _winReq, Gun _refToGun, boolean AiOn) {
+    public Brain(int _size, int _winReq,  boolean AiOn) {
         this();
-        init(_size, _winReq, _refToGun, AiOn);
+        init(_size, _winReq, AiOn);
         createMap();
         // setImage(new GreenfootImage("placa mov.png"));
     }
 
-    private void init(int _size, int _winReq, Gun _refToGun, boolean AiOn) {
+    private void init(int _size, int _winReq, boolean AiOn) {
         // initializeaza variabile
         AI = AiOn;
-        refToGun = _refToGun;
         gameState = State.waitForMove;
         size = _size;
         winReq = _winReq;
@@ -142,7 +139,6 @@ public class Brain extends Actor {
         if (size > 10) {
             raport = Element.resizeImgs(size);
             Line.resizeImgs(raport);
-            Bullet.raport = raport;
         } else
             raport = -1;
 
@@ -201,8 +197,8 @@ public class Brain extends Actor {
                 break;
         }
         if (raport == -1)
-            return (x + offset) * elementDimension + 305;
-        return (int) ((x + offset) * (elementDimension / raport) + 305 + elementDimension / 2);
+            return (x + offset) * elementDimension + 330;
+        return (int) ((x + offset) * (elementDimension / raport) + 330 + elementDimension / 2);
     }
 
     private int turnYinCoord(int y, int dim) {
@@ -238,8 +234,8 @@ public class Brain extends Actor {
                 break;
         }
         if (raport == -1)
-            return (y + offset) * elementDimension + 15;
-        return (int) ((y + offset) * (elementDimension / raport) + 15 + elementDimension / 2);
+            return (y + offset) * elementDimension + 35;
+        return (int) ((y + offset) * (elementDimension / raport) + 35 + elementDimension / 2);
     }
 
     public void createGrid(int n) {
@@ -271,7 +267,7 @@ public class Brain extends Actor {
     }
 
     private void setBoard(int n) {
-        if (n < 10) {
+       /* if (n < 10) {
             backBoard.scale(backBoard.getWidth() - elementDimension * (10 - n), backBoard.getHeight() - elementDimension * (10 - n));
         }
 
@@ -281,7 +277,7 @@ public class Brain extends Actor {
 
         } else {
             setLocation(turnXinCoord(n / 2, n), turnYinCoord(n / 2, n));
-        }
+        }*/
         setImage(backBoard);
 
     }
@@ -718,7 +714,7 @@ public class Brain extends Actor {
             createGrid(size);
             createPointers();
             setBoard(size);
-            ZoomElement.scaleImgs();
+          ZoomElement.scaleImgs();
             once = false;
         }
         if (size > 20) {

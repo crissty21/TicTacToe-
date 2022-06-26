@@ -6,17 +6,6 @@ public class ZoomElement extends Actor {
     private int curentImg;
     private static GreenfootImage xImg = new GreenfootImage("x_4.png");
     private static GreenfootImage oImg = new GreenfootImage("o_4.png");
-    private static GreenfootImage[] tiles = {
-            new GreenfootImage("back_tile_1.png"),
-            new GreenfootImage("back_tile_4.png"),
-            new GreenfootImage("back_tile_7.png"),
-            new GreenfootImage("back_tile_2.png"),
-            new GreenfootImage("back_tile_5.png"),
-            new GreenfootImage("back_tile_8.png"),
-            new GreenfootImage("back_tile_3.png"),
-            new GreenfootImage("back_tile_6.png"),
-            new GreenfootImage("back_tile_9.png")
-    };
     private static GreenfootImage[] drawOver = {
             new GreenfootImage("x_front.png"),
             new GreenfootImage("o_front.png")

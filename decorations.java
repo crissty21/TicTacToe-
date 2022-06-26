@@ -4,50 +4,58 @@ import greenfoot.*;
  * clasa de baza a decoratiunilor din MainMenu
  */
 public class decorations extends Actor {
-    //variabila pentru animatia de fadeIn
-    //true = start \ false = stop
+    // variabila pentru animatia de fadeIn
+    // true = start \ false = stop
     private boolean bFadeIn;
-    //variabila pentru animatia de fadeOut
-    //true = start \ false = stop
+    // variabila pentru animatia de fadeOut
+    // true = start \ false = stop
     private boolean bFadeOut;
-    //variabila pentru animatia de pulse
-    //true = start \ false = stop
+    // variabila pentru animatia de pulse
+    // true = start \ false = stop
     private boolean bPulse;
-    //variabila pentru viteza de fade
+    // variabila pentru viteza de fade
     private int fadeSpeed;
-    //variabila pentru transparenta curenta a imaginii
-    //este folosita la animatiile de fade 
+    // variabila pentru transparenta curenta a imaginii
+    // este folosita la animatiile de fade
     private int fadeIndex;
-    
-    //variabila pentru pornirea animatiei de moveFromTo
+
+    // variabila pentru pornirea animatiei de moveFromTo
     private boolean bMove;
-    //doua variabile pentru animatia de move 
+    // doua variabile pentru animatia de move
     private coordonates start;
     private coordonates finish;
-    //viteza cu care se va misca obiectul in cadrul animatiei de moveFromTo
+    // viteza cu care se va misca obiectul in cadrul animatiei de moveFromTo
     private int moveSpeed;
-    
-        //imaginea obiectului
-        protected GreenfootImage image;
+    // de cate ori redam animatia de pulse
+    private int pulseTimes;
+    // imaginea obiectului
+    protected GreenfootImage image;
+    // daca stergem obiectul dupa fadeout sau nu
+    private boolean remove;
 
-    public decorations() {}
-
-    /**
-     * constructorul clasei Decorations
-     * @param img imaginea obiectului 
-     */
-    public decorations(GreenfootImage img) {
-        image = img;
-        setImage(image);
-        //blocam toate animatiile 
+    public decorations() {
+        // blocam toate animatiile
         bFadeIn = false;
         bFadeOut = false;
         bMove = false;
         bPulse = false;
+        remove = false;
+    }
+
+    /**
+     * constructorul clasei Decorations
+     * 
+     * @param img imaginea obiectului
+     */
+    public decorations(GreenfootImage img) {
+        this();
+        image = img;
+        setImage(image);
     }
 
     /**
      * functie ce porneste animatia de fadeIn
+     * 
      * @param speed viteza cu care va aparea obiectul
      */
     public void fadeIn(int speed) {
@@ -57,8 +65,14 @@ public class decorations extends Actor {
         fadeIndex = 0;
     }
 
+    public void pulseFor(int speed, int times) {
+        pulse(speed);
+        pulseTimes = times;
+    }
+
     /**
      * functie ce porneste animatia de fadeOut
+     * 
      * @param speed viteza cu care va disparea obiectul
      */
     public void fadeOut(int speed) {
@@ -68,22 +82,23 @@ public class decorations extends Actor {
         fadeIndex = 255;
     }
 
-    
     /**
      * functie ce porneste animatia de pulse
+     * 
      * @param speed viteza cu care va aparea si va disparea obiectul
      */
     public void pulse(int speed) {
         bPulse = true;
         fadeSpeed = speed;
+        pulseTimes = -1;
     }
 
-    
     /**
      * functie ce va porni animatia de moveFromTo
-     * @param _start coordonatele punctului de pornire
+     * 
+     * @param _start  coordonatele punctului de pornire
      * @param _finish coordonatele punctului de sosire
-     * @param speed viteza cu care se va deplasa 
+     * @param speed   viteza cu care se va deplasa
      */
     public void moveFromTo(coordonates _start, coordonates _finish, int speed) {
         start = _start;
@@ -98,6 +113,11 @@ public class decorations extends Actor {
      */
     public void goInvisible() {
         image.setTransparency(0);
+    }
+
+    public void fadeOutAndRemove(int speed) {
+        fadeOut(speed);
+        remove = true;
     }
 
     /**
@@ -121,12 +141,19 @@ public class decorations extends Actor {
                 fadeIndex = 0;
                 image.setTransparency(0);
                 bFadeOut = false;
+                if (remove)
+                    getWorld().removeObject(this);
             }
         }
         if (bPulse) {
+
             if (fadeIndex == 0) {
                 bFadeIn = true;
                 bFadeOut = false;
+                pulseTimes--;
+                if (pulseTimes == 0) {
+                    bPulse = false;
+                }
             }
             if (fadeIndex == 255) {
                 bFadeOut = true;
@@ -144,10 +171,11 @@ public class decorations extends Actor {
     }
 
     /**
-     * interpolare liniara intre coordonatele obiectului si coordonatele pasate 
+     * interpolare liniara intre coordonatele obiectului si coordonatele pasate
+     * 
      * @param other setul secund cu care se vor interpola coordonatele obiectului
      * @param speed viteza de interpolare
-     * @return set de coordonate intermediare 
+     * @return set de coordonate intermediare
      */
     protected coordonates lerp(coordonates other, double speed) {
         // interpolare liniara
