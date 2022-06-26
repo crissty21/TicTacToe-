@@ -2,14 +2,14 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.*;
 
 public class GridElement extends Actor {
-    protected int x, y;
+    protected coordonates myCoordonates;
     protected List<List<GridElement>> Lines; // lista cu linile din care face parte obiectul
     protected Type Val;
     private final int[][] offsetNeigh = { { -1, -1, -1, 0, 0, 1, 1, 1 }, { -1, 0, 1, -1, 1, -1, 0, 1 } }; // offsetul la
     // private int hasLineOver = -1;
 
     public GridElement() {
-        x = y = 0;
+        myCoordonates = new coordonates(0, 0);
         Val = Val.notOpened;
         Lines = new ArrayList<>();
         for (int i = 0; i < 4; i++)
@@ -18,8 +18,8 @@ public class GridElement extends Actor {
 
     public GridElement(int CoordX, int CoordY) {
         this();
-        x = CoordX;
-        y = CoordY;
+        myCoordonates.x = CoordX;
+        myCoordonates.y = CoordY;
     }
 
     /*
@@ -37,9 +37,9 @@ public class GridElement extends Actor {
         MyList<? extends GridElement> desiredLine;
         GridElement desiredNeigh = null;
         added = false;
-        desiredLine = Brain.Elements.get(x + offsetNeigh[0][i]);
+        desiredLine = Brain.Elements.get(myCoordonates.x + offsetNeigh[0][i]);
         if (desiredLine != null) {
-            desiredNeigh = (GridElement) desiredLine.get(y + offsetNeigh[1][i]);
+            desiredNeigh = (GridElement) desiredLine.get(myCoordonates.y + offsetNeigh[1][i]);
         } else {
             return added;
         }
@@ -99,11 +99,11 @@ public class GridElement extends Actor {
     }
 
     public int getCoordX() {
-        return x;
+        return myCoordonates.x;
     }
 
     public int getCoordY() {
-        return y;
+        return myCoordonates.y;
     }
 
     public void setStatus(Type newStatus) {
@@ -115,6 +115,6 @@ public class GridElement extends Actor {
     }
 
     public coordonates getCoordonates() {
-        return new coordonates(y, x);
+        return myCoordonates;
     }
 }

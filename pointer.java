@@ -4,7 +4,7 @@ public class pointer extends Actor {
     public pointer(float _raport, int _index) {
         int dim = 1;
         GreenfootImage image = new GreenfootImage(dim, dim);
-        image.setColor(Color.BLACK);
+        image.setColor(new Color(0,0,0,0));
         image.fillRect(0, 0, dim, dim);
         setImage(image);
         index = _index;

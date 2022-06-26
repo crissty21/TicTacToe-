@@ -20,6 +20,7 @@ comment2.params=CoordX\ CoordY
 comment2.target=GridElement(int,\ int)
 comment3.params=i
 comment3.target=boolean\ addNeigh(int)
+comment3.text=\r\n\ public\ void\ addLineOver(int\ orientare)\r\n\ {\r\n\ hasLineOver\ \=\ orientare;\r\n\ }\r\n\ public\ int\ getLineOver()\r\n\ {\r\n\ return\ hasLineOver;\r\n\ }\r\n
 comment4.params=index\ vecin
 comment4.target=void\ addOnLine(int,\ GridElement)
 comment5.params=index\ newLine

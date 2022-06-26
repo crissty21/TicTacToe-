@@ -4,22 +4,35 @@ public class ZoomElement extends Actor {
     private Element refToCopied;
     private Type tip;
     private int curentImg;
-    private static GreenfootImage xImg = new GreenfootImage("as.png");
-    private static GreenfootImage oImg = new GreenfootImage("os.png");
-    private static GreenfootImage[] explozie = {
-            new GreenfootImage("box1.png"),
-            new GreenfootImage("box2.png"),
-            new GreenfootImage("box3.png"),
-            new GreenfootImage("box4.png"),
-            new GreenfootImage("box5.png"),
-            new GreenfootImage("box6.png"),
-            new GreenfootImage("box7.png"),
-            new GreenfootImage("box8.png"),
-            new GreenfootImage("box9.png"),
-            new GreenfootImage("box10.png"),
-            new GreenfootImage("box11.png"),
-            new GreenfootImage("box12.png"),
-            new GreenfootImage("box13.png")
+    private static GreenfootImage xImg = new GreenfootImage("x_4.png");
+    private static GreenfootImage oImg = new GreenfootImage("o_4.png");
+    private static GreenfootImage[] tiles = {
+            new GreenfootImage("back_tile_1.png"),
+            new GreenfootImage("back_tile_4.png"),
+            new GreenfootImage("back_tile_7.png"),
+            new GreenfootImage("back_tile_2.png"),
+            new GreenfootImage("back_tile_5.png"),
+            new GreenfootImage("back_tile_8.png"),
+            new GreenfootImage("back_tile_3.png"),
+            new GreenfootImage("back_tile_6.png"),
+            new GreenfootImage("back_tile_9.png")
+    };
+    private static GreenfootImage[] drawOver = {
+            new GreenfootImage("x_front.png"),
+            new GreenfootImage("o_front.png")
+    };
+
+    private static GreenfootImage[] animationX = {
+            new GreenfootImage("x_1.png"),
+            new GreenfootImage("x_2.png"),
+            new GreenfootImage("x_3.png"),
+            new GreenfootImage("x_4.png")
+    };
+    private static GreenfootImage[] animationO = {
+            new GreenfootImage("o_1.png"),
+            new GreenfootImage("o_2.png"),
+            new GreenfootImage("o_3.png"),
+            new GreenfootImage("o_4.png")
     };
 
     /*
@@ -46,7 +59,7 @@ public class ZoomElement extends Actor {
                 setImage(oImg);
                 break;
             default:
-                setImage(explozie[0]);
+                setImage(new GreenfootImage(20, 20));
         }
     }
 
@@ -54,26 +67,37 @@ public class ZoomElement extends Actor {
         int dim = 20;
         xImg.scale(dim, dim);
         oImg.scale(dim, dim);
-        for (GreenfootImage iter : explozie) {
+        for (GreenfootImage iter : animationO) {
+            iter.scale(dim, dim);
+        }
+        for (GreenfootImage iter : animationX) {
+            iter.scale(dim, dim);
+        }
+        for (GreenfootImage iter : drawOver) {
             iter.scale(dim, dim);
         }
     }
 
     public void act() {
+
         int img = refToCopied.imgDisplayed();
-        if (img != curentImg) {
+        if (curentImg != img) {
             curentImg = img;
-            switch (img) {
-                case -1:
-                    setImage(xImg);
-                    break;
-                case -2:
-                    setImage(oImg);
-                    break;
-                case -3:
-                    break;
-                default:
-                    setImage(explozie[img]);
+            if (img == 0) {
+                setImage(new GreenfootImage(20, 20));
+            }
+            if (img > 0) {
+                if (img == 1) {
+                    setImage(drawOver[0]);
+                } else if (img / 10 == 2) {
+                    setImage(animationX[img % 10]);
+                }
+            } else {
+                if (img == -1) {
+                    setImage(drawOver[1]);
+                } else if (img / 10 == -2) {
+                    setImage(animationO[-1*img % 10]);
+                }
             }
         }
         /*
