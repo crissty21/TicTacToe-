@@ -8,42 +8,56 @@ public class Next extends Brain {
     public static int ct;
     static int a;
 
-    GreenfootImage[] np = new GreenfootImage[5];
+    GreenfootImage[] xtoo = new GreenfootImage[9];
+    GreenfootImage[] otox = new GreenfootImage[9];
 
     public Next() {
         initImgs();
         start = start1 = false;
         ct = 0;
-        setImage(np[0]);
+        if (Brain.currentPlayer == Type.X)
+            setImage(xtoo[0]);
+        else
+            setImage(otox[0]);
     }
 
     private void initImgs() {
-        np[0] = new GreenfootImage("light.png");
-        np[1] = new GreenfootImage("light1.png");
-        np[2] = new GreenfootImage("light2.png");
-        np[3] = new GreenfootImage("light3.png");
-        np[4] = new GreenfootImage("light4.png");
+        xtoo[0] = new GreenfootImage("images\\x_to_0_1.png");
+        xtoo[1] = new GreenfootImage("images\\x_to_0_2.png");
+        xtoo[2] = new GreenfootImage("images\\x_to_0_3.png");
+        xtoo[3] = new GreenfootImage("images\\x_to_0_4.png");
+        xtoo[4] = new GreenfootImage("images\\x_to_0_5.png");
+        xtoo[5] = new GreenfootImage("images\\x_to_0_6.png");
+        xtoo[6] = new GreenfootImage("images\\x_to_0_7.png");
+        xtoo[7] = new GreenfootImage("images\\x_to_0_8.png");
+        xtoo[8] = new GreenfootImage("images\\x_to_0_9.png");
+
+        otox[0] = new GreenfootImage("images\\x_to_0_9.png");
+        otox[1] = new GreenfootImage("images\\x_to_0_10.png");
+        otox[2] = new GreenfootImage("images\\x_to_0_11.png");
+        otox[3] = new GreenfootImage("images\\x_to_0_12.png");
+        otox[4] = new GreenfootImage("images\\x_to_0_13.png");
+        otox[5] = new GreenfootImage("images\\x_to_0_14.png");
+        otox[6] = new GreenfootImage("images\\x_to_0_15.png");
+        otox[7] = new GreenfootImage("images\\x_to_0_16.png");
+        otox[8] = new GreenfootImage("images\\x_to_0_1.png");
     }
 
     public void act() {
-        if (start) {
-            ct++;
-            if (ct % 5 == 0)
-                if (currentPlayer == Type.X)
-                    setImage(np[ct / 5]);
-                else
-                    setImage(np[4 - (ct / 5)]);
-            if (ct == 20) {
-                ct = 0;
-                start = false;
+        if (Brain.gameState != State.ended) {
+            if (start) {
+                ct++;
+                if (ct > 5 && ct % 5 == 0)
+                    if (currentPlayer == Type.Y)
+                        setImage(xtoo[ct / 5 - 2]);
+                    else
+                        setImage(otox[ct / 5 - 2]);
+                if (ct == 50) {
+                    ct = 0;
+                    start = false;
+                    Brain.gameState = State.waitForMove;
+                }
             }
-        }
-        if (start1) {
-            if (currentPlayer == Type.X)
-                setImage(np[0]);
-            else
-                setImage(np[4]);
-            start1 = false;
         }
     }
 }

@@ -52,7 +52,10 @@ public abstract class buttons extends decorations {
         limits = _limits;
         limitd = _limitd;
     }
-
+    public void resetimage()
+    {
+        setImage(image);
+    }
     /**
      * act() este responsabil de miscarea butonului
      * de rularea animatiilor din clasa {@link decorations} 

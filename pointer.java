@@ -25,7 +25,7 @@ public class pointer extends Actor {
                     }
                     oldInter = inter;
                     added = new ZoomElement(inter.getStatus(),inter);
-                    getWorld().addObject(added, 70 + (30 * (index / 5)), 90 + 30 * (int) (index % 5));
+                    getWorld().addObject(added, 154 + (28 * (index / 5)), 44 + 28 * (int) (index % 5));
                     
                 }
             }

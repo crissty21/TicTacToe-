@@ -6,17 +6,6 @@ public class ZoomElement extends Actor {
     private int curentImg;
     private static GreenfootImage xImg = new GreenfootImage("x_4.png");
     private static GreenfootImage oImg = new GreenfootImage("o_4.png");
-    private static GreenfootImage[] tiles = {
-            new GreenfootImage("back_tile_1.png"),
-            new GreenfootImage("back_tile_4.png"),
-            new GreenfootImage("back_tile_7.png"),
-            new GreenfootImage("back_tile_2.png"),
-            new GreenfootImage("back_tile_5.png"),
-            new GreenfootImage("back_tile_8.png"),
-            new GreenfootImage("back_tile_3.png"),
-            new GreenfootImage("back_tile_6.png"),
-            new GreenfootImage("back_tile_9.png")
-    };
     private static GreenfootImage[] drawOver = {
             new GreenfootImage("x_front.png"),
             new GreenfootImage("o_front.png")
@@ -80,23 +69,25 @@ public class ZoomElement extends Actor {
 
     public void act() {
 
-        int img = refToCopied.imgDisplayed();
-        if (curentImg != img) {
-            curentImg = img;
-            if (img == 0) {
-                setImage(new GreenfootImage(20, 20));
-            }
-            if (img > 0) {
-                if (img == 1) {
-                    setImage(drawOver[0]);
-                } else if (img / 10 == 2) {
-                    setImage(animationX[img % 10]);
+        if (Brain.gameState != State.ended) {
+            int img = refToCopied.imgDisplayed();
+            if (curentImg != img) {
+                curentImg = img;
+                if (img == 0) {
+                    setImage(new GreenfootImage(20, 20));
                 }
-            } else {
-                if (img == -1) {
-                    setImage(drawOver[1]);
-                } else if (img / 10 == -2) {
-                    setImage(animationO[-1*img % 10]);
+                if (img > 0) {
+                    if (img == 1) {
+                        setImage(drawOver[0]);
+                    } else if (img / 10 == 2) {
+                        setImage(animationX[img % 10]);
+                    }
+                } else {
+                    if (img == -1) {
+                        setImage(drawOver[1]);
+                    } else if (img / 10 == -2) {
+                        setImage(animationO[-1 * img % 10]);
+                    }
                 }
             }
         }

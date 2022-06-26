@@ -7,10 +7,10 @@ public class Line extends Actor
     int orientare;
     
     public static GreenfootImage[] linie = {
-        new GreenfootImage("linie_1.png"),
-        new GreenfootImage("linie_2.png"),
-        new GreenfootImage("linie_3.png"),
-        new GreenfootImage("linie_4.png")
+        new GreenfootImage("images\\line_1.png"),
+        new GreenfootImage("images\\line_2.png"),
+        new GreenfootImage("images\\line_4.png"),
+        new GreenfootImage("images\\line_3.png")
     };
 
     public Line(int ori)
@@ -33,9 +33,9 @@ public class Line extends Actor
     }
     public static void initImgs()
     {
-        linie[0] = new GreenfootImage("linie_1.png");
-        linie[1] = new GreenfootImage("linie_2.png");
-        linie[2] = new GreenfootImage("linie_3.png");
-        linie[3] = new GreenfootImage("linie_4.png");
+        linie[0] = new GreenfootImage("line_1.png");
+        linie[1] = new GreenfootImage("line_2.png");
+        linie[2] = new GreenfootImage("line_4.png");
+        linie[3] = new GreenfootImage("line_3.png");
     }
 }
