@@ -1,5 +1,8 @@
 import greenfoot.*;
 
+/**
+ * copiaza elementele din careu si le adauga in lupa 
+ */
 public class pointer extends Actor {
 
     private int index;

@@ -1,5 +1,9 @@
 import greenfoot.*;
 
+
+/**
+ * copie a elementelor din careul, folosita pentru afisarea in lupa 
+ */
 public class ZoomElement extends Actor {
     private Element refToCopied;
     private Type tip;

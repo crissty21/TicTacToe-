@@ -1,11 +1,19 @@
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.*;
 
+/**
+ * clasa de baza a elementelor din joc
+ * este mostenita de de clasa {@link GridElement}
+ */
 public class GridElement extends Actor {
+    // coordonatele elementului din careu
     protected coordonates myCoordonates;
-    protected List<List<GridElement>> Lines; // lista cu linile din care face parte obiectul
+    // lista cu linile din care face parte obiectul
+    protected List<List<GridElement>> Lines;
+    // valoarea elementului
     protected Type Val;
-    private final int[][] offsetNeigh = { { -1, -1, -1, 0, 0, 1, 1, 1 }, { -1, 0, 1, -1, 1, -1, 0, 1 } }; // offsetul la
+    // offestul vecinilor, in coordonate relative
+    private final int[][] offsetNeigh = { { -1, -1, -1, 0, 0, 1, 1, 1 }, { -1, 0, 1, -1, 1, -1, 0, 1 } };
     // private int hasLineOver = -1;
 
     public GridElement() {
@@ -32,11 +40,17 @@ public class GridElement extends Actor {
      * return hasLineOver;
      * }
      */
+
+    /**
+     * functie ce verifica daca vecinul cu indexul i, are aceasi valoare cu noi
+     * 
+     * @param i indexul vecinului testat
+     * @return boolean ce transmite daca cele doua elemente tesate au aceasi valoare
+     */
     public boolean addNeigh(int i) {
-        boolean added;
+        boolean added = false;
         MyList<? extends GridElement> desiredLine;
         GridElement desiredNeigh = null;
-        added = false;
         desiredLine = Brain.Elements.get(myCoordonates.x + offsetNeigh[0][i]);
         if (desiredLine != null) {
             desiredNeigh = (GridElement) desiredLine.get(myCoordonates.y + offsetNeigh[1][i]);
@@ -54,23 +68,9 @@ public class GridElement extends Actor {
         return added;
     }
 
-    public void addOnLine(int index, GridElement vecin) {
-        Lines.get(index).add(vecin);
-    }
-
-    public void addLineOnLine(int index, List<GridElement> newLine) {
-        Lines.get(index).addAll(newLine);
-    }
-
-    public void selfAdd() {
-        for (int i = 0; i <= 3; i++)
-            addOnLine(i, this);
-    }
-
-    public int getLineLenght(int index) {
-        return Lines.get(index).size();
-    }
-
+    /**
+     * sincronizeaza liniile tuturor elementelor vecine elementului curent
+     */
     public void sincLines() {
         for (int line = 0; line <= 3; line++) {
             int sizeOfLine = Lines.get(line).size();
@@ -86,14 +86,71 @@ public class GridElement extends Actor {
         }
     }
 
+    /**
+     * adauga un element pe o linie
+     * 
+     * @param index linia pe care adaugam
+     * @param vecin elementul adaugat
+     */
+    public void addOnLine(int index, GridElement vecin) {
+        Lines.get(index).add(vecin);
+    }
+
+    /**
+     * adaugam o lista de elemente pe o linie
+     * 
+     * @param index   linia pe care adaugam
+     * @param newLine lista ce va fi adaugata
+     */
+    public void addLineOnLine(int index, List<GridElement> newLine) {
+        Lines.get(index).addAll(newLine);
+    }
+
+    /**
+     * adauga elementul curent pe toate liniile prorpii
+     */
+    public void selfAdd() {
+        for (int i = 0; i <= 3; i++)
+            addOnLine(i, this);
+    }
+
+    /**
+     * returneaza lungimea unei linii
+     * 
+     * @param index linia a carei lungimi o dorim
+     * @return lungimea acesteia
+     */
+    public int getLineLenght(int index) {
+        return Lines.get(index).size();
+    }
+
+    /**
+     * testeaza daca o anumita linie este castigatoare
+     * 
+     * @param index linia testata
+     * @return true - castigatoare / false - necastigatoare
+     */
     public boolean won(int index) {
         return Lines.get(index).size() >= Brain.winReq;
     }
 
+    /**
+     * returneaza o anumita linie
+     * 
+     * @param index indexul liniei dorite
+     * @return linia de la indexul trimis ca parametru
+     */
     public List<GridElement> getLine(int index) {
         return Lines.get(index);
     }
 
+    /**
+     * testeaza daca o anumita linie contine un anumit element
+     * 
+     * @param line   linia verificata
+     * @param second elementul testat
+     * @return true daca il contine, falsa in caz contrar
+     */
     public boolean containsOnLine(int line, GridElement second) {
         return Lines.get(line).contains(second);
     }

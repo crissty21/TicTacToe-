@@ -1,10 +1,7 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class ReturnMenu here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
+ * buton ce ne intoarce la meniul principal
  */
 public class ReturnMenu extends buttons
 {

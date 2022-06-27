@@ -118,18 +118,36 @@ public class Brain extends Actor {
 
     // referinta la cocos
     Cocos refToCocos;
+    // dimensiunea default a unui element din careu
     private int elementDimension = 48;
 
     public Brain() {
     }
 
+    /**
+     * constructorul clasei
+     * 
+     * @param _size   dimensiunea careului de joc
+     * @param _winReq dimensiunea liniei cu care se va castiga
+     * @param AiOn    daca se joaca contra calculatorului sau nu
+     * @param biro    referinta la {@link Cocos}
+     */
     public Brain(int _size, int _winReq, boolean AiOn, Cocos biro) {
         this();
         init(_size, _winReq, AiOn, biro);
         createMap();
-        // setImage(new GreenfootImage("placa mov.png"));
     }
 
+    /**
+     * functie folosita la initializarea mai multor variabile, si realizarea de
+     * setari
+     * initiale
+     * 
+     * @param _size   dimensiunea careului de joc
+     * @param _winReq dimensiunea liniei cu care se va castiga
+     * @param AiOn    daca se joaca contra calculatorului sau nu
+     * @param biro    referinta la {@link Cocos}
+     */
     private void init(int _size, int _winReq, boolean AiOn, Cocos biro) {
         // initializeaza variabile
         AI = AiOn;
@@ -138,9 +156,12 @@ public class Brain extends Actor {
         winReq = _winReq;
         once = true;
         mutari = 0;
-        currentPlayer = Type.Y;
+        currentPlayer = Type.X;
+        refToCocos = biro;
+        // resetam imaginile statica
         Element.initImgs();
         if (size > 10) {
+            // scalam elementele ca sa incapa in careu
             raport = Element.resizeImgs(size);
             Line.resizeImgs(raport);
         } else
@@ -152,10 +173,15 @@ public class Brain extends Actor {
             LastAddedElement = new coordonates(Greenfoot.getRandomNumber(size), Greenfoot.getRandomNumber(size));
             AiMatrix = new Type[_size][_size];
         }
-        refToCocos = biro;
-
     }
 
+    /**
+     * creaza o mapa a vecinilor, folosita pentru indentificarea vecinilor pe linii
+     * 0 -> |
+     * 1 -> -
+     * 2 -> \
+     * 3 -> /
+     */
     private void createMap() {
         // creaza mapa vecinilor
         mapNeigh = new int[8];
@@ -169,9 +195,18 @@ public class Brain extends Actor {
         mapNeigh[7] = 2;
     }
 
+    /**
+     * transforma parametrii primiti in coordonate in lume
+     * este folosita pentru adaugarea de elemente in lume
+     * 
+     * @param x   indexul liniei elementului
+     * @param dim dimensiunea careului
+     * @return coordonate din lume
+     */
     private int turnXinCoord(int x, int dim) {
-        // turning index into coordonates
         int offset;
+        // daca careul este mai mic de 10, se vor plasa elementele mai in interiorul
+        // plansei
         switch (dim) {
             case 10:
                 offset = 1;
@@ -206,6 +241,13 @@ public class Brain extends Actor {
         return (int) ((x + offset) * (elementDimension / raport) + 330 + elementDimension / 2);
     }
 
+    /**
+     * functioneaza la fel ca turnXinCoord ,doar ca pentru indexul coloanei
+     * 
+     * @param y   indexul coloanei elementului
+     * @param dim dimensiunea plansei de joc
+     * @return coordonatele in lume
+     */
     private int turnYinCoord(int y, int dim) {
         // turning index into coordonates
         int offset;
@@ -243,6 +285,11 @@ public class Brain extends Actor {
         return (int) ((y + offset) * (elementDimension / raport) + 35 + elementDimension / 2);
     }
 
+    /**
+     * creaza gridul de joc, si adauga elementele in lume
+     * 
+     * @param n dimensiunea plansei
+     */
     public void createGrid(int n) {
         // creaza gridul
         Elements.clear();
@@ -271,26 +318,11 @@ public class Brain extends Actor {
 
     }
 
-    private void setBoard(int n) {
-        /*
-         * if (n < 10) {
-         * backBoard.scale(backBoard.getWidth() - elementDimension * (10 - n),
-         * backBoard.getHeight() - elementDimension * (10 - n));
-         * }
-         * 
-         * if (n % 2 == 0) {
-         * setLocation((int) (turnXinCoord(n / 2, n) - (elementDimension/2) /
-         * Math.abs(raport)),
-         * (int) (turnYinCoord(n / 2, n) - (elementDimension/2) / Math.abs(raport)));
-         * 
-         * } else {
-         * setLocation(turnXinCoord(n / 2, n), turnYinCoord(n / 2, n));
-         * }
-         */
-        setImage(backBoard);
-
-    }
-
+    /**
+     * pentru a se putea folosi lupa, s-au creat 25 de pointeri care se vor
+     * intersecta cu elemente din careu, si le vor copia
+     * aceasta functie creaza si adauga acesti pointeri in lume
+     */
     private void createPointers() {
         pointer aiElement;
         for (int i = 0; i < 25; i++) {
@@ -300,7 +332,12 @@ public class Brain extends Actor {
         }
     }
 
-    // ai function
+    /**
+     * functie care transforma gridul intr-o matrice, pe care sa o poata interpreta
+     * algoritmul de Inteligenta Artificiala
+     * 
+     * AI function
+     */
     private void transcriptGrid() {
         Type aiElement;
         for (int i = 0; i < size; i++) {
@@ -311,7 +348,17 @@ public class Brain extends Actor {
         }
     }
 
-    // ai function
+    /**
+     * pentru a optimiza algoritmul de generare a urmatoarei mutari, am ales sa
+     * pargurg careul in spirala, din interior spre exterior
+     * aceasta functie genereaza parcurgerea in spirala incepand de la elementul cu
+     * coordonatele memorate in startPosition
+     * 
+     * @param startPosition coordonatele elementului de inceput
+     * @return lista cu coordonatele elementelor din parcurgerea in spirala
+     * 
+     *         AI function
+     */
     private List<coordonates> getParcurgere(coordonates startPosition) {
         List<coordonates> parcurgeri = new ArrayList<>();
         // creaza pentru elementul de la pozita startPosition, parcurferea in spirala a
@@ -440,7 +487,13 @@ public class Brain extends Actor {
         return parcurgeri;
     }
 
-    // ai function
+    /**
+     * generam toate parcurgerile in spirala la inceputul jocului, si le memoram in
+     * lista de coordonate a
+     * 
+     * AI function
+     */
+
     private void createAllParcurgeri() {
         for (int i = 0; i < size; i++)
             for (int j = 0; j < size; j++)
@@ -448,7 +501,17 @@ public class Brain extends Actor {
 
     }
 
-    // ai function
+    /**
+     * aceasta functie gaseste urmatoarea mutare a calculatorui, prin apelarea unui
+     * algoritm de tip minimax pentru fiecare element din careu
+     * 
+     * @param lastAdded ultimul element adaugat, elementul de la care se porneste
+     *                  parcurgerea in spirala
+     * @return coordonatele urmatoarei miscari a calculatorului
+     * 
+     *         AI function
+     */
+
     protected GridElement AiMove(coordonates lastAdded) {
         int bestMove = Integer.MIN_VALUE;
         int valoare;
@@ -460,6 +523,10 @@ public class Brain extends Actor {
         // preia primul vecini
         List<coordonates> MyParcurgere = a.get(lastAdded.convertToIndex(size));
         boolean staticEval = false;
+        // se va porni cu o adancime egala cu 0, iar daca nu se gaseste o miscare
+        // concludenta, se va adanci pana la nivelul maxim retinut in AiLevel
+        // daca se atinge adancimea maxima, se va face o evaluare statica, si se va
+        // alege cea mai buna miscare
         do {
             if (bestMove <= 15 && localAiLevel == AiLevel) {
                 staticEval = true;
@@ -470,22 +537,17 @@ public class Brain extends Actor {
             for (coordonates nextNeigh : MyParcurgere) {
                 if (AiMatrix[nextNeigh.x][nextNeigh.y] == Type.notOpened) {
                     AiMatrix[nextNeigh.x][nextNeigh.y] = Type.X;
+                    // apelarea algoritmului minimax pentru elementul de la coordonatele nextNeigh
                     if (localAiLevel == 0)
                         valoare = minimax(AiMatrix, localAiLevel, Type.Y, nextNeigh, Integer.MIN_VALUE,
                                 Integer.MAX_VALUE, staticEval);
                     else
                         valoare = minimax(AiMatrix, localAiLevel, Type.Y, nextNeigh, Integer.MIN_VALUE,
                                 Integer.MAX_VALUE, staticEval);
-                    /*
-                     * System.out.println(
-                     * nextNeigh.x + " " + nextNeigh.y + " " + valoare + " " + bestMove + " " +
-                     * localAiLevel);
-                     */
                     if (valoare == bestMove) {
-
+                        // in cazul in care avem mai multe miscari egale calitativ, alegem una aleator
                         if (Greenfoot.getRandomNumber(300) == 100) {
                             nextMove = (Element) Elements.get(nextNeigh.y).get(nextNeigh.x);
-                            // System.err.println("sda");
                             if (nextMove == null) {
                                 System.err.println("null pointer class brain cast failed");
                                 break;
@@ -529,7 +591,17 @@ public class Brain extends Actor {
         return false;
     }
 
-    // ai function
+    /**
+     * verifica si returneaza un vector cu dimensiunile linilor pentru elementul
+     * trimis ca parametru
+     * 
+     * @param grid         careul in stadiul curent
+     * @param curentPlayer jucatorul curent
+     * @param lastAdded    ultimul element adaugat
+     * @return vector cu cele 4 dimensiuni ale celor 4 linii posibile |-\/
+     * 
+     *         AI function
+     */
     private int[] checkLenghts(Type[][] grid, Type curentPlayer, coordonates lastAdded) {
         int[] lenghts = { 0, 0, 0, 0 };
 
@@ -605,21 +677,41 @@ public class Brain extends Actor {
         return lenghts;
     }
 
-    // ai function
+    /**
+     * evaluarea statica a plansei de joc la un anumit stadiu
+     * se va prelua cea mai mare linie
+     * 
+     * @param lenghts lungimiile ce vor fi evaluate
+     * @return cea mai mare linie componenta
+     * 
+     *         AI function
+     */
     private int staticEvaluation(int[] lenghts) {
         int max = 0;
-        int sum = 0;
         for (int i : lenghts) {
-            // repair this
+            // ar fi necesara o imbunatatire aici
             if (i > max) {
                 max = i;
-                sum = max;
             }
         }
-        return sum;
+        return max;
     }
 
-    // ai function
+    /**
+     * Algoritmul de minimax, ce va evalua plansa de joc, si va returna cate un scor
+     * pentru fiecare miscare
+     * 
+     * @param grid         plansa curenta
+     * @param depth        adancimea la care se face evaluarea
+     * @param curentPlayer jucatorul pentru care se face evaluarea
+     * @param lastAdded    coordonatele ultimului element adaugat
+     * @param alpha        alpha, folosit la pruning
+     * @param beta         betha, folosit la pruning
+     * @param staticEval   variabila care permite sau nu evaluarea statica
+     * @return un scor pentru miscarea primita prin lastAdded
+     * 
+     *         AI function
+     */
     private int minimax(Type[][] grid, int depth, Type curentPlayer, coordonates lastAdded, int alpha, int beta,
             boolean staticEval) {
         int[] lenghts = checkLenghts(grid, inversType(curentPlayer), lastAdded);
@@ -654,6 +746,7 @@ public class Brain extends Actor {
                         bestMove = Integer.max(bestMove, valoare);
                         alpha = Integer.max(alpha, valoare);
                         grid[nextNeigh.x][nextNeigh.y] = Type.notOpened;
+                        // verificam posibilitatea pruning-ului
                         if (beta <= alpha) {
                             break;
                         }
@@ -669,6 +762,7 @@ public class Brain extends Actor {
                         bestMove = Integer.min(bestMove, valoare);
                         beta = Integer.min(beta, valoare);
                         grid[nextNeigh.x][nextNeigh.y] = Type.notOpened;
+                        // verificam posibilitatea pruning-ului
                         if (beta <= alpha) {
                             break;
                         }
@@ -681,6 +775,11 @@ public class Brain extends Actor {
 
     }
 
+    /**
+     * functie ce primeste un element din careul, si il deschide (selecteaza)
+     * 
+     * @param Clicked elementul ce se doreste a fi deschis
+     */
     protected void clicked(Element Clicked) {
         boolean added;
         Clicked.setStatus(currentPlayer);
@@ -713,9 +812,8 @@ public class Brain extends Actor {
                     break;
                 }
             }
-            if(mutari == size*size)
-            {
-                //cazul de egalitate
+            if (mutari == size * size) {
+                // cazul de egalitate
                 gameState = State.ended;
                 refToCocos.ending(3);
             }
@@ -726,15 +824,40 @@ public class Brain extends Actor {
         Clicked.sincLines();
     }
 
+    /**
+     * functie ce misca cei 25 de pointeri dupa mouse
+     * se apeleaza doar in cazul in care avem un careu mai mare de 20 de elemente
+     */
+    private void movePointer() {
+        if (Greenfoot.mouseMoved(null)) {
+            MouseInfo mouse = Greenfoot.getMouseInfo();
+            int index = 0;
+            int cordx, cordy;
+            for (pointer iter : crossair) {
+                if (iter == null) {
+                    System.err.println("null pointer in class brain");
+                    break;
+                }
+                cordx = mouse.getX() + (int) (elementDimension / raport * offsetPointer[0][index]);
+                cordy = mouse.getY() + (int) (elementDimension / raport * offsetPointer[1][index]);
+                iter.setLocation(cordx, cordy);
+                index++;
+            }
+        }
+    }
+
+    /**
+     * functia act() - se apeleaza in fiecare tick al jocului
+     */
     public void act() {
         if (once) {
-            // begin play
+            // se efectueaza o singura data, la inceputul jocului
             if (AI) {
                 createAllParcurgeri();
             }
             createGrid(size);
             createPointers();
-            setBoard(size);
+            setImage(backBoard);
             ZoomElement.scaleImgs();
             once = false;
         }
@@ -755,23 +878,6 @@ public class Brain extends Actor {
                 }
             }
         }
-    }
 
-    private void movePointer() {
-        if (Greenfoot.mouseMoved(null)) {
-            MouseInfo mouse = Greenfoot.getMouseInfo();
-            int index = 0;
-            int cordx, cordy;
-            for (pointer iter : crossair) {
-                if (iter == null) {
-                    System.err.println("null pointer in class brain");
-                    break;
-                }
-                cordx = mouse.getX() + (int) (elementDimension / raport * offsetPointer[0][index]);
-                cordy = mouse.getY() + (int) (elementDimension / raport * offsetPointer[1][index]);
-                iter.setLocation(cordx, cordy);
-                index++;
-            }
-        }
     }
 }

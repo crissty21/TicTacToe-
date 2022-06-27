@@ -65,6 +65,12 @@ public class decorations extends Actor {
         fadeIndex = 0;
     }
 
+    /**
+     * pregateste animatia de pulse ce va rula de un numar finit de ori
+     * 
+     * @param speed viteza animatiei
+     * @param times numarul de repetari
+     */
     public void pulseFor(int speed, int times) {
         pulse(speed);
         pulseTimes = times;
@@ -115,11 +121,22 @@ public class decorations extends Actor {
         image.setTransparency(0);
     }
 
-    public void setMyImage(GreenfootImage newImage)
-    {
+    /**
+     * schimba imaginea si updateaza variabila image
+     * 
+     * @param newImage noua imagine
+     */
+    public void setMyImage(GreenfootImage newImage) {
         setImage(newImage);
         image = newImage;
     }
+
+    /**
+     * porneste animatia de fadeout, iar dupa ce aceasta este completa, sterge
+     * obietul curent
+     * 
+     * @param speed viteza animatiei
+     */
     public void fadeOutAndRemove(int speed) {
         fadeOut(speed);
         remove = true;

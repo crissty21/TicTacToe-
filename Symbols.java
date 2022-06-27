@@ -1,10 +1,7 @@
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class Symbols here.
- * 
- * @author (your name)
- * @version (a version number or a date)
+ * butoanele cu care se va selecta codul ce va porni animatia easter egg-ului 
  */
 public class Symbols extends buttons {
     public int tip;

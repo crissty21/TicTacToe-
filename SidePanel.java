@@ -1,10 +1,9 @@
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class SidePanel here.
- * 
- * @author (your name)
- * @version (a version number or a date)
+ * primul pas in pornirea easter egg-ului
+ * creaza butoanele responsabile de cod
+ * porneste animatia in cazul in care butoanele sunt in ordinea corecta
  */
 public class SidePanel extends buttons {
     private boolean doSuper;

@@ -1,10 +1,13 @@
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
+/**
+ * clasa lumii jocului
+ * aici se va desfasura nivelul principal
+ */
 public class Lvl10X10 extends World {
 
-    // public Lvl10X10(int gridSize, int linesToWin, boolean againstAi) {
     public Lvl10X10(int gridSize, int linesToWin, boolean againstAi) {
-        // se plaseaza obiectele in functie de raportul din clasa variabile
+        
         super(900, 700, 1);
         Element.initImgs();
         Line.initImgs();

@@ -1,5 +1,8 @@
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
+/**
+ * Clasa responsabila de reprezentarea elementelor pe grid, in lume
+ */
 public class Element extends GridElement {
     private int img;
     private int openAnimationSpeed = 5;
@@ -10,6 +13,8 @@ public class Element extends GridElement {
     private static int drawOffset = 9;
     private static boolean AI;
     private GreenfootImage temp;
+
+    // toate imaginile folosite
     private static GreenfootImage[] tiles = {
             new GreenfootImage("back_tile_1.png"),
             new GreenfootImage("back_tile_4.png"),
@@ -63,6 +68,9 @@ public class Element extends GridElement {
         return img;
     }
 
+    /**
+     * functie ce alege elementul, si schimba jucatorul
+     */
     public void choose() // selecteaza x sau 0 pt caseta
     {
         refToBrain.clicked(this);
@@ -76,12 +84,13 @@ public class Element extends GridElement {
         Next.start1 = true;
     }
 
+    /**
+     * functie ce deschide elementul
+     * va schimba valoarea acestuia din nedeschis in X ssau Y (0)
+     */
     public void openIt() {
-        // refToGun.lookAtMe(this);
-        // Cocos.startAnimation = true;
         Brain.mutari++;
         Val = Brain.currentPlayer;
-        // Brain.gameState = State.WaitingForBullet;
         Brain.gameState = State.animationOn;
         selected = true;
         contor = 0;
@@ -168,6 +177,12 @@ public class Element extends GridElement {
         }
     }
 
+    /**
+     * schimba dimnesiunea imaginilor in functie de dimensiunea careului de joc
+     * 
+     * @param size dimensiunea careului
+     * @return raportul cu care s-au modificat imaginile
+     */
     public static float resizeImgs(int size) {
         int initialSpace = 48,
                 maxSpace = 480;
@@ -247,6 +262,9 @@ public class Element extends GridElement {
         return raport;
     }
 
+    /**
+     * reinitializeaza toate imaginile
+     */
     public static void initImgs() {
 
         drawOffset = 9;

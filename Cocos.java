@@ -1,9 +1,13 @@
 
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
+/**
+ * clasa characterului jocului, cocosul gangster
+ */
 public class Cocos extends Actor {
 
     private int ct;
+    // vectori de imagini pentru animatii
     private static GreenfootImage[] cocosClipit = new GreenfootImage[7];
     private static GreenfootImage[] cocosLose = new GreenfootImage[3];
     private static GreenfootImage[] cocosWin = new GreenfootImage[3];
@@ -12,10 +16,16 @@ public class Cocos extends Actor {
     private boolean incruntat;
     private boolean uimit;
 
+    private coordonates start, finish;
+    private boolean bMove;
+    private int moveSpeed;
+
     public Cocos() {
         init();
         setImage(cocosClipit[0]);
     }
+
+    private boolean End;
 
     private void init() {
         cocosClipit[0] = new GreenfootImage("images\\biro_1.png");
@@ -41,17 +51,26 @@ public class Cocos extends Actor {
         ct = 0;
     }
 
+    /**
+     * porneste animatia de clipit
+     */
     public void startClipit() {
         clipit = true;
         ct = 0;
     }
 
+    /**
+     * porneste animatia de uimire
+     */
     public void startUimit() {
         uimit = true;
         setImage(cocosClipit[0]);
         ct = 0;
     }
 
+    /**
+     * porneste animatia de incruntare
+     */
     public void startIncruntat() {
         incruntat = true;
         setImage(cocosClipit[0]);
@@ -73,10 +92,10 @@ public class Cocos extends Actor {
         setLocation(start.x, start.y);
     }
 
-    private coordonates start, finish;
-    private boolean bMove;
-    private int moveSpeed;
-
+    /**
+     * functia act() ruleaza in fiecare tick
+     * reda diferite animatii
+     */
     public void act() {
         if (bMove) {
             coordonates newLocation = lerp(finish, moveSpeed);
@@ -132,8 +151,14 @@ public class Cocos extends Actor {
         }
     }
 
-    private boolean End;
-
+    /**
+     * incheie jocul
+     * 
+     * @param tip tipul in care s-a terminat jocul:
+     *            1 - a castigat X
+     *            2 - a castigat 0
+     *            3 - egalitate
+     */
     public void ending(int tip) {
         decorations placa = new decorations(new GreenfootImage("images\\win_plaque.png"));
         decorations scris = new decorations(new GreenfootImage(1, 1));
