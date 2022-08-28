@@ -21,7 +21,7 @@ public class ShowText extends decorations {
         // cream o imagine noua cu textul
         img = new GreenfootImage(26, 15);
         img.setColor(new Color(103, 38, 032));
-        img.setFont(MainMenu.BurstFont);
+        //img.setFont(MainMenu.BurstFont);
         updateImage(x);
 
         parent = _parent;
@@ -58,7 +58,7 @@ public class ShowText extends decorations {
     public ShowText(int x, decorations _parent, boolean mwp, Color textColor, int fontDim) {
         img = new GreenfootImage(26, 15);
         img.setColor(textColor);
-        img.setFont(MainMenu.BurstFont.deriveFont(fontDim));
+        //img.setFont(MainMenu.BurstFont.deriveFont(fontDim));
         updateImage(x);
         parent = _parent;
         moveWithParrent = mwp;

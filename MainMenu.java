@@ -1,12 +1,12 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 //biblioteci folosite pentru crearea fontului
-import java.awt.Font;
+/*import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.IOException;*/
 
 /**
  * lumea meniului principal
@@ -16,7 +16,7 @@ import java.io.IOException;
 public class MainMenu extends World
 {
     //fontul textului din joc
-    public static greenfoot.Font BurstFont;
+    //public static greenfoot.Font BurstFont;
     
     //text ce pulseaze care te indruma sa apesi click pentru a incepe
     private decorations pressClick;
@@ -49,9 +49,6 @@ public class MainMenu extends World
         pressClick.pulse(5);
         addObject(pressClick, 300, 300);
 
-        //copyright claims
-        addObject(new decorations(new GreenfootImage("images\\bb_copyright.png")), 300, 375);
-        addObject(new decorations(new GreenfootImage("images\\cc_copyright.png")), 300, 385);
 
         //butoanele de startButton si exitButton
         //acestea nu sunt inca adaugate in lume 
@@ -61,7 +58,7 @@ public class MainMenu extends World
                 new GreenfootImage("images\\exit_select.png"));
 
         setPaintOrder(decorations.class, buttons.class);
-        createFont();
+        //createFont();
     }
 
     /**
@@ -85,7 +82,8 @@ public class MainMenu extends World
     }
     /**
      * functie ce creaza fontul utilizand un fisier True Type Font
-     */
+     *//*
+      
     private void createFont() {
         
         File f = new File("Burst_numeric_little-Regular.ttf");
@@ -107,5 +105,5 @@ public class MainMenu extends World
             e.printStackTrace();
         }
 
-    }
+    }*/
 }
